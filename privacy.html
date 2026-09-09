@@ -17,39 +17,84 @@
 <body><div class="wrap">
   <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
   <h1>Privacy policy</h1>
-  <p class="muted">Effective September 9, 2026</p>
-  <p>Lowball is a Chrome extension that estimates fair rent for Zillow rental listings and suggests an offer. This policy explains exactly what leaves your browser, when, and why. The short version: listing data, never personal data.</p>
+  <p class="muted">Effective September 9, 2026. Last updated September 9, 2026. Version 2.</p>
+
+  <p>Lowball is a free Chrome extension that estimates fair rent for Zillow rental listings and suggests an offer. It is run by its founder, an individual operator in the United States. This policy covers the extension, our server at api.lowball.rent, and this website. It explains exactly what leaves your browser, when, and why.</p>
+  <p>The short version: we work with listing facts, not with you. There are no accounts, no names, and no emails. Two things we do handle are worth knowing about: a random install identifier, used only if you turn on sharing, and your IP address, which reaches our server with every request as it does for any website.</p>
 
   <h2>What the extension reads</h2>
-  <p>Lowball runs only on pages at zillow.com. On a rental listing or search page it reads the listing information Zillow shows you: price, bedrooms, bathrooms, square footage, location, days on market, price history, posted specials, and, for buildings, the list of available units. It does not read any other site, your Zillow account, your searches, or anything you type.</p>
+  <p>Lowball runs only on pages at zillow.com. It watches the listing data Zillow loads into the page and picks out rental listings. From a listing it reads: price, base rent, bedrooms, bathrooms, square footage, year built, home type, street address, city, ZIP code, map coordinates, days on Zillow, price history, Zillow's published rent estimate, posted specials, lease length, whether the owner listed it, the listing description text, and, for buildings, the list of available units.</p>
+  <p>It does not read other websites, your Zillow account, your saved homes, your search terms or filters, or anything you type on Zillow. It never loads Zillow pages on its own; it only reads pages you open.</p>
 
-  <h2>What is sent to our server, always</h2>
-  <p>To score a listing, the extension sends that listing's facts to our server at api.lowball.rent and receives an estimate back. No account exists and no personal information is included in that request. Our server does not log your IP address beyond ordinary short-term operational logs.</p>
+  <h2>Sent to our server to score a listing</h2>
+  <p>To produce an estimate, the extension sends the listing facts above, except the description text and Zillow's rent estimate, which stay in your browser, to our server at api.lowball.rent over HTTPS and gets an estimate back. The description is checked in your browser for words like "short-term" or "furnished" and only those two yes-or-no answers are sent. On search result pages it sends the facts for each listing card on screen so it can add a badge to each one. These requests carry no identifier for you and no account. We do not store them. Like every web server, ours sees your IP address when it answers; see "Server logs" below.</p>
 
-  <h2>What is sent only if you opt in</h2>
-  <p>On first use the panel asks whether you want to share the listings you view to improve estimates for everyone. If you say yes, the extension sends a snapshot of each listing you open, at most once per listing per day, tagged with a random install identifier so we can count distinct installs. That identifier is not linked to you, your Google account, or your email. You can turn sharing off at any time with the "Share data" toggle in any panel, and the identifier can be reset by reinstalling the extension.</p>
+  <h2>Sent only if you turn on sharing</h2>
+  <p>The first time the panel appears it asks whether you want to share the listings you view to improve estimates for everyone. Nothing in this section is sent unless you say yes. If you do, the extension sends:</p>
+  <ul>
+    <li>A snapshot of each rental listing you open, at most once per listing per day. It contains the listing facts listed above, minus the description text and Zillow's rent estimate.</li>
+    <li>For apartment buildings, the building name, ZIP code, unit list, specials, and lease length.</li>
+    <li>A record that you copied an offer letter for a listing, with the listing's id and page path.</li>
+  </ul>
+  <p>Each of these is tagged with a random install identifier. That identifier is a random string created by the extension and stored only in your browser's extension storage. It is not derived from your Google account, email, device, or anything else about you. We use it to count distinct installs, to tell one person's views apart from another's when weighting data, and to find your data if you ask us to delete it.</p>
+  <p>You can turn sharing off at any time with the "Share data" switch in the panel footer. Turning it off stops all sending immediately. Data already sent stays on our server until it expires or you ask us to delete it. Your install identifier is shown in the "Wrong? Flag it" form in the panel, where you can also reset it. Uninstalling the extension deletes the identifier and your sharing choice from your browser; reinstalling creates a new identifier.</p>
+
+  <h2>Sent when you use the feedback form</h2>
+  <p>The "Wrong? Flag it" form sends what you enter: the reason you pick, the optional note, the amounts you offered and the landlord accepted, plus the listing's facts, our estimate, the listing's page address, and your install identifier so the entry can be deleted on request. This is sent when you press Send, whether or not sharing is on.</p>
+  <p>Please do not put names, phone numbers, emails, or other personal details in the note. Notes are capped at 500 characters, and anything that looks like an email address or phone number is removed before saving. We delete any note on request.</p>
+
   <table>
-    <tr><th>Sent</th><th>Not sent</th></tr>
-    <tr><td>Listing price, size, location, days listed, price history, specials, unit lists</td><td>Your name, email, phone, or any account</td></tr>
-    <tr><td>Which listing you copied an offer for, and feedback you type into the flag form</td><td>Your searches, filters, saved homes, or browsing outside zillow.com</td></tr>
-    <tr><td>A random install identifier</td><td>Your IP address (beyond short-lived server logs), device identifiers, or location</td></tr>
+    <tr><th>Sent</th><th>Never sent</th></tr>
+    <tr><td>Listing price, size, address, location, days listed, price history, specials, unit lists</td><td>Your name, email, phone, or any account</td></tr>
+    <tr><td>If sharing is on: listing snapshots, copied-offer records, and a random install identifier</td><td>Your search terms, filters, saved homes, or browsing outside zillow.com</td></tr>
+    <tr><td>If you use the feedback form: what you enter, with the listing and our estimate</td><td>The listing description text, Zillow's rent estimate, device identifiers, your own location, your Zillow login</td></tr>
   </table>
 
-  <h2>How we use it</h2>
-  <p>Listing data is used to build and improve the rent estimates the extension shows: comparable rentals, price-cut patterns, and building vacancy patterns. Feedback and reported outcomes are used to correct estimates. We may publish aggregated market statistics, such as median asking rent or cut rates by ZIP code, that cannot be traced to any listing view or install. We do not sell personal data, and we do not use any of this data for advertising.</p>
+  <h2>Server logs</h2>
+  <p>Our server runs on Fly.io in the United States. Every request to it carries your IP address. We do not keep request logs that contain IP addresses; our own log line per request records only the path, timing, and result. Fly.io may keep brief infrastructure logs containing IP addresses under its own privacy policy. This website is hosted on GitHub Pages, which records visitor IP addresses in its own logs under GitHub's policy.</p>
 
-  <h2>Storage and retention</h2>
-  <p>Your consent choice and install identifier are stored in your browser's extension storage and nowhere else. Listing snapshots are kept on our servers for as long as they are useful for estimates. You can request deletion of data tied to your install identifier by emailing us with the identifier shown in the panel's data-sharing settings.</p>
+  <h2>Personal information, plainly</h2>
+  <p>We do not collect names, emails, phone numbers, or account details, and we do not want them. Three things we handle can count as personal information under California law, and we treat them that way: the random install identifier, IP addresses in our host's logs, and anything personal you choose to type into the feedback note. Everything else we handle describes a rental listing, not a person.</p>
 
-  <h2>Third parties</h2>
-  <p>Our server runs on Fly.io and this website on Vercel; both process traffic under their own privacy terms. Lowball is not affiliated with Zillow. Listing data belongs to its listing sources.</p>
+  <h2>How we use data</h2>
+  <ul>
+    <li>Listing facts are used to compute the estimate you see and to build and improve the estimates: comparable rentals, price-cut patterns, vacancy patterns, and coverage in areas we do not yet model.</li>
+    <li>Feedback and reported outcomes are used to correct estimates.</li>
+    <li>The install identifier is used to count installs, weight shared data, and honor deletion requests.</li>
+    <li>We may publish aggregate market statistics, such as median asking rent or the share of listings that cut price by ZIP code. We may also license aggregate statistics like these to other companies. Aggregates never contain install identifiers, individual view records, notes, or anything that identifies a person, and we publicly commit not to try to re-identify anyone from them and to require the same of anyone we share them with. We only publish a statistic when it is built from at least 10 listings.</li>
+  </ul>
+  <p>We do not sell or share personal information, we do not use any data for advertising, we do not use it to decide anyone's creditworthiness or eligibility for anything, and we do not let anyone read individual records except to run the service, investigate abuse, or comply with law.</p>
+
+  <h2>Who else sees it</h2>
+  <p>Fly.io hosts our server and stores the data files. GitHub hosts this website. Neither is allowed to use the data for their own purposes. We share nothing else with anyone, except aggregate statistics as described above, or if required by law. Lowball is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Zillow and Zestimate are trademarks of Zillow Group, Inc. Listing data belongs to its listing sources. Use of Lowball is also governed by our <a href="/terms">Terms of Use</a>.</p>
+
+  <h2>How long we keep it</h2>
+  <ul>
+    <li>Scoring requests: not stored.</li>
+    <li>Shared listing snapshots and copied-offer records: 24 months, then deleted or reduced to aggregates that carry no identifier.</li>
+    <li>Feedback form entries: 24 months, then deleted.</li>
+    <li>Your sharing choice and install identifier: in your browser until you reset them or uninstall.</li>
+    <li>Deletion requests: completed within 30 days.</li>
+  </ul>
+
+  <h2>Your choices and rights</h2>
+  <p>Anyone, in any state, can ask us what data we hold for their install identifier, ask us to delete it, or ask us to remove a feedback note. Email <a href="mailto:hello@lowball.rent">hello@lowball.rent</a>. For shared data, include your install identifier from the panel's feedback form; that is the only way we can find your records, and it is also the only proof of ownership we need. For a feedback note, tell us roughly when you sent it and which listing it was about. We answer within 30 days and we will never treat you differently for asking.</p>
+  <p>California residents have the right to know what personal information we collect and how we use it, to delete it, to correct it, and to be free from discrimination for exercising these rights. Because we do not sell or share personal information, there is nothing to opt out of on that front. If we ever changed that, this policy would say so and the extension would ask you first.</p>
+  <p>Our browser extension does not respond to "Do Not Track" signals, because the only tracking-like behavior it has, listing sharing, is off until you turn it on.</p>
+
+  <h2>Security</h2>
+  <p>All traffic between the extension and our server uses HTTPS. Data is stored on a private volume on Fly.io that only the operator can access, protected by Fly.io's account security and two-factor authentication. Nothing is perfect. If shared data or feedback is ever exposed, we will post a notice on this website within 72 hours of learning about it, and describe what happened and what we did.</p>
+
+  <h2>Where data is stored, and who this is for</h2>
+  <p>Our server and data are in the United States. Lowball is offered in the United States and is not distributed in the European Union or United Kingdom. If you use it from outside the United States, your data is processed in the United States under this policy.</p>
 
   <h2>Children</h2>
-  <p>Lowball is not directed at children under 13 and does not knowingly collect information from them.</p>
+  <p>Lowball is for adults looking for a rental. It is not directed at children under 13 and we do not knowingly collect information from them. If you believe a child has sent us data, email us and we will delete it.</p>
 
   <h2>Changes</h2>
-  <p>If this policy changes in a way that affects what is collected, the extension will ask for your consent again before sharing anything new.</p>
+  <p>When this policy changes, we update the date and version at the top and keep prior versions listed at the bottom of this page. If a change affects what is shared, the extension will ask for your sharing choice again before sending anything new.</p>
 
   <h2>Contact</h2>
   <p><a href="mailto:hello@lowball.rent">hello@lowball.rent</a></p>
+  <p class="muted">Version history: v2, September 9, 2026 (this version). v1, September 9, 2026 (initial).</p>
 </div></body></html>
