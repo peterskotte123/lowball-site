@@ -68,6 +68,7 @@
       <label>Type</label>
       <select id="type"><option value="APARTMENT">Apartment or condo</option><option value="TOWNHOUSE">Townhouse</option><option value="SINGLE_FAMILY">House</option></select>
       <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-weight:500"><input type="checkbox" id="complex" style="width:auto"> Managed building (leasing office, not an individual owner)</label>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:8px;font-weight:500"><input type="checkbox" id="ontime" style="width:auto"> I have paid rent on time throughout my tenancy (adds one sentence to the letter)</label>
       <button class="btn" type="submit">Show my counter</button>
       <div class="err" id="err"></div>
       <p class="fine">Nothing you type is stored with your name. The estimate uses public listing data and our San Diego model; outside San Diego it uses a public rent index and is rougher. Not advice or a guarantee.</p>
@@ -87,7 +88,7 @@
       <div class="label" style="margin-top:22px">Renewal letter</div>
       <textarea id="letter"></textarea>
       <button class="btn ghost" type="button" id="copy">Copy letter</button>
-      <p class="fine">Estimates are not advice or a guarantee. Rent-control rules vary by city and building; check them before you rely on a cap.</p>
+      <p class="fine">Not legal advice. Rent-increase limits depend on your city, building age, and owner; the state cap may not apply. Verify at oag.ca.gov/housing or with a local tenant-rights group. Check that the comps are still listed before you send; you are responsible for what you send.</p>
     </div>
   </div>
 
@@ -104,18 +105,18 @@
   var num = function (id) { var v = Number(String($(id).value).replace(/[^0-9.]/g, '')); return v > 0 ? v : null; };
   function letterFor(q, r) {
     var lines = ['Hi,', ''];
-    lines.push('Thank you for the renewal offer for ' + (q.address || 'my unit') + '. I would like to stay' + (q.years && q.years >= 2 ? ' after ' + q.years + ' years here' : '') + ', and I have paid on time every month.');
+    lines.push('Thank you for the renewal offer for ' + (q.address || 'my unit') + '. I would like to stay' + (q.years && q.years >= 2 ? ' after ' + q.years + ' years here' : '') + '.' + (q.ontime ? ' I have paid rent on time throughout my tenancy.' : ''));
     var cs = (r.comps || []).filter(function (c) { return c.price <= q.proposed_rent; }).sort(function (a, b) { return Math.abs(a.price - r.counter) - Math.abs(b.price - r.counter); }).slice(0, 3).sort(function (a, b) { return a.price - b.price; });
-    if (cs.length >= 2 && !r.zip_only) lines.push('', 'Comparable ' + (q.beds === 0 ? 'studios' : q.beds + '-bed units') + ' nearby are listed at ' + money(cs[0].price) + ' to ' + money(cs[cs.length - 1].price) + ' right now (a few below).');
+    if (cs.length >= 2 && !r.zip_only) lines.push('', 'Comparable ' + (q.beds === 0 ? 'studios' : q.beds + '-bed units') + ' nearby are listed on Zillow at ' + money(cs[0].price) + ' to ' + money(cs[cs.length - 1].price) + ' as of ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' (a few below).');
     if (r.counter < q.proposed_rent) lines.push('', 'Rather than ' + money(q.proposed_rent) + ', would you renew at ' + money(r.counter) + ' for 12 months? That keeps a reliable tenant in place with no vacancy, no turnover cost, and no listing.');
     else lines.push('', 'I can sign at ' + money(q.proposed_rent) + ' for 12 months. Would you consider a 24-month term at that rate, or taking care of [a repair] before the new term starts?');
     lines.push('', 'I can sign this week. If that number does not work, tell me what would.', '', 'Thank you,', '[Your name]', '[Phone]');
-    if (cs.length >= 2 && !r.zip_only) { lines.push('', 'Similar listings I looked at:'); cs.forEach(function (c) { lines.push('- ' + (c.addr || 'Nearby') + (c.sqft ? ' · ' + c.sqft.toLocaleString() + ' sf' : '') + ' · ' + money(c.price) + (c.days != null ? ' · listed ' + (c.days === 0 ? 'today' : c.days + ' days') : '')); }); }
+    if (cs.length >= 2 && !r.zip_only) { lines.push('', 'Similar listings I looked at on Zillow:'); cs.forEach(function (c) { lines.push('- ' + (c.addr || 'Nearby') + (c.sqft ? ' · ' + c.sqft.toLocaleString() + ' sf' : '') + ' · ' + money(c.price) + (c.days != null ? ' · listed ' + (c.days === 0 ? 'today' : c.days + ' days') : '')); }); }
     return lines.join('\n');
   }
   $('f').addEventListener('submit', function (e) {
     e.preventDefault(); $('err').style.display = 'none';
-    var q = { current_rent: num('cur'), proposed_rent: num('prop'), years: num('years'), zip: $('zip').value.trim(), beds: Number($('beds').value), baths: num('baths'), sqft: num('sqft'), type: $('type').value, address: $('addr').value.trim() || null, is_complex: $('complex').checked };
+    var q = { current_rent: num('cur'), proposed_rent: num('prop'), years: num('years'), zip: $('zip').value.trim(), beds: Number($('beds').value), baths: num('baths'), sqft: num('sqft'), type: $('type').value, address: $('addr').value.trim() || null, is_complex: $('complex').checked, ontime: $('ontime').checked };
     if (!q.current_rent || !q.proposed_rent || !/^\d{5}$/.test(q.zip)) { $('err').textContent = 'Current rent, proposed rent, and a 5-digit ZIP are needed.'; $('err').style.display = 'block'; return; }
     fetch(API + '/v1/renewal', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-renew' }, body: JSON.stringify(q) })
       .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
