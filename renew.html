@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Renewal counter · Lowball</title>
+<meta name="description" content="Your landlord wants more at renewal. See what comparable units rent for today, what leaving would cost them, and a number to counter with. Free, no account.">
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<style>
+  :root { --ink:#101828; --muted:#475467; --line:#EAECF0; --paper:#fff; --soft:#F8FAFC; --green:#157347; --amber:#B45309; --red:#B42318; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif; color:var(--ink); background:var(--paper); }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:20px 0; }
+  .brand img.logo { height:38px; width:auto; display:block; }
+  nav a { color:var(--muted); text-decoration:none; margin-left:22px; font-weight:500; font-size:15px; }
+  h1 { font-size:clamp(30px,4.5vw,46px); line-height:1.08; letter-spacing:-0.02em; margin:24px 0 10px; }
+  .lede { font-size:18px; color:var(--muted); max-width:36em; margin:0 0 28px; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start; }
+  form { background:var(--soft); border:1px solid var(--line); border-radius:14px; padding:22px; }
+  label { display:block; font-size:13px; font-weight:600; color:var(--muted); margin:12px 0 4px; }
+  input, select { width:100%; padding:10px 12px; border:1px solid #D0D5DD; border-radius:10px; font-size:15px; background:#fff; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:10px; background:var(--ink); color:#fff; font-weight:600; text-decoration:none; border:0; cursor:pointer; font-size:15px; margin-top:18px; }
+  .btn.ghost { background:#fff; color:var(--ink); border:1px solid #D0D5DD; }
+  .fine { font-size:13px; color:#98A2B3; margin-top:12px; }
+  .result { display:none; }
+  .hero-num { font-size:44px; font-weight:800; letter-spacing:-0.02em; color:var(--green); line-height:1; margin:6px 0; }
+  .label { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
+  .stat { background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .stat b { display:block; font-size:20px; } .stat span { font-size:12px; color:var(--muted); }
+  ul.why { padding-left:18px; color:#344054; font-size:15px; } ul.why li { margin:6px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14px; margin-top:8px; } th, td { text-align:left; padding:6px 4px; border-bottom:1px solid var(--line); } th.n, td.n { text-align:right; }
+  textarea { width:100%; min-height:260px; padding:12px; border:1px solid #D0D5DD; border-radius:10px; font:14px/1.5 inherit; margin-top:8px; }
+  .err { color:var(--red); font-size:14px; margin-top:10px; display:none; }
+  footer { border-top:1px solid var(--line); padding:26px 0 40px; font-size:13px; color:#98A2B3; margin-top:56px; }
+  footer a { color:#667085; }
+  @media (max-width:820px) { .two { grid-template-columns:1fr; } .row3 { grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
+    <nav><a href="/">Extension</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
+  </header>
+
+  <h1>Renewing? Counter with the market, not a guess.</h1>
+  <p class="lede">Put in what you pay, what they want, and the unit. You get what comparable units rent for today, what your leaving would cost the landlord, a number to counter with, and the letter.</p>
+
+  <div class="two">
+    <form id="f" autocomplete="off">
+      <div class="row">
+        <div><label>Current rent, per month</label><input id="cur" inputmode="numeric" placeholder="2,900" required></div>
+        <div><label>Proposed rent</label><input id="prop" inputmode="numeric" placeholder="3,150" required></div>
+      </div>
+      <label>Street address (optional, sharpens the comps)</label><input id="addr" placeholder="3050 Upas St">
+      <div class="row">
+        <div><label>ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" placeholder="92104" required></div>
+        <div><label>Years in the unit</label><input id="years" inputmode="numeric" placeholder="3"></div>
+      </div>
+      <div class="row3">
+        <div><label>Bedrooms</label><select id="beds"><option value="0">Studio</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select></div>
+        <div><label>Bathrooms</label><input id="baths" inputmode="decimal" placeholder="1"></div>
+        <div><label>Square feet</label><input id="sqft" inputmode="numeric" placeholder="900"></div>
+      </div>
+      <label>Type</label>
+      <select id="type"><option value="APARTMENT">Apartment or condo</option><option value="TOWNHOUSE">Townhouse</option><option value="SINGLE_FAMILY">House</option></select>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-weight:500"><input type="checkbox" id="complex" style="width:auto"> Managed building (leasing office, not an individual owner)</label>
+      <button class="btn" type="submit">Show my counter</button>
+      <div class="err" id="err"></div>
+      <p class="fine">Nothing you type is stored with your name. The estimate uses public listing data and our San Diego model; outside San Diego it uses a public rent index and is rougher. Not advice or a guarantee.</p>
+    </form>
+
+    <div class="result" id="res">
+      <div class="label" id="ctrLabel">Counter at</div>
+      <div class="hero-num" id="counter">$0</div>
+      <div id="sub" style="color:var(--muted)"></div>
+      <div class="stats">
+        <div class="stat"><b id="sFair">$0</b><span>Comparable units today</span></div>
+        <div class="stat"><b id="sInc">0%</b><span>Proposed increase</span></div>
+        <div class="stat"><b id="sTurn">$0</b><span>Landlord's cost if you leave</span></div>
+      </div>
+      <ul class="why" id="why"></ul>
+      <details id="compsBox"><summary id="compsSum">Comparable rentals</summary><table id="comps"><tr><th>Address</th><th class="n">Rent</th><th class="n">Size</th><th class="n">Days</th></tr></table></details>
+      <div class="label" style="margin-top:22px">Renewal letter</div>
+      <textarea id="letter"></textarea>
+      <button class="btn ghost" type="button" id="copy">Copy letter</button>
+      <p class="fine">Estimates are not advice or a guarantee. Rent-control rules vary by city and building; check them before you rely on a cap.</p>
+    </div>
+  </div>
+
+  <footer>
+    <div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc.</div>
+    <div><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  var API = (new URLSearchParams(location.search).get('api')) || 'https://api.lowball.rent';
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (v) { return '$' + Math.round(v).toLocaleString('en-US'); };
+  var num = function (id) { var v = Number(String($(id).value).replace(/[^0-9.]/g, '')); return v > 0 ? v : null; };
+  function letterFor(q, r) {
+    var lines = ['Hi,', ''];
+    lines.push('Thank you for the renewal offer for ' + (q.address || 'my unit') + '. I would like to stay' + (q.years && q.years >= 2 ? ' after ' + q.years + ' years here' : '') + ', and I have paid on time every month.');
+    var cs = (r.comps || []).filter(function (c) { return c.price <= q.proposed_rent; }).sort(function (a, b) { return Math.abs(a.price - r.counter) - Math.abs(b.price - r.counter); }).slice(0, 3).sort(function (a, b) { return a.price - b.price; });
+    if (cs.length >= 2 && !r.zip_only) lines.push('', 'Comparable ' + (q.beds === 0 ? 'studios' : q.beds + '-bed units') + ' nearby are listed at ' + money(cs[0].price) + ' to ' + money(cs[cs.length - 1].price) + ' right now (a few below).');
+    if (r.counter < q.proposed_rent) lines.push('', 'Rather than ' + money(q.proposed_rent) + ', would you renew at ' + money(r.counter) + ' for 12 months? That keeps a reliable tenant in place with no vacancy, no turnover cost, and no listing.');
+    else lines.push('', 'I can sign at ' + money(q.proposed_rent) + ' for 12 months. Would you consider a 24-month term at that rate, or taking care of [a repair] before the new term starts?');
+    lines.push('', 'I can sign this week. If that number does not work, tell me what would.', '', 'Thank you,', '[Your name]', '[Phone]');
+    if (cs.length >= 2 && !r.zip_only) { lines.push('', 'Similar listings I looked at:'); cs.forEach(function (c) { lines.push('- ' + (c.addr || 'Nearby') + (c.sqft ? ' · ' + c.sqft.toLocaleString() + ' sf' : '') + ' · ' + money(c.price) + (c.days != null ? ' · listed ' + (c.days === 0 ? 'today' : c.days + ' days') : '')); }); }
+    return lines.join('\n');
+  }
+  $('f').addEventListener('submit', function (e) {
+    e.preventDefault(); $('err').style.display = 'none';
+    var q = { current_rent: num('cur'), proposed_rent: num('prop'), years: num('years'), zip: $('zip').value.trim(), beds: Number($('beds').value), baths: num('baths'), sqft: num('sqft'), type: $('type').value, address: $('addr').value.trim() || null, is_complex: $('complex').checked };
+    if (!q.current_rent || !q.proposed_rent || !/^\d{5}$/.test(q.zip)) { $('err').textContent = 'Current rent, proposed rent, and a 5-digit ZIP are needed.'; $('err').style.display = 'block'; return; }
+    fetch(API + '/v1/renewal', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-renew' }, body: JSON.stringify(q) })
+      .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+      .then(function (r) {
+        $('ctrLabel').textContent = r.counter < q.proposed_rent ? 'Counter at' : 'Sign at';
+        $('counter').textContent = money(r.counter);
+        $('sub').textContent = r.counter < q.proposed_rent ? money(q.proposed_rent - r.counter) + ' a month under the proposal · ' + money((q.proposed_rent - r.counter) * 12) + ' over the year' : 'The proposal is at or under the market. Ask for a longer term or a repair instead of a lower number.';
+        $('sFair').textContent = money(r.fair); $('sInc').textContent = (r.increase_pct >= 0 ? '+' : '') + r.increase_pct + '%'; $('sTurn').textContent = money(r.turnover_cost);
+        var why = $('why'); why.innerHTML = ''; (r.signals || []).forEach(function (s) { var li = document.createElement('li'); li.textContent = s; why.appendChild(li); });
+        var tb = $('comps'); tb.innerHTML = '<tr><th>Address</th><th class="n">Rent</th><th class="n">Size</th><th class="n">Days</th></tr>';
+        (r.comps || []).forEach(function (c) { var tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="n"></td><td class="n"></td><td class="n"></td>'; tr.children[0].textContent = c.addr || 'Hidden address'; tr.children[1].textContent = money(c.price); tr.children[2].textContent = c.sqft ? c.sqft.toLocaleString() + ' sf' : ''; tr.children[3].textContent = c.days != null ? c.days + 'd' : ''; tb.appendChild(tr); });
+        $('compsSum').textContent = (r.comps || []).length + (r.zip_only ? ' rentals in the same ZIP (location not exact)' : ' comparable rentals nearby'); $('compsBox').open = !r.zip_only && (r.comps || []).length > 0;
+        $('letter').value = letterFor(q, r);
+        $('res').style.display = 'block'; $('res').scrollIntoView({ behavior: 'smooth', block: 'start' });
+      })
+      .catch(function (err) { $('err').textContent = 'Could not reach the estimate service (' + err.message + '). Try again in a minute.'; $('err').style.display = 'block'; });
+  });
+  $('copy').addEventListener('click', function () { var ta = $('letter'); ta.select(); try { navigator.clipboard.writeText(ta.value); } catch (e) { document.execCommand('copy'); } $('copy').textContent = 'Copied'; setTimeout(function () { $('copy').textContent = 'Copy letter'; }, 1500); });
+})();
+</script>
+</body>
+</html>
