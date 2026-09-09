@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lowball Privacy Policy</title>
+<link rel="icon" href="/img/icon.png">
+<style>
+  body { margin:0; font:16px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif; color:#101828; background:#fff; }
+  .wrap { max-width:720px; margin:0 auto; padding:32px 24px 64px; }
+  a { color:#101828; } h1 { letter-spacing:-0.02em; } h2 { font-size:20px; margin-top:32px; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:800; text-decoration:none; color:#101828; margin-bottom:28px; }
+  .brand img { width:26px; height:26px; border-radius:7px; }
+  .muted { color:#667085; }
+  table { border-collapse:collapse; width:100%; font-size:15px; } td, th { text-align:left; padding:8px 6px; border-bottom:1px solid #EAECF0; vertical-align:top; }
+</style>
+</head>
+<body><div class="wrap">
+  <a class="brand" href="/"><img src="/img/icon.png" alt="">Lowball</a>
+  <h1>Privacy policy</h1>
+  <p class="muted">Effective September 9, 2026</p>
+  <p>Lowball is a Chrome extension that estimates fair rent for Zillow rental listings and suggests an offer. This policy explains exactly what leaves your browser, when, and why. The short version: listing data, never personal data.</p>
+
+  <h2>What the extension reads</h2>
+  <p>Lowball runs only on pages at zillow.com. On a rental listing or search page it reads the listing information Zillow shows you: price, bedrooms, bathrooms, square footage, location, days on market, price history, posted specials, and, for buildings, the list of available units. It does not read any other site, your Zillow account, your searches, or anything you type.</p>
+
+  <h2>What is sent to our server, always</h2>
+  <p>To score a listing, the extension sends that listing's facts to our server at api.lowball.rent and receives an estimate back. No account exists and no personal information is included in that request. Our server does not log your IP address beyond ordinary short-term operational logs.</p>
+
+  <h2>What is sent only if you opt in</h2>
+  <p>On first use the panel asks whether you want to share the listings you view to improve estimates for everyone. If you say yes, the extension sends a snapshot of each listing you open, at most once per listing per day, tagged with a random install identifier so we can count distinct installs. That identifier is not linked to you, your Google account, or your email. You can turn sharing off at any time with the "Share data" toggle in any panel, and the identifier can be reset by reinstalling the extension.</p>
+  <table>
+    <tr><th>Sent</th><th>Not sent</th></tr>
+    <tr><td>Listing price, size, location, days listed, price history, specials, unit lists</td><td>Your name, email, phone, or any account</td></tr>
+    <tr><td>Which listing you copied an offer for, and feedback you type into the flag form</td><td>Your searches, filters, saved homes, or browsing outside zillow.com</td></tr>
+    <tr><td>A random install identifier</td><td>Your IP address (beyond short-lived server logs), device identifiers, or location</td></tr>
+  </table>
+
+  <h2>How we use it</h2>
+  <p>Listing data is used to build and improve the rent estimates the extension shows: comparable rentals, price-cut patterns, and building vacancy patterns. Feedback and reported outcomes are used to correct estimates. We may publish aggregated market statistics, such as median asking rent or cut rates by ZIP code, that cannot be traced to any listing view or install. We do not sell personal data, and we do not use any of this data for advertising.</p>
+
+  <h2>Storage and retention</h2>
+  <p>Your consent choice and install identifier are stored in your browser's extension storage and nowhere else. Listing snapshots are kept on our servers for as long as they are useful for estimates. You can request deletion of data tied to your install identifier by emailing us with the identifier shown in the panel's data-sharing settings.</p>
+
+  <h2>Third parties</h2>
+  <p>Our server runs on Fly.io and this website on Vercel; both process traffic under their own privacy terms. Lowball is not affiliated with Zillow. Listing data belongs to its listing sources.</p>
+
+  <h2>Children</h2>
+  <p>Lowball is not directed at children under 13 and does not knowingly collect information from them.</p>
+
+  <h2>Changes</h2>
+  <p>If this policy changes in a way that affects what is collected, the extension will ask for your consent again before sharing anything new.</p>
+
+  <h2>Contact</h2>
+  <p><a href="mailto:hello@lowball.rent">hello@lowball.rent</a></p>
+</div></body></html>
