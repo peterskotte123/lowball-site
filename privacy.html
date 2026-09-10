@@ -30,9 +30,10 @@
   <p>To produce an estimate, the extension sends the listing facts above, except the description text and Zillow's rent estimate, which stay in your browser, to our server at api.lowball.rent over HTTPS and gets an estimate back. The description is checked in your browser for words like "short-term" or "furnished" and only those two yes-or-no answers are sent. On search result pages it sends the facts for each listing card on screen so it can add a badge to each one. These requests carry no identifier for you and no account. We do not store them. Like every web server, ours sees your IP address when it answers; see "Server logs" below.</p>
 
   <h2>Sent only if you turn on sharing</h2>
-  <p>The first time the panel appears it asks whether you want to share the listings you view to improve estimates for everyone. Nothing in this section is sent unless you say yes. If you do, the extension sends:</p>
+  <p>When you install Lowball, and the first time the panel appears, it asks whether you want to share the listings and search results you view to improve estimates for everyone. Nothing in this section is sent unless you say yes. If you do, the extension sends:</p>
   <ul>
-    <li>A snapshot of each rental listing you open, at most once per listing per day. It contains the listing facts listed above, minus the description text and Zillow's rent estimate.</li>
+    <li>A snapshot of each rental listing you open, at most once per listing per day. It contains the listing facts listed above plus the tax-assessed value, lease term, laundry and parking features, and photo count, minus the description text and Zillow's rent estimate.</li>
+    <li>The result cards on each rental search page you load: for every card, the listing id, street address, city, ZIP, coordinates, asking rent, last price change and date, beds, baths, square footage, home type, year built, and days on Zillow; for apartment buildings, the name, page link, units available, and each floor plan's starting rent. Not your search terms, filters, or map position.</li>
     <li>For apartment buildings, the building name, ZIP code, unit list, specials, and lease length.</li>
     <li>A record that you copied an offer letter for a listing, with the listing's id and page path.</li>
   </ul>
