@@ -48,26 +48,75 @@
   footer a { color:#667085; }
   @media (max-width:820px) { .hero, .privacy { grid-template-columns:1fr; } .strip .wrap, .grid3 { grid-template-columns:1fr 1fr; } }
   @media (max-width:520px) { .strip .wrap, .grid3 { grid-template-columns:1fr; } nav a { margin-left:14px; } }
+  header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; }
+  nav { display:flex; align-items:center; gap:22px; }
+  nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:15px; white-space:nowrap; }
+  nav a:hover { color:var(--ink); }
+
+  /* Mobile menu: a right-side drawer. No JavaScript — a hidden checkbox drives it, so it works with scripts off
+     and cannot get stuck in a half-open state. One nav element serves as both the desktop row and the mobile drawer, so the
+     links exist once in the markup. */
+  .navt { position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
+  .burger, .scrim, .navclose { display:none; }
+  @media (max-width:720px) {
+    header { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
+
+    .burger { display:flex; flex-direction:column; justify-content:center; gap:5px;
+              width:44px; height:44px; margin-right:-10px; padding:10px; cursor:pointer; z-index:70; }
+    .burger span { display:block; height:2px; border-radius:2px; background:var(--ink,#101828);
+                   transition:transform .25s ease, opacity .2s ease; }
+    .navt:focus-visible ~ .burger { outline:2px solid var(--green,#157347); outline-offset:2px; border-radius:8px; }
+    .navt:checked ~ .burger span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .navt:checked ~ .burger span:nth-child(2) { opacity:0; }
+    .navt:checked ~ .burger span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+
+    .scrim { display:block; position:fixed; inset:0; background:rgba(16,24,40,.45);
+             opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:55; }
+    .navt:checked ~ .scrim { opacity:1; pointer-events:auto; }
+
+    nav { position:fixed; top:0; right:0; height:100dvh; width:min(80vw,320px);
+          flex-direction:column; align-items:stretch; gap:0;
+          background:#fff; box-shadow:-24px 0 48px -24px rgba(16,24,40,.35);
+          padding:72px 24px 32px; z-index:60; overflow-y:auto;
+          transform:translateX(100%); transition:transform .28s cubic-bezier(.4,0,.2,1);
+          visibility:hidden; }
+    .navt:checked ~ nav { transform:translateX(0); visibility:visible; }
+    nav a { font-size:17px; padding:15px 0; border-bottom:1px solid var(--line,#EAECF0); }
+    nav a:last-of-type { border-bottom:0; }
+    .navclose { display:block; position:absolute; top:12px; right:14px; width:44px; height:44px;
+                line-height:44px; text-align:center; font-size:26px; color:var(--muted,#475467); cursor:pointer; }
+
+    /* 64px between sections reads as dead space at phone width */
+    section { padding:44px 0; }
+    h1 { margin-bottom:14px; }
+    h2 { font-size:27px; }
+    .hero { padding:28px 0 24px; gap:32px; }
+    .privacy { padding:26px; border-radius:14px; }
+    .sub { font-size:16px; margin-bottom:24px; }
+  }
+  /* Keep the page still while the drawer is open. Ignored by browsers without :has(), which only means the
+     page can scroll behind the drawer. */
+  body:has(.navt:checked) { overflow:hidden; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <header>
     <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
-    <nav><a href="#how">How it works</a><a href="/renew">Renewing?</a><a href="/rent/">Rent by ZIP</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a></nav>
+    <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="#how">How it&nbsp;works</a><a href="/renew">Renewing?</a><a href="/rent/">Rent by&nbsp;ZIP</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a></nav>
   </header>
 
   <div class="hero">
     <div>
-      <h1>Know what to <em>offer</em> before you pay asking rent.</h1>
-      <p class="lede">Lowball works on top of zillow.com rental listings. Open one and it shows our estimate of fair rent, a suggested opening offer, and a likely landing range. Then it drafts the offer for you.</p>
+      <h1>See which listings are about to <em>drop the price</em>.</h1>
+      <p class="lede">Lowball works on top of zillow.com rental listings. Open one and it tells you how many listings like it have already cut, what a month of sitting empty costs the owner, and what to offer. It shows the difference in dollars a year, not a percentage, and drafts the note for you.</p>
       <div class="cta">
         <a class="btn" href="#install">Add to Chrome, free</a>
         <a class="btn ghost" href="#how">See how it works</a>
       </div>
       <p class="fine">No account. No ads. Data sharing is optional and anonymous. Works on zillow.com listings and search results.</p>
     </div>
-    <img class="shot" src="/img/panel.png" alt="The Lowball panel on a rental listing: open at $2,450 on a $2,900 ask, expect to land near $2,625, with the evidence listed">
+    <img class="shot" src="/img/panel.png" alt="The Lowball panel on a rental listing: 31 days listed and 48% of comparable listings have already cut, so offer $2,175 on a $2,900 ask, expect to land near $2,375, which is $6,300 a year">
   </div>
 </div>
 
@@ -80,15 +129,15 @@
 
 <div class="wrap">
   <section id="how">
-    <h2>How it works</h2>
+    <h2>How it&nbsp;works</h2>
     <p class="sub">Every number comes with its evidence: nearby comps, days on market, price cuts, posted specials, and the listing site's own rent estimate shown for comparison. You see the reasoning, not just a figure.</p>
     <div class="grid3">
-      <div class="card"><div class="num">1</div><h3>Browse rentals like normal</h3><p>Search results get a chip on each card: over by 12%, at market, or under market, with an opening number. Triage the whole page at a glance.</p></div>
-      <div class="card"><div class="num">2</div><h3>Open a listing</h3><p>The panel shows estimated fair rent, a suggested offer, where it is likely to settle, and why. Big buildings get per-unit numbers and the posted specials called out.</p></div>
+      <div class="card"><div class="num">1</div><h3>Browse rentals like normal</h3><p>Search results get a chip on each card: how much a month it asks above similar listings nearby, or at market, or under, with an opening number. Triage the whole page at a glance.</p></div>
+      <div class="card"><div class="num">2</div><h3>Open a listing</h3><p>The panel opens with what happens next: days listed, the share of listings like it that have already cut, and how much longer it is likely to sit. Then the offer, what it saves over a year, and why. Big buildings get per-unit numbers and the posted specials called out.</p></div>
       <div class="card"><div class="num">3</div><h3>Copy the offer</h3><p>One click drafts a polite, evidence-backed note to the landlord with one number and the comps behind it. Paste it, send it, and negotiate from evidence.</p></div>
     </div>
     <div class="badges" style="margin-top:22px">
-      <span class="b red">Cut $150 · Over by 45% · open $2,325</span><span class="b amber">Over by 8% · open $2,650</span><span class="b gray">At market · open $2,275</span><span class="b green">Under market · open $1,925</span>
+      <span class="b red">Cut $150 · $310/mo over comps · open $2,325</span><span class="b amber">$95/mo over comps · open $2,650</span><span class="b gray">At market · open $2,275</span><span class="b green">Under market · open $1,925</span>
     </div>
   </section>
 
@@ -111,7 +160,7 @@
 
   <footer>
     <div><img src="/img/logo.svg" alt="Lowball" class="logo">© 2026 Lowball. Lowball is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Zillow and Zestimate are trademarks of Zillow Group, Inc. Estimates are for information only, not financial, legal, or real estate advice, and not a guarantee of any price or outcome. Confirm fees and terms with the property.</div>
-    <div><a href="/renew">Renewal counter</a> · <a href="/rent/">Rent by ZIP</a> · <a href="/accuracy">Accuracy</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
+    <div><a href="/renew">Renewal counter</a> · <a href="/rent/">Rent by&nbsp;ZIP</a> · <a href="/accuracy">Accuracy</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
   </footer>
 </div>
 </body>
