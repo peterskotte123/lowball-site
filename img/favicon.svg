@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?><svg role="img" aria-label="Lowball" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
 <defs>
 <radialGradient id="lbBall" cx="34%" cy="28%" r="86%">
-<stop offset="0%" stop-color="#2C7150"/><stop offset="30%" stop-color="#215F42"/><stop offset="68%" stop-color="#1A5036"/><stop offset="100%" stop-color="#123725"/>
+<stop offset="0%" stop-color="#2D965F"/><stop offset="30%" stop-color="#1C8251"/><stop offset="68%" stop-color="#157347"/><stop offset="100%" stop-color="#0C4229"/>
 </radialGradient>
 <radialGradient id="lbRim" cx="50%" cy="50%" r="50%">
 <stop offset="0%" stop-color="#000000" stop-opacity="0"/><stop offset="78%" stop-color="#000000" stop-opacity="0"/><stop offset="100%" stop-color="#0B2318" stop-opacity=".55"/>
@@ -10,7 +10,7 @@
 <stop offset="0%" stop-color="#DFEDE5" stop-opacity=".30"/><stop offset="60%" stop-color="#DFEDE5" stop-opacity=".08"/><stop offset="100%" stop-color="#DFEDE5" stop-opacity="0"/>
 </radialGradient>
 <radialGradient id="lbBounce" cx="56%" cy="88%" r="34%">
-<stop offset="0%" stop-color="#7FB398" stop-opacity=".22"/><stop offset="100%" stop-color="#7FB398" stop-opacity="0"/>
+<stop offset="0%" stop-color="#6FCB9B" stop-opacity=".22"/><stop offset="100%" stop-color="#6FCB9B" stop-opacity="0"/>
 </radialGradient>
 <linearGradient id="lbStreak" x1="0.1" y1="0" x2="0.9" y2="1">
 <stop offset="0%" stop-color="#F2F8F4" stop-opacity=".95"/><stop offset="70%" stop-color="#F2F8F4" stop-opacity=".45"/><stop offset="100%" stop-color="#F2F8F4" stop-opacity="0"/>
