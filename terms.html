@@ -16,7 +16,6 @@
   nav { display:flex; align-items:center; gap:22px; }
   nav a { color:#475467; text-decoration:none; font-weight:500; font-size:15px; white-space:nowrap; }
   nav a:hover { color:#101828; }
-
   /* Mobile menu: a right-side drawer. No JavaScript — a hidden checkbox drives it, so it works with scripts off
      and cannot get stuck in a half-open state. One nav element serves as both the desktop row and the mobile drawer, so the
      links exist once in the markup. */
@@ -24,7 +23,6 @@
   .burger, .scrim, .navclose { display:none; }
   @media (max-width:720px) {
     header { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
-
     .burger { display:flex; flex-direction:column; justify-content:center; gap:5px;
               width:44px; height:44px; margin-right:-10px; padding:10px; cursor:pointer; z-index:70; }
     .burger span { display:block; height:2px; border-radius:2px; background:var(--ink,#101828);
@@ -33,11 +31,9 @@
     .navt:checked ~ .burger span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
     .navt:checked ~ .burger span:nth-child(2) { opacity:0; }
     .navt:checked ~ .burger span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-
     .scrim { display:block; position:fixed; inset:0; background:rgba(16,24,40,.45);
              opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:55; }
     .navt:checked ~ .scrim { opacity:1; pointer-events:auto; }
-
     nav { position:fixed; top:0; right:0; height:100dvh; width:min(80vw,320px);
           flex-direction:column; align-items:stretch; gap:0;
           background:#fff; box-shadow:-24px 0 48px -24px rgba(16,24,40,.35);
@@ -49,7 +45,6 @@
     nav a:last-of-type { border-bottom:0; }
     .navclose { display:block; position:absolute; top:12px; right:14px; width:44px; height:44px;
                 line-height:44px; text-align:center; font-size:26px; color:var(--muted,#475467); cursor:pointer; }
-
     /* 64px between sections reads as dead space at phone width */
     section { padding:44px 0; }
     h1 { margin-bottom:14px; }
@@ -62,52 +57,38 @@
      page can scroll behind the drawer. */
   body:has(.navt:checked) { overflow:hidden; }
 </style>
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/terms"><meta property="og:title" content="Terms"><meta property="og:description" content="Terms of use for Lowball."><meta property="og:image" content="https://lowball.rent/img/share/home.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Terms"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Terms"><meta name="twitter:description" content="Terms of use for Lowball."><meta name="twitter:image" content="https://lowball.rent/img/share/home.png">
 </head>
 <body><div class="wrap">
   <header><a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a><input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="/">Extension</a><a href="/renew">Renewing?</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a></nav></header>
   <h1>Terms of Use</h1>
 <p class="muted">Effective September 9, 2026</p>
-
 <!-- ENTITY: when the LLC is formed, replace "Lowball" here and the governing-law section, and the footer of index.html -->
 <p>These terms are an agreement between you and Lowball, the operator of the Lowball Chrome extension, lowball.rent, and api.lowball.rent (together, "Lowball"). By installing the extension or using the site, you agree to them. If you do not agree, do not use Lowball.</p>
-
 <h2>1. What Lowball is</h2>
 <p>Lowball shows estimates of fair rent, suggested opening offers, and likely landing ranges for rental listings you view on zillow.com, and drafts a message you can send to a landlord. The estimates come from a statistical model trained on listing data, public rent indexes, and, where you opt in, listings shared by other users.</p>
-
 <h2>2. Estimates are information, not advice</h2>
 <p>Every number Lowball shows is an estimate. It is not financial, legal, real estate, or investment advice, and Lowball is not a real estate broker, agent, or attorney. Estimates can be wrong, out of date, or based on incomplete listing data. Before you offer, rent, or sign anything, confirm the price, fees, availability, and lease terms with the property and use your own judgment.</p>
-
 <h2>3. No guarantee of accuracy or outcome</h2>
 <p>Lowball does not promise that any estimate is accurate, that a landlord will accept any offer, that you will pay less than asking rent, or that a listing will cut its price. Market statistics on the site describe past data for specific areas and time periods and do not predict what will happen with any listing.</p>
-
 <h2>4. Your offers are yours</h2>
 <p>Lowball drafts text. You decide whether to send it, to whom, and what to change. You are responsible for every message you send, for its accuracy, and for any application, lease, or payment that follows. Do not represent that a landlord or Zillow has endorsed an offer.</p>
-
 <h2>5. Not affiliated with Zillow or any landlord</h2>
 <p>Lowball is an independent product. It is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. or any landlord, property manager, or listing source. Zillow and Zestimate are trademarks of Zillow Group, Inc. Your use of zillow.com is governed by Zillow's own terms, and you are responsible for complying with them.</p>
-
 <h2>6. Acceptable use</h2>
 <p>You may use Lowball only for your own personal rental search. Do not use it to scrape, collect, or redistribute listing data at scale, to harass or spam landlords, to send offers you do not intend to honor, to discriminate against anyone, to interfere with Zillow or with Lowball's servers, or to reverse engineer or resell the service. You must be at least 18 years old. Lowball may suspend access for misuse.</p>
-
 <h2>7. Data</h2>
 <p>What the extension reads and sends is described in the <a href="/privacy">Privacy Policy</a>, which is part of these terms. Listing data you choose to share is used to improve estimates for everyone.</p>
-
 <h2>8. Disclaimer of warranties</h2>
 <p>Lowball is provided "as is" and "as available". To the fullest extent permitted by law, Lowball disclaims all warranties, express or implied, including merchantability, fitness for a particular purpose, and non-infringement, and does not warrant that the service will be accurate, uninterrupted, or error-free.</p>
-
 <h2>9. Limitation of liability</h2>
 <p>To the fullest extent permitted by law, Lowball is not liable for any indirect, incidental, special, consequential, or punitive damages, or for any lost savings, lost housing opportunity, lost profits, or lost data, arising from your use of Lowball. Lowball's total liability for any claim is limited to fifty dollars (US $50). Some jurisdictions do not allow certain limitations, so parts of this section may not apply to you.</p>
-
 <h2>10. Changes</h2>
 <p>Lowball may change these terms or the service at any time. Material changes will be posted on this page with a new effective date. Continued use after a change means you accept it.</p>
-
 <h2>11. Governing law</h2>
 <p>These terms are governed by the laws of the State of California, without regard to conflict-of-law rules. Any dispute will be heard in the state or federal courts located in San Diego County, California, and you consent to their jurisdiction.</p>
-
 <h2>12. California residents</h2>
 <p>Under California Civil Code section 1789.3, you may contact the Complaint Assistance Unit of the Division of Consumer Services of the California Department of Consumer Affairs at 1625 North Market Blvd., Suite N 112, Sacramento, CA 95834, or by telephone at (800) 952-5210.</p>
-
 <h2>13. Contact</h2>
 <p>Questions about these terms: <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></p>
-
 </div></body></html>

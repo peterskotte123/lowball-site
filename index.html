@@ -5,7 +5,6 @@
 <title>Lowball</title>
 <meta name="description" content="A free Chrome extension that shows our estimate of fair rent, a suggested opening offer, and a likely landing range on every rental listing you open, as you browse.">
 <link rel="icon" type="image/svg+xml" href="/img/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png"><link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
-<meta property="og:title" content="Lowball"><meta property="og:description" content="See estimated fair rent and a suggested opening offer on every rental listing you open."><meta property="og:image" content="https://lowball.rent/img/panel.png">
 <style>
   :root { --ink:#101828; --muted:#475467; --line:#EAECF0; --paper:#fff; --soft:#F8FAFC; --green:#157347; --amber:#B45309; --red:#B42318; }
   * { box-sizing:border-box; }
@@ -52,7 +51,6 @@
   nav { display:flex; align-items:center; gap:22px; }
   nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:15px; white-space:nowrap; }
   nav a:hover { color:var(--ink); }
-
   /* Mobile menu: a right-side drawer. No JavaScript — a hidden checkbox drives it, so it works with scripts off
      and cannot get stuck in a half-open state. One nav element serves as both the desktop row and the mobile drawer, so the
      links exist once in the markup. */
@@ -60,7 +58,6 @@
   .burger, .scrim, .navclose { display:none; }
   @media (max-width:720px) {
     header { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
-
     .burger { display:flex; flex-direction:column; justify-content:center; gap:5px;
               width:44px; height:44px; margin-right:-10px; padding:10px; cursor:pointer; z-index:70; }
     .burger span { display:block; height:2px; border-radius:2px; background:var(--ink,#101828);
@@ -69,11 +66,9 @@
     .navt:checked ~ .burger span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
     .navt:checked ~ .burger span:nth-child(2) { opacity:0; }
     .navt:checked ~ .burger span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-
     .scrim { display:block; position:fixed; inset:0; background:rgba(16,24,40,.45);
              opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:55; }
     .navt:checked ~ .scrim { opacity:1; pointer-events:auto; }
-
     nav { position:fixed; top:0; right:0; height:100dvh; width:min(80vw,320px);
           flex-direction:column; align-items:stretch; gap:0;
           background:#fff; box-shadow:-24px 0 48px -24px rgba(16,24,40,.35);
@@ -85,7 +80,6 @@
     nav a:last-of-type { border-bottom:0; }
     .navclose { display:block; position:absolute; top:12px; right:14px; width:44px; height:44px;
                 line-height:44px; text-align:center; font-size:26px; color:var(--muted,#475467); cursor:pointer; }
-
     /* 64px between sections reads as dead space at phone width */
     section { padding:44px 0; }
     h1 { margin-bottom:14px; }
@@ -98,6 +92,7 @@
      page can scroll behind the drawer. */
   body:has(.navt:checked) { overflow:hidden; }
 </style>
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/"><meta property="og:title" content="Lowball"><meta property="og:description" content="See which listings are about to drop the price. Fair-rent estimates and an opening offer on every Zillow rental listing you open."><meta property="og:image" content="https://lowball.rent/img/share/home.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Lowball"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Lowball"><meta name="twitter:description" content="See which listings are about to drop the price. Fair-rent estimates and an opening offer on every Zillow rental listing you open."><meta name="twitter:image" content="https://lowball.rent/img/share/home.png">
 </head>
 <body>
 <div class="wrap">
@@ -105,7 +100,6 @@
     <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
     <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="#how">How it&nbsp;works</a><a href="/renew">Renewing?</a><a href="/rent/">Rent by&nbsp;ZIP</a><a href="/accuracy">Accuracy</a><a href="/roulette">Roulette</a><a href="/privacy">Privacy</a></nav>
   </header>
-
   <div class="hero">
     <div>
       <h1>See which listings are about to <em>drop the price</em>.</h1>
@@ -119,14 +113,12 @@
     <img class="shot" src="/img/panel.png" alt="The Lowball panel on a rental listing: 31 days listed and 48% of comparable listings have already cut, so offer $2,175 on a $2,900 ask, expect to land near $2,375, which is $6,300 a year">
   </div>
 </div>
-
 <div class="strip"><div class="wrap">
   <div class="stat"><b>1 in 3</b><span>San Diego listings cut price before they rent</span></div>
   <div class="stat"><b>4%</b><span>median San Diego cut, larger the longer a listing sits</span></div>
   <div class="stat"><b>45%</b><span>of San Diego listings older than 30 days have already cut</span></div>
   <div class="stat"><b>$0</b><span>to install and use</span></div>
 </div><div class="wrap"><p class="fine" style="margin:14px 0 0">From our September 2026 snapshot of San Diego County rentals. Past cuts do not predict any one listing.</p></div></div>
-
 <div class="wrap">
   <section id="how">
     <h2>How it&nbsp;works</h2>
@@ -140,14 +132,12 @@
       <span class="b red">Cut $150 · $310/mo over comps · open $2,325</span><span class="b amber">$95/mo over comps · open $2,650</span><span class="b gray">At market · open $2,275</span><span class="b green">Under market · open $1,925</span>
     </div>
   </section>
-
   <section id="install">
     <h2>Install</h2>
     <p class="sub">Lowball is a Chrome extension. It runs only on zillow.com and talks to one server, ours, to score listings.</p>
     <a class="btn" href="https://chrome.google.com/webstore" rel="noopener">Add to Chrome</a>
     <p class="fine">Chrome Web Store listing pending review. Until then, ask us for the direct install link.</p>
   </section>
-
   <section id="privacy">
     <div class="privacy">
       <div>
@@ -157,7 +147,6 @@
       <div><a class="btn ghost" href="/privacy">Read the privacy policy</a></div>
     </div>
   </section>
-
   <footer>
     <div><img src="/img/logo.svg" alt="Lowball" class="logo">© 2026 Lowball. Lowball is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Zillow and Zestimate are trademarks of Zillow Group, Inc. Estimates are for information only, not financial, legal, or real estate advice, and not a guarantee of any price or outcome. Confirm fees and terms with the property.</div>
     <div><a href="/roulette">Rent roulette</a> · <a href="/renew">Renewal counter</a> · <a href="/rent/">Rent by&nbsp;ZIP</a> · <a href="/accuracy">Accuracy</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>

@@ -41,7 +41,6 @@
   nav { display:flex; align-items:center; gap:22px; }
   nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:15px; white-space:nowrap; }
   nav a:hover { color:var(--ink); }
-
   /* Mobile menu: a right-side drawer. No JavaScript — a hidden checkbox drives it, so it works with scripts off
      and cannot get stuck in a half-open state. One nav element serves as both the desktop row and the mobile drawer, so the
      links exist once in the markup. */
@@ -49,7 +48,6 @@
   .burger, .scrim, .navclose { display:none; }
   @media (max-width:720px) {
     header { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
-
     .burger { display:flex; flex-direction:column; justify-content:center; gap:5px;
               width:44px; height:44px; margin-right:-10px; padding:10px; cursor:pointer; z-index:70; }
     .burger span { display:block; height:2px; border-radius:2px; background:var(--ink,#101828);
@@ -58,11 +56,9 @@
     .navt:checked ~ .burger span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
     .navt:checked ~ .burger span:nth-child(2) { opacity:0; }
     .navt:checked ~ .burger span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-
     .scrim { display:block; position:fixed; inset:0; background:rgba(16,24,40,.45);
              opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:55; }
     .navt:checked ~ .scrim { opacity:1; pointer-events:auto; }
-
     nav { position:fixed; top:0; right:0; height:100dvh; width:min(80vw,320px);
           flex-direction:column; align-items:stretch; gap:0;
           background:#fff; box-shadow:-24px 0 48px -24px rgba(16,24,40,.35);
@@ -74,7 +70,6 @@
     nav a:last-of-type { border-bottom:0; }
     .navclose { display:block; position:absolute; top:12px; right:14px; width:44px; height:44px;
                 line-height:44px; text-align:center; font-size:26px; color:var(--muted,#475467); cursor:pointer; }
-
     /* 64px between sections reads as dead space at phone width */
     section { padding:44px 0; }
     h1 { margin-bottom:14px; }
@@ -87,6 +82,7 @@
      page can scroll behind the drawer. */
   body:has(.navt:checked) { overflow:hidden; }
 </style>
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/renew"><meta property="og:title" content="Renewal counter"><meta property="og:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta property="og:image" content="https://lowball.rent/img/share/renew.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Renewal counter"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Renewal counter"><meta name="twitter:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta name="twitter:image" content="https://lowball.rent/img/share/renew.png">
 </head>
 <body>
 <div class="wrap">
@@ -94,10 +90,8 @@
     <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
     <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="/">Extension</a><a href="/privacy">Privacy</a><a href="/terms">Terms</a></nav>
   </header>
-
   <h1>Renewing? Counter with the market, not a guess.</h1>
   <p class="lede">Put in what you pay, what they want, and the unit. You get what comparable units rent for today, what your leaving would cost the landlord, a number to counter with, and the letter.</p>
-
   <div class="two">
     <form id="f" autocomplete="off">
       <div class="row">
@@ -122,7 +116,6 @@
       <div class="err" id="err"></div>
       <p class="fine">Nothing you type is stored with your name. The estimate uses public listing data and our San Diego model; outside San Diego it uses a public rent index and is rougher. Not advice or a guarantee.</p>
     </form>
-
     <div class="result" id="res">
       <div class="label" id="ctrLabel">Counter at</div>
       <div class="hero-num" id="counter">$0</div>
@@ -140,7 +133,6 @@
       <p class="fine">Not legal advice. Rent-increase limits depend on your city, building age, and owner; the state cap may not apply. Verify at oag.ca.gov/housing or with a local tenant-rights group. Check that the comps are still listed before you send; you are responsible for what you send.</p>
     </div>
   </div>
-
   <footer>
     <div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc.</div>
     <div><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
