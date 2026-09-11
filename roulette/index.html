@@ -54,6 +54,8 @@
   .mutebtn { margin-left:8px; border:1px solid #D0D5DD; background:#fff; color:var(--muted); border-radius:999px;
              padding:4px 11px; font:inherit; font-size:12px; font-weight:600; cursor:pointer; }
   .mutebtn[aria-pressed="true"] { color:#98A2B3; }
+  .soundnote { margin:8px 0 0; text-align:center; font-size:13px; color:var(--amber); max-width:30em; }
+  .soundnote[hidden] { display:none; }
   .hub { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:19%; height:19%; border-radius:50%;
          background:#fff; box-shadow:0 2px 10px rgba(16,24,40,.25); display:grid; place-items:center; z-index:2; }
   .hub img { width:64%; height:auto; display:block; }
@@ -66,6 +68,7 @@
   .result { width:min(100%,460px); margin-top:28px; border:1px solid var(--line); border-radius:16px; padding:22px; background:#fff;
             box-shadow:0 16px 40px -26px rgba(16,24,40,.4); }
   .result[hidden] { display:none; }
+  .result .addr { font-size:21px; font-weight:800; letter-spacing:-0.01em; line-height:1.25; margin:0 0 2px; }
   .result .where { font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:700; }
   .result .price { font-size:40px; font-weight:800; letter-spacing:-0.02em; margin:2px 0 2px; }
   .result .facts { color:var(--muted); font-size:15px; margin:0 0 16px; }
@@ -185,11 +188,13 @@
         <div class="hub" aria-hidden="true"><img src="/img/mark.svg" alt=""></div>
       </div>
       <p class="fine" id="flick">Flick it with your thumb, or use the button.
-        <button type="button" id="mute" class="mutebtn" aria-pressed="false" title="Mute the clicks">&#128266; Sound on</button></p>
+        <button type="button" id="mute" class="mutebtn" aria-pressed="false" title="Mute the sound">&#128266; Sound on</button></p>
+      <p class="soundnote" id="soundnote" hidden></p>
       <button class="spin" id="spin" disabled>Spin the wheel</button>
       <p class="fine" id="hint" style="margin-top:12px;text-align:center">&nbsp;</p>
 
       <div class="result" id="result" hidden aria-live="polite">
+        <div class="addr" id="rAddr"></div>
         <div class="where" id="rWhere"></div>
         <div class="price" id="rPrice"></div>
         <p class="facts" id="rFacts"></p>
@@ -261,6 +266,30 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
     return clip;
   }
 
+  // iOS and desktop Chrome both gate playback on a real gesture, and an iPhone's physical silent switch mutes HTML
+  // audio outright. So: unlock inside the gesture that starts a spin, and if the browser refuses, say so on screen
+  // instead of failing quietly, which is what happened the first time.
+  var unlocked = false;
+
+  function unlock() {
+    var ctx = audio();                                 // resumes the click oscillators
+    var c = clipEl();
+    if (unlocked) return;
+    var pr = c.play();
+    if (pr && pr.then) {
+      pr.then(function () { c.pause(); try { c.currentTime = START_AT; } catch (e) {} unlocked = true; soundNote(''); })
+        .catch(function (err) { soundNote(err && err.name === 'NotAllowedError'
+          ? 'Tap the sound button once to allow audio.'
+          : 'Your device is not letting the page play audio. On an iPhone, check the silent switch.'); });
+    } else { unlocked = true; }
+  }
+
+  function soundNote(msg) {
+    var el = $('soundnote'); if (!el) return;
+    el.textContent = msg || '';
+    el.hidden = !msg;
+  }
+
   function clipStart() {
     if (muted) return;
     var c = clipEl();
@@ -268,7 +297,11 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
     try { c.currentTime = START_AT; } catch (e) {}
     c.volume = 0.85;
     var pr = c.play();
-    if (pr && pr.catch) pr.catch(function () {});      // a browser that refuses without a gesture: clicks still play
+    if (pr && pr.catch) pr.catch(function (err) {
+      soundNote(err && err.name === 'NotAllowedError'
+        ? 'Tap the sound button once to allow audio.'
+        : 'Your device is not letting the page play audio. On an iPhone, check the silent switch.');
+    });
   }
 
   function clipStop() {
@@ -423,7 +456,8 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
     var parts = [beds, (ba ? (ba % 1 ? ba.toFixed(1) : ba) + ' bath' : null),
                  (D.sqft[i] ? D.sqft[i].toLocaleString('en-US') + ' sq ft' : null),
                  D.types[D.type[i]]];
-    $('rWhere').textContent = D.cities[D.city[i]] + ' \u00b7 ' + D.zip[i];
+    $('rAddr').textContent = D.addr[i] || D.cities[D.city[i]];
+    $('rWhere').textContent = D.cities[D.city[i]] + ', CA ' + D.zip[i];
     $('rPrice').textContent = money(D.price[i]) + '/mo';
     $('rFacts').textContent = parts.filter(Boolean).join(' \u00b7 ');
     var v = verdict(i);
@@ -437,7 +471,7 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
     // without it, it opens the listing on the web. No custom scheme, which fails silently when the app is absent.
     $('rLink').href = 'https://www.zillow.com/homedetails/' + D.zpid[i] + '_zpid/';
     $('rAsof').textContent = 'From our snapshot of ' + D.asof + '. It may have rented or changed price since, and the'
-      + ' address stays on Zillow rather than here. Estimates are not advice or a guarantee.';
+      + ' Estimates are not advice or a guarantee.';
     $('result').hidden = false;
     // On a phone the card sits below the wheel, so bring it to the eye rather than leaving them to scroll.
     try { $('result').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
@@ -510,18 +544,15 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
       $(id).addEventListener('input', refilter);
       $(id).addEventListener('change', refilter);
     });
-    $('wheel').addEventListener('pointerdown', function () {                // a flick is a gesture too
-      audio();
-      if (!muted) { var c = clipEl(); c.load(); }                           // unlock playback on iOS
-    });
+    $('wheel').addEventListener('pointerdown', function () { unlock(); });  // a flick is a gesture too
     $('mute').addEventListener('click', function () {
       muted = !muted;
       $('mute').setAttribute('aria-pressed', muted ? 'true' : 'false');
       $('mute').innerHTML = muted ? '\uD83D\uDD07 Sound off' : '\uD83D\uDD0A Sound on';
-      if (muted) clipStop();
+      if (muted) { clipStop(); soundNote(''); } else { unlock(); }
     });
-    $('spin').addEventListener('click', spin);
-    $('again').addEventListener('click', spin);
+    $('spin').addEventListener('click', function () { unlock(); spin(); });
+    $('again').addEventListener('click', function () { unlock(); spin(); });
     refilter();
   }).catch(function (e) {
     $('count').classList.add('none');
