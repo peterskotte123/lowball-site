@@ -223,11 +223,11 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
     if (actx.state === 'suspended') actx.resume();     // browsers need a gesture first; a spin or a flick is one
     return actx;
   }
-  // The spin track. Measured with ffmpeg: the clip opens near-silent (-116dB) and only reaches full level about ten
-  // seconds in, so starting at 0 would play almost nothing under a five-second spin. START_AT drops the needle where
-  // it is already loud. Change that one number to move which part plays.
-  var START_AT = 8.0;
+  // The spin track. The file itself is trimmed to start on the loud part and to drop the TikTok tag off the end,
+  // so playback is always from 0. Nothing seeks. An earlier version played from 8s into a longer file, and setting
+  // currentTime before the media had loaded was a silent no-op on a cold page.
   var clip = null, clipFade = null;
+
   function clipEl() {
     if (!clip) {
       clip = new Audio('./spin.m4a');
@@ -236,40 +236,33 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
     }
     return clip;
   }
-  // iOS and desktop Chrome both gate playback on a real gesture, and an iPhone's physical silent switch mutes HTML
-  // audio outright. So: unlock inside the gesture that starts a spin, and if the browser refuses, say so on screen
-  // instead of failing quietly, which is what happened the first time.
-  var unlocked = false;
-  function unlock() {
-    var ctx = audio();                                 // resumes the click oscillators
-    var c = clipEl();
-    if (unlocked) return;
-    var pr = c.play();
-    if (pr && pr.then) {
-      pr.then(function () { c.pause(); try { c.currentTime = START_AT; } catch (e) {} unlocked = true; soundNote(''); })
-        .catch(function (err) { soundNote(err && err.name === 'NotAllowedError'
-          ? 'Tap the sound button once to allow audio.'
-          : 'Your device is not letting the page play audio. On an iPhone, check the silent switch.'); });
-    } else { unlocked = true; }
-  }
+
   function soundNote(msg) {
     var el = $('soundnote'); if (!el) return;
     el.textContent = msg || '';
     el.hidden = !msg;
   }
+
+  function refused(err) {
+    soundNote(err && err.name === 'NotAllowedError'
+      ? 'Tap the sound button once to allow audio.'
+      : 'Your device is not letting the page play audio. On an iPhone, check the silent switch.');
+  }
+
+  // No play-then-pause unlock. That version raced: its play() promise resolved after a spin had already started the
+  // track, and its .then() paused the very thing that was supposed to be playing, so the FIRST spin after a page
+  // load was always silent and every one after it worked. Which is exactly what "sometimes" looks like.
+  // clipStart() is reached synchronously from the click or the flick, so it is inside the user gesture already.
   function clipStart() {
     if (muted) return;
     var c = clipEl();
     if (clipFade) { clearInterval(clipFade); clipFade = null; }
-    try { c.currentTime = START_AT; } catch (e) {}
+    try { c.currentTime = 0; } catch (e) {}
     c.volume = 0.85;
     var pr = c.play();
-    if (pr && pr.catch) pr.catch(function (err) {
-      soundNote(err && err.name === 'NotAllowedError'
-        ? 'Tap the sound button once to allow audio.'
-        : 'Your device is not letting the page play audio. On an iPhone, check the silent switch.');
-    });
+    if (pr && pr.then) pr.then(function () { soundNote(''); }).catch(refused);
   }
+
   function clipStop() {
     if (!clip) return;
     var c = clip;
@@ -279,6 +272,7 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
       if (c.volume <= 0.001) { clearInterval(clipFade); clipFade = null; c.pause(); }
     }, 28);
   }
+
   var noiseBuf = null;
   function noise(ctx) {
     if (!noiseBuf) {
@@ -492,15 +486,15 @@ import { Wheel } from './vendor/spin-wheel-esm.js';
       $(id).addEventListener('input', refilter);
       $(id).addEventListener('change', refilter);
     });
-    $('wheel').addEventListener('pointerdown', function () { unlock(); });  // a flick is a gesture too
+    $('wheel').addEventListener('pointerdown', function () { audio(); });   // resume the click oscillators
     $('mute').addEventListener('click', function () {
       muted = !muted;
       $('mute').setAttribute('aria-pressed', muted ? 'true' : 'false');
       $('mute').innerHTML = muted ? '\uD83D\uDD07 Sound off' : '\uD83D\uDD0A Sound on';
-      if (muted) { clipStop(); soundNote(''); } else { unlock(); }
+      if (muted) { clipStop(); soundNote(''); } else { audio(); }
     });
-    $('spin').addEventListener('click', function () { unlock(); spin(); });
-    $('again').addEventListener('click', function () { unlock(); spin(); });
+    $('spin').addEventListener('click', function () { audio(); spin(); });
+    $('again').addEventListener('click', function () { audio(); spin(); });
     refilter();
   }).catch(function (e) {
     $('count').classList.add('none');
