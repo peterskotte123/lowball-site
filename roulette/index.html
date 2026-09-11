@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rent roulette</title>
+<meta name="description" content="Set your criteria, spin the wheel, and land on a random real San Diego County rental from our snapshot, with our estimate of what it is worth.">
+<link rel="canonical" href="https://lowball.rent/roulette">
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png"><link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
+<meta property="og:title" content="Rent roulette"><meta property="og:description" content="Spin the wheel and land on a random rental that matches your criteria.">
+<style>
+  :root { --ink:#101828; --muted:#475467; --line:#EAECF0; --paper:#fff; --soft:#F8FAFC; --green:#157347; --amber:#B45309; --red:#B42318; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif; color:var(--ink); background:var(--paper); }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+  header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; }
+  .brand { display:flex; align-items:center; gap:10px; font-weight:800; font-size:18px; text-decoration:none; color:var(--ink); }
+  .brand img.logo { height:38px; width:auto; display:block; }
+  nav { display:flex; align-items:center; gap:22px; }
+  nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:15px; white-space:nowrap; }
+  nav a:hover { color:var(--ink); }
+  h1 { font-size:clamp(32px,4.6vw,48px); line-height:1.06; letter-spacing:-0.02em; margin:18px 0 12px; }
+  h1 em { font-style:normal; color:var(--green); }
+  .lede { font-size:18px; color:var(--muted); max-width:36em; margin:0 0 28px; }
+  .fine { font-size:13px; color:#98A2B3; }
+
+  .board { display:grid; grid-template-columns: 340px 1fr; gap:36px; align-items:start; padding-bottom:56px; }
+
+  .panel { background:var(--soft); border:1px solid var(--line); border-radius:16px; padding:20px; }
+  .panel h2 { font-size:17px; margin:0 0 4px; }
+  .panel .fine { margin:0 0 16px; }
+  .field { margin-bottom:16px; }
+  .field label { display:block; font-size:13px; font-weight:600; color:var(--muted); margin-bottom:6px; }
+  select, input[type=number] { width:100%; padding:10px 12px; border:1px solid #D0D5DD; border-radius:9px; font:inherit; font-size:15px; background:#fff; color:var(--ink); }
+  .pair { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .chips { display:flex; flex-wrap:wrap; gap:7px; }
+  .chip { padding:7px 13px; border:1px solid #D0D5DD; border-radius:999px; background:#fff; font-size:14px; font-weight:600; color:var(--muted); cursor:pointer; user-select:none; }
+  .chip[aria-pressed="true"] { background:var(--ink); border-color:var(--ink); color:#fff; }
+  .toggle { display:flex; align-items:flex-start; gap:10px; font-size:14px; color:#344054; cursor:pointer; }
+  .toggle input { margin-top:3px; width:18px; height:18px; flex:0 0 auto; accent-color:var(--green); }
+  .count { font-size:15px; font-weight:700; padding:12px 0 2px; border-top:1px solid var(--line); margin-top:4px; }
+  .count span { color:var(--green); }
+  .count.none span { color:var(--red); }
+
+  .stage { display:flex; flex-direction:column; align-items:center; }
+  .wheelbox { position:relative; width:min(100%, 420px); aspect-ratio:1; }
+  .pointer { position:absolute; top:-2px; left:50%; transform:translateX(-50%); width:0; height:0;
+             border-left:13px solid transparent; border-right:13px solid transparent; border-top:22px solid var(--ink); z-index:3;
+             filter:drop-shadow(0 2px 3px rgba(16,24,40,.25)); }
+  .wheel { width:100%; height:100%; border-radius:50%; overflow:hidden; touch-action:none; cursor:grab;
+           box-shadow:0 20px 50px -22px rgba(16,24,40,.5), 0 0 0 8px #fff, 0 0 0 10px var(--line); }
+  .wheel canvas { display:block; }
+  .wheel:active { cursor:grabbing; }
+  #flick { margin:14px 0 0; text-align:center; }
+  .mutebtn { margin-left:8px; border:1px solid #D0D5DD; background:#fff; color:var(--muted); border-radius:999px;
+             padding:4px 11px; font:inherit; font-size:12px; font-weight:600; cursor:pointer; }
+  .mutebtn[aria-pressed="true"] { color:#98A2B3; }
+  .hub { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); width:19%; height:19%; border-radius:50%;
+         background:#fff; box-shadow:0 2px 10px rgba(16,24,40,.25); display:grid; place-items:center; z-index:2; }
+  .hub img { width:64%; height:auto; display:block; }
+
+  .spin { margin-top:26px; display:inline-flex; align-items:center; gap:9px; padding:15px 34px; border:0; border-radius:12px;
+          background:var(--ink); color:#fff; font:inherit; font-weight:700; font-size:17px; cursor:pointer; }
+  .spin:hover:not(:disabled) { background:#1D2939; }
+  .spin:disabled { opacity:.45; cursor:not-allowed; }
+
+  .result { width:min(100%,460px); margin-top:28px; border:1px solid var(--line); border-radius:16px; padding:22px; background:#fff;
+            box-shadow:0 16px 40px -26px rgba(16,24,40,.4); }
+  .result[hidden] { display:none; }
+  .result .where { font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); font-weight:700; }
+  .result .price { font-size:40px; font-weight:800; letter-spacing:-0.02em; margin:2px 0 2px; }
+  .result .facts { color:var(--muted); font-size:15px; margin:0 0 16px; }
+  .verdict { font-weight:700; font-size:15px; margin:0 0 14px; }
+  .verdict.over { color:var(--red); } .verdict.fair { color:var(--muted); } .verdict.under { color:#067647; }
+  .rgrid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:16px; }
+  .rgrid div { background:var(--soft); border:1px solid var(--line); border-radius:10px; padding:10px; }
+  .rgrid b { display:block; font-size:17px; } .rgrid span { font-size:12px; color:var(--muted); }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:10px; background:var(--ink); color:#fff; font-weight:600; text-decoration:none; font-size:15px; }
+  .btn.ghost { background:#fff; color:var(--ink); border:1px solid #D0D5DD; }
+  .ractions { display:flex; gap:10px; flex-wrap:wrap; }
+
+  footer { border-top:1px solid var(--line); padding:26px 0 40px; font-size:13px; color:#98A2B3; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  footer a { color:#667085; }
+  .nojs { background:#FEF0C7; border:1px solid #FEDF89; color:#7A2E0E; border-radius:10px; padding:12px 14px; margin:0 0 20px; }
+
+  .navt { position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
+  .burger, .scrim, .navclose { display:none; }
+  @media (max-width:900px) { .board { grid-template-columns:1fr; gap:28px; } .stage { order:-1; } }
+  @media (max-width:720px) {
+    header { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
+    .burger { display:flex; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px; margin-right:-10px; padding:10px; cursor:pointer; z-index:70; }
+    .burger span { display:block; height:2px; border-radius:2px; background:var(--ink); transition:transform .25s ease, opacity .2s ease; }
+    .navt:focus-visible ~ .burger { outline:2px solid var(--green); outline-offset:2px; border-radius:8px; }
+    .navt:checked ~ .burger span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .navt:checked ~ .burger span:nth-child(2) { opacity:0; }
+    .navt:checked ~ .burger span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .scrim { display:block; position:fixed; inset:0; background:rgba(16,24,40,.45); opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:55; }
+    .navt:checked ~ .scrim { opacity:1; pointer-events:auto; }
+    nav { position:fixed; top:0; right:0; height:100dvh; width:min(80vw,320px); flex-direction:column; align-items:stretch; gap:0;
+          background:#fff; box-shadow:-24px 0 48px -24px rgba(16,24,40,.35); padding:72px 24px 32px; z-index:60; overflow-y:auto;
+          transform:translateX(100%); transition:transform .28s cubic-bezier(.4,0,.2,1); visibility:hidden; }
+    .navt:checked ~ nav { transform:translateX(0); visibility:visible; }
+    nav a { font-size:17px; padding:15px 0; border-bottom:1px solid var(--line); }
+    nav a:last-of-type { border-bottom:0; }
+    .navclose { display:block; position:absolute; top:12px; right:14px; width:44px; height:44px; line-height:44px; text-align:center; font-size:26px; color:var(--muted); cursor:pointer; }
+    .result .price { font-size:34px; }
+  }
+  body:has(.navt:checked) { overflow:hidden; }
+  @media (prefers-reduced-motion: reduce) { .pointer { transition:none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
+    <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">&times;</label><a href="/">Extension</a><a href="/renew">Renewing?</a><a href="/rent/">Rent by&nbsp;ZIP</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a></nav>
+  </header>
+
+  <h1>Rent <em>roulette</em>.</h1>
+  <p class="lede">Set the criteria, spin the wheel, and land on a real rental that matches. Every result comes with our
+  estimate of what it is actually worth, so you find out whether the one fate handed you is a deal or a stretch.</p>
+
+  <noscript><p class="nojs">The wheel needs JavaScript to spin. Everything else on the site works without it.</p></noscript>
+
+  <div class="board">
+    <form class="panel" id="filters" onsubmit="return false">
+      <h2>Your criteria</h2>
+      <p class="fine">San Diego County, from our own snapshot.</p>
+
+      <div class="field">
+        <label id="bedsLabel">Bedrooms</label>
+        <div class="chips" role="group" aria-labelledby="bedsLabel" id="beds"></div>
+      </div>
+
+      <div class="field">
+        <label>Monthly rent</label>
+        <div class="pair">
+          <input type="number" id="pmin" placeholder="Min" min="0" step="100" inputmode="numeric" aria-label="Minimum rent">
+          <input type="number" id="pmax" placeholder="Max" min="0" step="100" inputmode="numeric" aria-label="Maximum rent">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="ptype">Property type</label>
+        <select id="ptype"><option value="">Any</option></select>
+      </div>
+
+      <div class="field">
+        <label for="city">City</label>
+        <select id="city"><option value="">Anywhere in the county</option></select>
+      </div>
+
+      <div class="field">
+        <label for="mins">Minimum size</label>
+        <select id="mins">
+          <option value="">Any size</option>
+          <option value="500">500 sq ft and up</option>
+          <option value="750">750 sq ft and up</option>
+          <option value="1000">1,000 sq ft and up</option>
+          <option value="1500">1,500 sq ft and up</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label for="days">Days on market</label>
+        <select id="days">
+          <option value="">Any</option>
+          <option value="f">Fresh, under 8 days</option>
+          <option value="30">Sitting 30 days or more</option>
+          <option value="60">Sitting 60 days or more</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="toggle"><input type="checkbox" id="overOnly">
+          <span>Only ones we think are over-priced, asking more than our estimate</span></label>
+      </div>
+
+      <div class="count" id="count">Loading listings&hellip;</div>
+    </form>
+
+    <div class="stage">
+      <div class="wheelbox">
+        <div class="pointer" id="pointer" aria-hidden="true"></div>
+        <div class="wheel" id="wheel" aria-hidden="true"></div>
+        <div class="hub" aria-hidden="true"><img src="/img/mark.svg" alt=""></div>
+      </div>
+      <p class="fine" id="flick">Flick it with your thumb, or use the button.
+        <button type="button" id="mute" class="mutebtn" aria-pressed="false" title="Mute the clicks">&#128266; Sound on</button></p>
+      <button class="spin" id="spin" disabled>Spin the wheel</button>
+      <p class="fine" id="hint" style="margin-top:12px;text-align:center">&nbsp;</p>
+
+      <div class="result" id="result" hidden aria-live="polite">
+        <div class="where" id="rWhere"></div>
+        <div class="price" id="rPrice"></div>
+        <p class="facts" id="rFacts"></p>
+        <p class="verdict" id="rVerdict"></p>
+        <div class="rgrid">
+          <div><b id="rEst"></b><span>our estimate</span></div>
+          <div><b id="rOffer"></b><span>opening offer</span></div>
+          <div><b id="rDays"></b><span>days listed</span></div>
+        </div>
+        <div class="ractions">
+          <a class="btn" id="rLink" target="_blank" rel="noopener nofollow">See it on Zillow</a>
+          <button class="btn ghost" id="again">Spin again</button>
+        </div>
+        <p class="fine" style="margin:14px 0 0" id="rAsof"></p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc.
+      Estimates come from public listing data and are not advice or a guarantee of any price or outcome.</div>
+    <div><a href="/">Extension</a> &middot; <a href="/rent/">Rent by ZIP</a> &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a></div>
+  </footer>
+</div>
+
+<script type="module">
+import { Wheel } from './vendor/spin-wheel-esm.js';
+
+(function () {
+  'use strict';
+  var D = null, matches = [], slice = [], wheel = null, ready = false;
+  var SEGS = 12;
+  var FILL = ['#157347', '#0F5235', '#1D2939', '#344054'];
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (n) { return '$' + Math.round(n).toLocaleString('en-US'); };
+  var BEDS = [['', 'Any'], ['0', 'Studio'], ['1', '1'], ['2', '2'], ['3', '3'], ['4+', '4+']];
+  var bedSel = '';
+
+
+  // The peg click, synthesised rather than loaded. A short burst of filtered noise plus a tuned blip, with the
+  // pitch and level following the wheel's current speed, so it rattles fast at the start and slows to a lazy tock.
+  // No audio file means nothing to host, nothing to 404, and no delay on the first tick.
+  var actx = null, muted = false;
+
+  function audio() {
+    if (muted) return null;
+    if (!actx) {
+      var C = window.AudioContext || window.webkitAudioContext;
+      if (!C) return null;
+      actx = new C();
+    }
+    if (actx.state === 'suspended') actx.resume();     // browsers need a gesture first; a spin or a flick is one
+    return actx;
+  }
+
+
+  // The spin track. Measured with ffmpeg: the clip opens near-silent (-116dB) and only reaches full level about ten
+  // seconds in, so starting at 0 would play almost nothing under a five-second spin. START_AT drops the needle where
+  // it is already loud. Change that one number to move which part plays.
+  var START_AT = 8.0;
+  var clip = null, clipFade = null;
+
+  function clipEl() {
+    if (!clip) {
+      clip = new Audio('./spin.m4a');
+      clip.preload = 'auto';
+      clip.volume = 0.85;
+    }
+    return clip;
+  }
+
+  function clipStart() {
+    if (muted) return;
+    var c = clipEl();
+    if (clipFade) { clearInterval(clipFade); clipFade = null; }
+    try { c.currentTime = START_AT; } catch (e) {}
+    c.volume = 0.85;
+    var pr = c.play();
+    if (pr && pr.catch) pr.catch(function () {});      // a browser that refuses without a gesture: clicks still play
+  }
+
+  function clipStop() {
+    if (!clip) return;
+    var c = clip;
+    if (clipFade) clearInterval(clipFade);
+    clipFade = setInterval(function () {               // short fade so it does not cut off dead
+      c.volume = Math.max(0, c.volume - 0.08);
+      if (c.volume <= 0.001) { clearInterval(clipFade); clipFade = null; c.pause(); }
+    }, 28);
+  }
+
+  var noiseBuf = null;
+  function noise(ctx) {
+    if (!noiseBuf) {
+      noiseBuf = ctx.createBuffer(1, Math.floor(ctx.sampleRate * 0.05), ctx.sampleRate);
+      var ch = noiseBuf.getChannelData(0);
+      for (var i = 0; i < ch.length; i++) ch[i] = (Math.random() * 2 - 1) * (1 - i / ch.length);
+    }
+    var s = ctx.createBufferSource(); s.buffer = noiseBuf; return s;
+  }
+
+  function tick() {
+    var ctx = audio(); if (!ctx) return;
+    var speed = Math.abs(wheel ? (wheel.rotationSpeed || 0) : 0);
+    var fast = Math.min(1, speed / 700);
+    var t0 = ctx.currentTime;
+
+    var g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, t0);
+    g.gain.exponentialRampToValueAtTime(0.06 + 0.10 * fast, t0 + 0.004);
+    g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.055 + 0.03 * (1 - fast));
+    g.connect(ctx.destination);
+
+    var bp = ctx.createBiquadFilter();
+    bp.type = 'bandpass';
+    bp.frequency.value = 1500 + 1400 * fast + Math.random() * 250;   // brighter while it is moving quickly
+    bp.Q.value = 6;
+    bp.connect(g);
+    var n = noise(ctx); n.connect(bp); n.start(t0); n.stop(t0 + 0.09);
+
+    var o = ctx.createOscillator(), og = ctx.createGain();
+    o.type = 'triangle';
+    o.frequency.setValueAtTime(320 + 260 * fast, t0);
+    o.frequency.exponentialRampToValueAtTime(150, t0 + 0.05);
+    og.gain.setValueAtTime(0.05 + 0.05 * fast, t0);
+    og.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.05);
+    o.connect(og); og.connect(ctx.destination);
+    o.start(t0); o.stop(t0 + 0.06);
+  }
+
+  // Two soft notes when it comes to rest, so the result has a landing.
+  function chime() {
+    var ctx = audio(); if (!ctx) return;
+    [[660, 0], [990, 0.11]].forEach(function (n) {
+      var o = ctx.createOscillator(), g = ctx.createGain(), t0 = ctx.currentTime + n[1];
+      o.type = 'sine'; o.frequency.value = n[0];
+      g.gain.setValueAtTime(0.0001, t0);
+      g.gain.exponentialRampToValueAtTime(0.10, t0 + 0.015);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.30);
+      o.connect(g); g.connect(ctx.destination); o.start(t0); o.stop(t0 + 0.32);
+    });
+  }
+
+  function buildBedChips() {
+    var box = $('beds');
+    BEDS.forEach(function (b) {
+      var el = document.createElement('button');
+      el.type = 'button'; el.className = 'chip'; el.textContent = b[1];
+      el.setAttribute('aria-pressed', b[0] === bedSel ? 'true' : 'false');
+      el.addEventListener('click', function () {
+        bedSel = b[0];
+        [].forEach.call(box.children, function (c) { c.setAttribute('aria-pressed', 'false'); });
+        el.setAttribute('aria-pressed', 'true');
+        refilter();
+      });
+      box.appendChild(el);
+    });
+  }
+
+  function filters() {
+    var pmin = parseFloat($('pmin').value), pmax = parseFloat($('pmax').value);
+    return {
+      beds: bedSel,
+      pmin: isFinite(pmin) ? pmin : null,
+      pmax: isFinite(pmax) ? pmax : null,
+      type: $('ptype').value === '' ? null : parseInt($('ptype').value, 10),
+      city: $('city').value === '' ? null : parseInt($('city').value, 10),
+      mins: $('mins').value === '' ? null : parseInt($('mins').value, 10),
+      days: $('days').value,
+      overOnly: $('overOnly').checked
+    };
+  }
+
+  function refilter() {
+    var f = filters(), out = [];
+    for (var i = 0; i < D.n; i++) {
+      if (f.pmin !== null && D.price[i] < f.pmin) continue;
+      if (f.pmax !== null && D.price[i] > f.pmax) continue;
+      if (f.beds !== '') {
+        if (f.beds === '4+') { if (D.beds[i] < 4) continue; }
+        else if (D.beds[i] !== parseInt(f.beds, 10)) continue;
+      }
+      if (f.type !== null && D.type[i] !== f.type) continue;
+      if (f.city !== null && D.city[i] !== f.city) continue;
+      if (f.mins !== null && (D.sqft[i] === 0 || D.sqft[i] < f.mins)) continue;
+      if (f.days === 'f') { if (D.days[i] >= 8) continue; }
+      else if (f.days !== '' && D.days[i] < parseInt(f.days, 10)) continue;
+      if (f.overOnly && D.over[i] <= 0) continue;
+      out.push(i);
+    }
+    matches = out;
+    var c = $('count');
+    c.classList.toggle('none', out.length === 0);
+    c.innerHTML = out.length === 0
+      ? 'No listings match. <span>Loosen something.</span>'
+      : '<span>' + out.length.toLocaleString('en-US') + '</span> listing' + (out.length === 1 ? '' : 's') + ' in play';
+    $('spin').disabled = out.length < 1;
+    $('hint').textContent = out.length === 0 ? 'Nothing to spin for yet.'
+      : out.length === 1 ? 'Only one match, so the wheel is a formality.' : '';
+    load(sample());
+    return out;
+  }
+
+  // A uniform sample of the filtered set, so whichever wedge it rests on is a uniformly random listing from
+  // everything that matched, not from a fixed dozen.
+  function sample() {
+    var n = Math.min(SEGS, matches.length), pool = matches.slice(), out = [];
+    for (var i = 0; i < n; i++) out.push(pool.splice(Math.floor(Math.random() * pool.length), 1)[0]);
+    slice = out;
+    return out;
+  }
+
+  function load(idx) {
+    if (!wheel) return;
+    wheel.items = idx.map(function (i) {
+      return { label: '$' + Math.round(D.price[i] / 100) / 10 + 'k', backgroundColor: FILL[idx.indexOf(i) % FILL.length] };
+    });
+    if (!idx.length) wheel.items = [{ label: '', backgroundColor: '#EAECF0' }];
+  }
+
+  function verdict(i) {
+    var over = D.over[i];
+    if (over >= 8) return ['over', 'Asking ' + over + '% above our estimate. There is room here.'];
+    if (over <= -5) return ['under', 'Asking under our estimate. Priced to go, so do not open too low.'];
+    return ['fair', 'Asking is close to our estimate. The lever here is time, not price.'];
+  }
+
+  function show(i) {
+    var beds = D.beds[i] === 0 ? 'Studio' : D.beds[i] + ' bed';
+    var ba = D.baths[i] / 2;
+    var parts = [beds, (ba ? (ba % 1 ? ba.toFixed(1) : ba) + ' bath' : null),
+                 (D.sqft[i] ? D.sqft[i].toLocaleString('en-US') + ' sq ft' : null),
+                 D.types[D.type[i]]];
+    $('rWhere').textContent = D.cities[D.city[i]] + ' \u00b7 ' + D.zip[i];
+    $('rPrice').textContent = money(D.price[i]) + '/mo';
+    $('rFacts').textContent = parts.filter(Boolean).join(' \u00b7 ');
+    var v = verdict(i);
+    $('rVerdict').className = 'verdict ' + v[0];
+    $('rVerdict').textContent = v[1];
+    $('rEst').textContent = money(D.est[i]);
+    var offer = Math.max(Math.min(D.est[i], D.price[i]) * 0.96, D.price[i] * 0.82);
+    $('rOffer').textContent = money(Math.round(offer / 25) * 25);
+    $('rDays').textContent = D.days[i] + (D.days[i] === 1 ? ' day' : ' days');
+    // A plain zillow.com https link. On a phone with the app installed this is a universal link and opens the app;
+    // without it, it opens the listing on the web. No custom scheme, which fails silently when the app is absent.
+    $('rLink').href = 'https://www.zillow.com/homedetails/' + D.zpid[i] + '_zpid/';
+    $('rAsof').textContent = 'From our snapshot of ' + D.asof + '. It may have rented or changed price since, and the'
+      + ' address stays on Zillow rather than here. Estimates are not advice or a guarantee.';
+    $('result').hidden = false;
+    // On a phone the card sits below the wheel, so bring it to the eye rather than leaving them to scroll.
+    try { $('result').scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (e) {}
+  }
+
+  // Whatever the wheel rests on is what we report, read from the library itself. That way a thumb flick and a
+  // button press are handled identically, and the card can never disagree with the wedge under the pointer.
+  function onRest(e) {
+    $('spin').disabled = matches.length < 1;
+    $('spin').textContent = 'Spin again';
+    $('hint').textContent = '';
+    var i = slice[e.currentIndex];
+    if (i === undefined) return;
+    clipStop();
+    chime();
+    show(i);
+  }
+
+  function spin() {
+    if (!ready || !matches.length) return;
+    sample(); load(slice);
+    $('result').hidden = true;
+    $('spin').disabled = true;
+    $('hint').textContent = 'Spinning\u2026';
+    var win = Math.floor(Math.random() * slice.length);
+    // spinToCenter false lands at a random angle inside the wedge, so it never stops dead centre.
+    wheel.spinToItem(win, 4200 + Math.floor(Math.random() * 1200), false, 4 + Math.floor(Math.random() * 3), 1);
+  }
+
+  fetch('./data.json').then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function (d) {
+    D = d;
+    var t = $('ptype');
+    d.types.forEach(function (name, i) {
+      var o = document.createElement('option'); o.value = i;
+      o.textContent = name.charAt(0).toUpperCase() + name.slice(1); t.appendChild(o);
+    });
+    var c = $('city');
+    d.cities.forEach(function (name, i) {
+      var o = document.createElement('option'); o.value = i; o.textContent = name; c.appendChild(o);
+    });
+
+    wheel = new Wheel($('wheel'), {
+      items: [{ label: '' }],
+      isInteractive: true,                 // drag and release, which is the point on a phone
+      pointerAngle: 0,                     // our pointer sits at the top
+      radius: 0.94,
+      lineWidth: 2,
+      lineColor: '#ffffff',
+      borderWidth: 0,
+      itemLabelColors: ['#ffffff'],
+      itemLabelFont: '-apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif',
+      itemLabelFontSizeMax: 20,
+      itemLabelRadius: 0.9,
+      itemLabelRadiusMax: 0.3,
+      itemLabelAlign: 'right',
+      rotationResistance: -35,             // friction on a flick: how quickly a throw winds down
+      rotationSpeedMax: 900,
+      onRest: onRest,
+      onCurrentIndexChange: tick,          // one click per wedge that passes the pointer
+      // Raised for a button spin and for a thumb flick alike, so the track starts from exactly one place.
+      onSpin: function () { $('result').hidden = true; $('hint').textContent = 'Spinning\u2026'; clipStart(); }
+    });
+    ready = true;
+
+    buildBedChips();
+    ['pmin', 'pmax', 'ptype', 'city', 'mins', 'days', 'overOnly'].forEach(function (id) {
+      $(id).addEventListener('input', refilter);
+      $(id).addEventListener('change', refilter);
+    });
+    $('wheel').addEventListener('pointerdown', function () {                // a flick is a gesture too
+      audio();
+      if (!muted) { var c = clipEl(); c.load(); }                           // unlock playback on iOS
+    });
+    $('mute').addEventListener('click', function () {
+      muted = !muted;
+      $('mute').setAttribute('aria-pressed', muted ? 'true' : 'false');
+      $('mute').innerHTML = muted ? '\uD83D\uDD07 Sound off' : '\uD83D\uDD0A Sound on';
+      if (muted) clipStop();
+    });
+    $('spin').addEventListener('click', spin);
+    $('again').addEventListener('click', spin);
+    refilter();
+  }).catch(function (e) {
+    $('count').classList.add('none');
+    $('count').innerHTML = '<span>Could not load the listings.</span> Reload the page to try again.';
+    $('hint').textContent = '';
+    $('flick').textContent = '';
+  });
+})();
+</script>
+</body>
+</html>
