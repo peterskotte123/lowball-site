@@ -17,7 +17,11 @@
    "price_min": 100000,
    "price_max": 15000000,
    "sqft_max": 10000
-  }
+  },
+  "gtfs": [
+   "https://www.sdmts.com/google_transit_files/google_transit.zip",
+   "https://lfportal.nctd.org/staticGTFS/google_transit.zip"
+  ]
  },
  "bham": {
   "name": "Birmingham",
@@ -37,6 +41,9 @@
    "price_min": 40000,
    "price_max": 3000000,
    "sqft_max": 8000
-  }
+  },
+  "gtfs": [
+   "https://maxtransit.org/GTFS/2026/google_transit_Working.zip"
+  ]
  }
 }
