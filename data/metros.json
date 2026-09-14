@@ -21,7 +21,8 @@
   "gtfs": [
    "https://www.sdmts.com/google_transit_files/google_transit.zip",
    "https://lfportal.nctd.org/staticGTFS/google_transit.zip"
-  ]
+  ],
+  "osm_pbf": "https://download.geofabrik.de/north-america/us/california/socal-latest.osm.pbf"
  },
  "bham": {
   "name": "Birmingham",
@@ -44,6 +45,7 @@
   },
   "gtfs": [
    "https://maxtransit.org/GTFS/2026/google_transit_Working.zip"
-  ]
+  ],
+  "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
  }
 }
