@@ -45,7 +45,7 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
   <div class="step" data-step="4">
     <p class="q" id="q4">Where should we send your deal alerts?</p>
     <input class="t" id="email" type="email" placeholder="Email (optional)" autocomplete="email">
-    <label class="ck" id="sharerow"><input type="checkbox" id="share"><span id="sharetxt">A licensed real-estate agent may email me about my search. <span style="color:var(--muted2)">Optional. Email only — nobody calls or texts you.</span></span></label>
+    <label class="ck" id="sharerow"><input type="checkbox" id="share"><span id="sharetxt">A licensed real-estate agent may email me about my search. <span style="color:var(--muted2)">Optional. Email only. Nobody calls or texts you.</span></span></label>
     <div class="notice" id="notice">We collect your answers and, if you give it, your email, to send deal alerts for your area and to draft the right offer. If you tick the box, we may share your email and answers with the businesses on <a href="https://api.lowball.rent/partners" target="_blank" rel="noopener">our partner list</a>, of the kinds named beside it (licensed real-estate agents and brokerages for buying and selling; property managers, landlords, and moving, internet or renters-insurance providers for renting), who may email you; that is a sale of personal information under California law, and you can opt out any time at <a href="/privacy#do-not-sell">Do Not Sell or Share My Personal Information</a>. We keep form entries 24 months. This form is separate from the extension, which never collects names or emails. <a href="/privacy">Privacy policy</a>.</div>
   </div>
 
@@ -76,7 +76,7 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
     else { c.style.display='none'; cb.style.display='none'; }
     if(it==='both'){ c.style.display=''; cb.style.display=''; c.textContent='Thinking about buying in the next couple of years?'; cb.dataset.k='buy_soon'; cb.innerHTML=''; [['yes','Yes, seriously'],['maybe','Maybe']].forEach(function(o){var b=document.createElement('button');b.className='opt';b.dataset.v=o[0];b.textContent=o[1];cb.appendChild(b)}); }
     $('q4').textContent=sell?'Where should we send what homes like yours are listing and selling for?':buy?'Where should we send offer drafts and deal alerts?':'Where should we send deal alerts?';
-    $('sharetxt').innerHTML=(sell||buy)?'A licensed real-estate agent may email me about '+(sell?'selling my home':'my search')+'. <span style="color:var(--muted2)">Optional. Email only \u2014 nobody calls or texts you.</span>':'Property managers, landlords, and moving, internet or renters-insurance providers may email me about my move. <span style="color:var(--muted2)">Optional. Email only \u2014 nobody calls or texts you.</span>';
+    $('sharetxt').innerHTML=(sell||buy)?'A licensed real-estate agent may email me about '+(sell?'selling my home':'my search')+'. <span style="color:var(--muted2)">Optional. Email only. Nobody calls or texts you.</span>':'Property managers, landlords, and moving, internet or renters-insurance providers may email me about my move. <span style="color:var(--muted2)">Optional. Email only. Nobody calls or texts you.</span>';
   }
   document.addEventListener('click',function(e){ var b=e.target.closest('.opt'); if(!b) return; var box=b.parentNode, k=box.dataset.k; box.querySelectorAll('.opt').forEach(function(x){x.classList.remove('on')}); b.classList.add('on'); a[k]=b.dataset.v;
     if(k==='intent'){ setup2(); show(2); } else if(k==='timeline'){ show(3); } else if(k==='market'){ loadAreas(); } });
@@ -89,7 +89,7 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
     fetch(API+'/lead',{method:'POST',headers:{'Content-Type':'application/json','X-Lowball-Client':'web-start'},body:JSON.stringify(body),keepalive:true}).catch(function(){});
     if(goInstall){ $('doneh').textContent=email?'You’re set.':'Thanks.'; $('donep').innerHTML=(email?'Deal alerts for '+(a.area||'your area')+' will come from hello@lowball.rent. ':'')+'Now install the extension: <a href="'+STORE+'" rel="noopener">Add Lowball to Chrome, free</a>.'; show(5); setTimeout(function(){location.href=STORE},1800); }
   }
-  // markets we cover, then area suggestions from that market's deals data (neighborhoods, cities, ZIPs) — nothing typed here leaves the page until submit
+  // markets we cover, then area suggestions from that market's deals data (neighborhoods, cities, ZIPs); nothing typed here leaves the page until submit
   function loadAreas(){ var m=a.market; if(!METROS[m]) return; var dl=$('arealist'); dl.innerHTML='';
     fetch('/deals/data/'+m+'/index.json').then(function(r){return r.json()}).then(function(d){ Object.keys(d.zips||{}).forEach(function(z){var o=document.createElement('option');o.value=z;dl.appendChild(o)}); }).catch(function(){});
     fetch('/deals/data/'+m+'/all.json').then(function(r){return r.json()}).then(function(d){ var seen={}; d.rows.forEach(function(r){[r.area,r.city].forEach(function(v){ if(v&&!seen[v]){seen[v]=1; var o=document.createElement('option');o.value=v;dl.appendChild(o)} })}); }).catch(function(){}); }
