@@ -12,7 +12,12 @@
   "geo": [
    32.85,
    -117.15
-  ]
+  ],
+  "bounds": {
+   "price_min": 100000,
+   "price_max": 15000000,
+   "sqft_max": 10000
+  }
  },
  "bham": {
   "name": "Birmingham",
@@ -27,6 +32,11 @@
   "geo": [
    33.5,
    -86.8
-  ]
+  ],
+  "bounds": {
+   "price_min": 40000,
+   "price_max": 3000000,
+   "sqft_max": 8000
+  }
  }
 }
