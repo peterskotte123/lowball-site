@@ -1,6 +1,7 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Best rental deals in San Diego right now · Lowball</title><meta name="description" content="Every active San Diego rental listing, scored against what similar listings ask, ranked by how far under typical it is. Filter by ZIP, beds and rent; open any one on Zillow."><link rel="canonical" href="https://lowball.rent/deals/">
 <link rel="icon" href="/img/mark.svg">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <style>:root{--ink:#101828;--muted:#475467;--line:#EAECF0;--soft:#F8FAFC;--green:#157347;--deal:#067647;--amber:#B54708;--red:#B42318}*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:#fff}
 a{color:var(--green)}header{border-bottom:1px solid var(--line);background:#fff}.nav{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:18px}.nav img{height:26px}.nav a{color:var(--muted);text-decoration:none;font-size:14px}
 main{max-width:1080px;margin:0 auto;padding:28px 20px 60px}h1{font-size:30px;letter-spacing:-.02em;margin:0 0 6px;line-height:1.15}.lede{color:var(--muted);margin:0 0 22px;max-width:60ch}
@@ -10,7 +11,7 @@ table{width:100%;border-collapse:collapse;font-size:15px}th{text-align:left;font
 td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.gap{font-weight:700;color:var(--deal)}.gap.neg{color:var(--muted);font-weight:500}.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}.fast{background:#ECFDF3;color:var(--deal)}.wait{background:#FFFAEB;color:var(--amber)}
 .open{display:inline-block;padding:7px 12px;border-radius:8px;background:var(--green);color:#fff;text-decoration:none;font-weight:600;font-size:14px;white-space:nowrap}.open:hover{background:#0f5c38}
 .cta{margin:26px 0 0;padding:16px 18px;border:1px solid var(--line);border-radius:12px;background:var(--soft);display:flex;gap:14px;align-items:center;flex-wrap:wrap}.cta b{font-size:16px}.cta a.btn{margin-left:auto;padding:9px 14px;border-radius:8px;background:var(--ink);color:#fff;text-decoration:none;font-weight:600}
-.foot{max-width:1080px;margin:0 auto;padding:18px 20px 40px;color:#98A2B3;font-size:12px;line-height:1.5}
+.leaflet-popup-content{font:14px/1.45 inherit}.leaflet-popup-content .open{margin-top:6px}.foot{max-width:1080px;margin:0 auto;padding:18px 20px 40px;color:#98A2B3;font-size:12px;line-height:1.5}
 @media (max-width:720px){th.hide,td.hide{display:none}h1{font-size:24px}.count{margin-left:0;width:100%}}
 </style></head><body>
 <header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/rent/">Fair rent by ZIP</a><a href="/renew">Renewal counter</a><a href="/deals/" style="color:var(--ink);font-weight:600">Deals</a></div></header>
@@ -18,15 +19,18 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
 <h1>Best rental deals in San Diego right now</h1>
 <p class="lede">Every active listing we know of, scored against what similar listings nearby ask, ranked by how far under typical it is. <b>Move fast</b> means priced right and fresh; <b>can wait</b> means it's likely to sit and cut. Pick one and open it on Zillow.</p>
 <div class="filters">
-  <label class="f">ZIP<select id="zip"><option value="">All San Diego County</option></select></label>
+  <label class="f">Neighborhood / area<select id="area"><option value="">All areas</option></select></label>
+  <label class="f">ZIP<select id="zip"><option value="">All ZIPs</option></select></label>
   <label class="f">Beds<select id="beds"><option value="">Any</option><option value="0">Studio</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option></select></label>
   <label class="f">Max rent<input id="max" type="number" placeholder="e.g. 3000" step="100" min="0"></label>
   <label class="f">Type<select id="type"><option value="">Any</option><option value="APARTMENT">Apartment</option><option value="CONDO">Condo</option><option value="TOWNHOUSE">Townhouse</option><option value="SINGLE_FAMILY">House</option></select></label>
   <label class="f">Show<select id="cue"><option value="">Everything</option><option value="fast">Move fast only</option><option value="wait">Can wait only</option></select></label>
   <label class="f">Sort<select id="sort"><option value="gap">Most under typical</option><option value="pct">Biggest % under</option><option value="days">Newest</option><option value="price">Cheapest</option></select></label>
+  <label class="f">View<select id="view"><option value="list">List</option><option value="map">Map</option></select></label>
   <div class="count" id="count"></div>
 </div>
-<div style="overflow-x:auto"><table><thead><tr><th>Listing</th><th class="num">Asking</th><th class="num">Typical nearby</th><th class="num">Under by</th><th class="num hide">Listed</th><th></th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+<div id="map" style="display:none;height:70vh;min-height:420px;border:1px solid var(--line);border-radius:12px;margin-bottom:18px"></div>
+<div id="list" style="overflow-x:auto"><table><thead><tr><th>Listing</th><th class="num">Asking</th><th class="num">Typical nearby</th><th class="num">Under by</th><th class="num">Suggested offer</th><th class="hide">Last cut</th><th class="num hide">Listed</th><th></th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
 <div class="cta"><div><b>Want the offer and the letter for any of these?</b><div style="color:var(--muted);font-size:14px">The free extension scores every listing on Zillow as you browse, drafts the message, and tells you when to move and when to wait.</div></div><a class="btn" href="/">Get Lowball, free</a></div>
 </main>
 <div class="foot" id="foot">Estimates compare each listing with similar active listings nearby; they are not advice or a guarantee, and a landlord can say no. Not affiliated with Zillow. Listings link to zillow.com; we show no address or photos here.</div>
@@ -37,25 +41,41 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
   function label(r){var b=r.beds===0?'Studio':(r.beds+' bd'); var t={APARTMENT:'apartment',CONDO:'condo',TOWNHOUSE:'townhouse',SINGLE_FAMILY:'house',MANUFACTURED:'home'}[r.type]||'home'; return b+(r.baths?' · '+r.baths+' ba':'')+(r.sqft?' · '+Math.round(r.sqft).toLocaleString()+' sqft':'')+' '+t+' · '+r.zip+(r.city?' · '+r.city:'')}
   function render(){
     if(!data) return; var z=$('zip').value, b=$('beds').value, mx=Number($('max').value)||0, t=$('type').value, c=$('cue').value, s=$('sort').value;
-    var rows=data.rows.filter(function(r){ if(z&&r.zip!==z) return false; if(b!==''&&!(b==='4'?r.beds>=4:r.beds===Number(b))) return false; if(mx&&r.price>mx) return false; if(t&&r.type!==t) return false; if(c&&r.cue!==c) return false; return true;});
+    var ar=$('area').value; var rows=data.rows.filter(function(r){ if(ar&&r.area!==ar) return false; if(z&&r.zip!==z) return false; if(b!==''&&!(b==='4'?r.beds>=4:r.beds===Number(b))) return false; if(mx&&r.price>mx) return false; if(t&&r.type!==t) return false; if(c&&r.cue!==c) return false; return true;});
     rows.sort(s==='pct'?function(a,b){return b.pct-a.pct}:s==='days'?function(a,b){return a.days-b.days}:s==='price'?function(a,b){return a.price-b.price}:function(a,b){return b.gap-a.gap||a.days-b.days});
-    $('count').textContent=rows.length.toLocaleString()+' listings'+(rows.length>LIMIT?' · showing top '+LIMIT:'')+' · as of '+data.asof;
+    var mapMode=$('view').value==='map'; $('list').style.display=mapMode?'none':''; $('map').style.display=mapMode?'':'none';
+    $('count').textContent=rows.length.toLocaleString()+' listings'+(!mapMode&&rows.length>LIMIT?' · showing top '+LIMIT:'')+' · as of '+data.asof;
+    if(mapMode){ drawMap(rows); return; }
     var tb=$('rows'); tb.innerHTML='';
     rows.slice(0,LIMIT).forEach(function(r){
       var tr=document.createElement('tr');
       var gap=r.gap>0?'<span class="gap">'+money(r.gap)+'/mo</span>':'<span class="gap neg">'+(r.gap<0?money(-r.gap)+'/mo over':'at typical')+'</span>';
       var cue=r.cue==='fast'?'<span class="pill fast">move fast</span>':r.cue==='wait'?'<span class="pill wait">can wait</span>':'';
-      tr.innerHTML='<td>'+label(r)+'</td><td class="num">'+money(r.price)+'</td><td class="num">'+money(r.fair)+'</td><td class="num">'+gap+'</td><td class="num hide">'+(r.days===0?'today':r.days+' d')+'</td><td>'+cue+'</td><td><a class="open" target="_blank" rel="noopener nofollow" href="https://www.zillow.com/homedetails/'+r.zpid+'_zpid/">Open on Zillow</a></td>';
+      var cut=r.cut?'<span style="color:var(--amber);font-weight:600">cut '+money(r.cut.amt)+'</span>'+(r.cut.date?'<span style="color:var(--muted);font-size:12px"> · '+r.cut.date.slice(5).replace('-','/')+'</span>':''):'<span style="color:#98A2B3">—</span>';
+      var extra=(r.special?'<span class="pill" style="background:#F2F4F7;color:#344054">'+r.special.desc+(r.special.effective?' · ~'+money(r.special.effective)+' effective':'')+'</span> ':'')+(r.tags&&r.tags.length?'<span style="color:var(--muted);font-size:12px">'+r.tags.join(' · ')+'</span>':'');
+      var sub=(r.ppsf?'<span style="color:var(--muted);font-size:12px">'+r.ppsf.toFixed(2)+'/sqft'+(r.seen_days>1?' · checked '+r.seen_days+' d ago':'')+'</span>':'');
+      tr.innerHTML='<td>'+label(r)+(sub||extra?'<div>'+sub+(sub&&extra?' ':'')+extra+'</div>':'')+'</td><td class="num">'+money(r.price)+'</td><td class="num">'+money(r.fair)+'</td><td class="num">'+gap+'</td><td class="num"><b>'+money(r.offer)+'</b></td><td class="hide">'+cut+'</td><td class="num hide">'+(r.days===0?'today':r.days+' d')+'</td><td>'+cue+'</td><td><a class="open" target="_blank" rel="noopener nofollow" href="https://www.zillow.com/homedetails/'+r.zpid+'_zpid/">Open on Zillow</a></td>';
       tb.appendChild(tr);
     });
   }
+  var map=null, layer=null;
+  function drawMap(rows){
+    if(!window.L) return;
+    if(!map){ map=L.map('map',{scrollWheelZoom:true}).setView([32.85,-117.15],10); L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18,attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'}).addTo(map); }
+    if(layer) layer.remove(); layer=L.layerGroup().addTo(map); var pts=[];
+    rows.slice(0,1500).forEach(function(r){ if(r.lat==null) return; var col=r.cue==='fast'?'#067647':r.cue==='wait'?'#B54708':(r.gap>0?'#157347':'#98A2B3');
+      var m=L.circleMarker([r.lat,r.lon],{radius:r.gap>500?8:6,color:col,fillColor:col,fillOpacity:.75,weight:1}).addTo(layer); pts.push([r.lat,r.lon]);
+      m.bindPopup('<b>'+money(r.price)+'</b> · '+label(r)+'<br>typical nearby '+money(r.fair)+' · offer <b>'+money(r.offer)+'</b>'+(r.cut?' · cut '+money(r.cut.amt):'')+(r.gap>0?' · <b style="color:#067647">'+money(r.gap)+'/mo under</b>':'')+(r.cue?' · '+(r.cue==='fast'?'move fast':'can wait'):'')+'<br><a class="open" target="_blank" rel="noopener nofollow" href="https://www.zillow.com/homedetails/'+r.zpid+'_zpid/">Open on Zillow</a>'); });
+    if(pts.length){ map.fitBounds(pts,{padding:[20,20],maxZoom:14}); } setTimeout(function(){map.invalidateSize()},50);
+  }
   fetch('data/all.json').then(function(r){return r.json()}).then(function(d){
-    data=d; var zips={}; d.rows.forEach(function(r){zips[r.zip]=(zips[r.zip]||0)+1});
+    data=d; var zips={}, areas={}; d.rows.forEach(function(r){zips[r.zip]=(zips[r.zip]||0)+1; if(r.area) areas[r.area]=(areas[r.area]||0)+1});
+    Object.keys(areas).sort().forEach(function(a){var o=document.createElement('option');o.value=a;o.textContent=a+' ('+areas[a]+')';$('area').appendChild(o)});
     Object.keys(zips).sort().forEach(function(z){var o=document.createElement('option');o.value=z;o.textContent=z+' ('+zips[z]+')';$('zip').appendChild(o)});
-    var q=new URLSearchParams(location.search); ['zip','beds','max','type','cue','sort'].forEach(function(k){if(q.get(k)!=null)$(k).value=q.get(k)});
+    var q=new URLSearchParams(location.search); ['area','zip','beds','max','type','cue','sort','view'].forEach(function(k){if(q.get(k)!=null)$(k).value=q.get(k)});
     render();
   });
-  ['zip','beds','max','type','cue','sort'].forEach(function(k){$(k).addEventListener('input',render);$(k).addEventListener('change',render)});
+  ['area','zip','beds','max','type','cue','sort','view'].forEach(function(k){$(k).addEventListener('input',render);$(k).addEventListener('change',render)});
 })();
 </script>
 </body></html>
