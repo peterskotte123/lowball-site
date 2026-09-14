@@ -64,7 +64,7 @@ input.pillb{cursor:text;min-width:0}input.pillb:focus,select.pillb:focus,.ms .ms
   <button type="button" class="chip amber" data-chip="wait">Can wait</button>
   <button type="button" class="chip" data-chip="cut">Has a recent cut</button>
   <div class="count" id="count"></div>
-  <div class="help" id="help"><button type="button" class="hb">How to read these numbers</button><div class="hp"><b>Typical nearby</b> is what similar active listings ask, blended with our model — an asking-price benchmark, not what places rent for. <b>Under by</b> is asking minus that. <b>Suggested offer</b> is where to open; on a fresh, fairly priced listing it equals asking, because under-bidding there costs you the unit — apply, then ask for the fair number once approved. <b>Move fast</b> = priced right and fresh. <b>Can wait</b> = over typical and sitting; listings like it usually cut. Estimates are not advice or a guarantee.</div></div>
+  <div class="help" id="help"><button type="button" class="hb">How to read these numbers</button><div class="hp"><b>Typical asking nearby</b> is what similar active listings ask — the lower of our model and the median of the real comparable listings, so it is a number you can point at. It is an asking-price benchmark, not what places rent for. <b>Under by</b> is asking minus that. <b>Suggested offer</b> is where to open; on a fresh, fairly priced listing it equals asking, because under-bidding there costs you the unit — apply, then ask for the fair number once approved. <b>Move fast</b> = priced right and fresh. <b>Can wait</b> = over typical and sitting; listings like it usually cut. Estimates are not advice or a guarantee.</div></div>
 </div></div>
 
 <div class="wrap">
@@ -110,9 +110,9 @@ input.pillb{cursor:text;min-width:0}input.pillb:focus,select.pillb:focus,.ms .ms
   }
   function card(r){
     var el=document.createElement('div'); el.className='card'; el.dataset.id=r.zpid;
-    var over=!(r.gap>0), typTop=Math.max(r.price,r.fair), lo=Math.min(r.price,r.fair)*0.85, span=Math.max(1,typTop*1.05-lo);
+    var bench=r.bench||r.fair, over=!(r.gap>0), typTop=Math.max(r.price,bench), lo=Math.min(r.price,bench)*0.85, span=Math.max(1,typTop*1.05-lo);
     var pos=function(v){return Math.round(100-Math.min(100,Math.max(0,(v-lo)/span*100)))};
-    var meter='<div class="meter"><div class="tr"><div class="tk tt" style="top:'+pos(r.fair)+'%" title="typical nearby"></div><div class="tk tp'+(over?' over':'')+'" style="top:'+pos(r.price)+'%" title="this listing"></div></div><div class="gap'+(over?' over':'')+'">'+(r.gap>0?money(r.gap)+' under':(r.gap<0?money(-r.gap)+' over':'at typical'))+'</div></div>';
+    var meter='<div class="meter"><div class="tr"><div class="tk tt" style="top:'+pos(bench)+'%" title="typical asking nearby"></div><div class="tk tp'+(over?' over':'')+'" style="top:'+pos(r.price)+'%" title="this listing"></div></div><div class="gap'+(over?' over':'')+'">'+(r.gap>0?money(r.gap)+' under':(r.gap<0?money(-r.gap)+' over':'at typical'))+'</div></div>';
     var cue=r.cue==='fast'?'<span class="cue fast">Move fast</span>':r.cue==='wait'?'<span class="cue wait">Can wait</span>':'';
     var l3=[r.area||r.city||'', r.zip, (r.days===0?'listed today':'listed '+r.days+' d'), r.cut?'<b>cut '+money(r.cut.amt)+(r.cut.date?' on '+r.cut.date.slice(5).replace('-','/'):'')+'</b>':'', r.ppsf?'$'+r.ppsf.toFixed(2)+'/sqft':'', r.walk!=null?'walk '+r.walk+(r.bike!=null?' · bike '+r.bike:''):'', (r.tags||[]).join(' · '), r.d!=null?(r.d<0.05?'<b style="color:#067647">this address</b>':(r.d<0.1?'<0.1':r.d.toFixed(1))+' mi away'):''].filter(Boolean).join(' · ');
     var offerNote=r.cue==='fast'&&r.offer>=r.price?'apply at asking, it\u2019ll go':(r.cue==='wait'?'or wait for the cut':'');
