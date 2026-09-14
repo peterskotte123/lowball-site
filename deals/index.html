@@ -6,7 +6,7 @@
 a{color:var(--green)}header{border-bottom:1px solid var(--line);background:#fff}.nav{max-width:1080px;margin:0 auto;padding:14px 20px;display:flex;align-items:center;gap:18px}.nav img{height:26px}.nav a{color:var(--muted);text-decoration:none;font-size:14px}
 main{max-width:1080px;margin:0 auto;padding:28px 20px 60px}h1{font-size:30px;letter-spacing:-.02em;margin:0 0 6px;line-height:1.15}.lede{color:var(--muted);margin:0 0 22px;max-width:60ch}
 .filters{display:flex;flex-wrap:wrap;gap:10px;align-items:end;padding:14px;border:1px solid var(--line);border-radius:12px;background:var(--soft);margin-bottom:18px}.f{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
-.f select,.f input{font:15px inherit;padding:8px 10px;border:1px solid #D0D5DD;border-radius:8px;background:#fff;color:var(--ink);min-width:120px}.count{margin-left:auto;font-size:14px;color:var(--muted);align-self:center}
+.f select,.f input{font:15px inherit;padding:8px 10px;border:1px solid #D0D5DD;border-radius:8px;background:#fff;color:var(--ink);min-width:120px}.ms{position:relative}.msb{font:15px inherit;padding:8px 10px;border:1px solid #D0D5DD;border-radius:8px;background:#fff;color:var(--ink);min-width:150px;text-align:left;cursor:pointer;text-transform:none;letter-spacing:0}.msb:after{content:"\25BE";float:right;color:var(--muted)}.msd{display:none;position:absolute;z-index:20;top:100%;left:0;min-width:220px;max-height:280px;overflow:auto;background:#fff;border:1px solid #D0D5DD;border-radius:10px;box-shadow:0 12px 30px -12px rgba(16,24,40,.35);padding:6px;margin-top:4px}.ms.open .msd{display:block}.msd label{display:flex;gap:8px;align-items:center;padding:6px 8px;border-radius:6px;font-size:14px;color:var(--ink);text-transform:none;letter-spacing:0;cursor:pointer}.msd label:hover{background:var(--soft)}th.sortable{cursor:pointer;user-select:none}th.sortable:hover{color:var(--ink)}th.sorted:after{content:" \25BE";}th.sorted.asc:after{content:" \25B4";}.count{margin-left:auto;font-size:14px;color:var(--muted);align-self:center}
 table{width:100%;border-collapse:collapse;font-size:15px}th{text-align:left;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
 td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.gap{font-weight:700;color:var(--deal)}.gap.neg{color:var(--muted);font-weight:500}.pill{display:inline-block;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap}.fast{background:#ECFDF3;color:var(--deal)}.wait{background:#FFFAEB;color:var(--amber)}
 .open{display:inline-block;padding:7px 12px;border-radius:8px;background:var(--green);color:#fff;text-decoration:none;font-weight:600;font-size:14px;white-space:nowrap}.open:hover{background:#0f5c38}
@@ -21,18 +21,19 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
 <div class="filters">
   <label class="f" style="min-width:260px;flex:1">Near an address<input id="near" list="nearlist" placeholder="Work, school, a friend's place…" autocomplete="off"><datalist id="nearlist"></datalist></label>
   <label class="f">Within<select id="radius"><option value="0.5">½ mile</option><option value="1">1 mile</option><option value="2" selected>2 miles</option><option value="5">5 miles</option></select></label>
-  <label class="f">Neighborhood / area<select id="area"><option value="">All areas</option></select></label>
-  <label class="f">ZIP<select id="zip"><option value="">All ZIPs</option></select></label>
-  <label class="f">Beds<select id="beds"><option value="">Any</option><option value="0">Studio</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4+</option></select></label>
+  <div class="f"><span>Neighborhood / area</span><div class="ms" id="area" data-label="Any"><button type="button" class="msb">Any</button><div class="msd"></div></div></div>
+  <div class="f"><span>ZIP</span><div class="ms" id="zip" data-label="Any"><button type="button" class="msb">Any</button><div class="msd"></div></div></div>
+  <div class="f"><span>Beds</span><div class="ms" id="beds" data-label="Any"><button type="button" class="msb">Any</button><div class="msd"><label><input type="checkbox" value="0">Studio</label><label><input type="checkbox" value="1">1</label><label><input type="checkbox" value="2">2</label><label><input type="checkbox" value="3">3</label><label><input type="checkbox" value="4">4+</label></div></div></div>
   <label class="f">Max rent<input id="max" type="number" placeholder="e.g. 3000" step="100" min="0"></label>
-  <label class="f">Type<select id="type"><option value="">Any</option><option value="APARTMENT">Apartment</option><option value="CONDO">Condo</option><option value="TOWNHOUSE">Townhouse</option><option value="SINGLE_FAMILY">House</option></select></label>
-  <label class="f">Show<select id="cue"><option value="">Everything</option><option value="fast">Move fast only</option><option value="wait">Can wait only</option></select></label>
-  <label class="f">Sort<select id="sort"><option value="gap">Most under typical</option><option value="dist">Nearest</option><option value="pct">Biggest % under</option><option value="days">Newest</option><option value="price">Cheapest</option></select></label>
+  <label class="f">Max suggested offer<input id="maxoffer" type="number" placeholder="e.g. 2800" step="50" min="0"></label>
+  <div class="f"><span>Type</span><div class="ms" id="type" data-label="Any"><button type="button" class="msb">Any</button><div class="msd"><label><input type="checkbox" value="APARTMENT">Apartment</label><label><input type="checkbox" value="CONDO">Condo</label><label><input type="checkbox" value="TOWNHOUSE">Townhouse</label><label><input type="checkbox" value="SINGLE_FAMILY">House</label></div></div></div>
+  <div class="f"><span>Show</span><div class="ms" id="cue" data-label="Any"><button type="button" class="msb">Any</button><div class="msd"><label><input type="checkbox" value="fast">Move fast</label><label><input type="checkbox" value="wait">Can wait</label><label><input type="checkbox" value="cut">Has a recent cut</label></div></div></div>
+  <label class="f">Sort<select id="sort"><option value="gap">Most under typical</option><option value="dist">Nearest</option><option value="walk">Most walkable</option><option value="pct">Biggest % under</option><option value="days">Newest</option><option value="price">Cheapest</option></select></label>
   <label class="f">View<select id="view"><option value="list">List</option><option value="map">Map</option></select></label>
   <div class="count" id="count"></div>
 </div>
 <div id="map" style="display:none;height:70vh;min-height:420px;border:1px solid var(--line);border-radius:12px;margin-bottom:18px"></div>
-<div id="list" style="overflow-x:auto"><table><thead><tr><th>Listing</th><th class="num">Asking</th><th class="num">Typical nearby</th><th class="num">Under by</th><th class="num">Suggested offer</th><th class="hide">Last cut</th><th class="num hide">Listed</th><th></th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+<div id="list" style="overflow-x:auto"><table><thead><tr><th class="sortable" data-k="price">Listing</th><th class="num sortable" data-k="price">Asking</th><th class="num sortable" data-k="fair">Typical nearby</th><th class="num sortable sorted" data-k="gap">Under by</th><th class="num sortable" data-k="offer">Suggested offer</th><th class="num hide sortable" data-k="walk" title="Walk Score / Bike Score as shown on the listing page; appears once someone has viewed it">Walk · Bike</th><th class="hide sortable" data-k="cutamt">Last cut</th><th class="num hide sortable" data-k="days">Listed</th><th></th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
 <div class="cta"><div><b>Want the offer and the letter for any of these?</b><div style="color:var(--muted);font-size:14px">The free extension scores every listing on Zillow as you browse, drafts the message, and tells you when to move and when to wait.</div></div><a class="btn" href="/">Get Lowball, free</a></div>
 </main>
 <div class="foot" id="foot">Estimates compare each listing with similar active listings nearby; they are not advice or a guarantee, and a landlord can say no. Not affiliated with Zillow. Listings link to zillow.com; we show no address or photos here.</div>
@@ -40,17 +41,26 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
 (function(){
   var $=function(id){return document.getElementById(id)}, data=null, LIMIT=300;
   function money(v){return '$'+Math.round(v).toLocaleString('en-US')}
-  function label(r){var b=r.beds===0?'Studio':(r.beds+' bd'); var t={APARTMENT:'apartment',CONDO:'condo',TOWNHOUSE:'townhouse',SINGLE_FAMILY:'house',MANUFACTURED:'home'}[r.type]||'home'; return b+(r.baths?' · '+r.baths+' ba':'')+(r.sqft?' · '+Math.round(r.sqft).toLocaleString()+' sqft':'')+' '+t+' · '+r.zip+(r.city?' · '+r.city:'')+(r.d!=null?' · <b>'+(r.d<0.1?'&lt;0.1':r.d.toFixed(1))+' mi</b>':'')}
+  function label(r){var b=r.beds===0?'Studio':(r.beds+' bd'); var t={APARTMENT:'apartment',CONDO:'condo',TOWNHOUSE:'townhouse',SINGLE_FAMILY:'house',MANUFACTURED:'home'}[r.type]||'home'; return b+(r.baths?' · '+r.baths+' ba':'')+(r.sqft?' · '+Math.round(r.sqft).toLocaleString()+' sqft':'')+' '+t+' · '+r.zip+(r.city?' · '+r.city:'')+(r.d!=null?(r.d<0.05?' · <b style="color:#067647">this address</b>':' · <b>'+(r.d<0.1?'&lt;0.1':r.d.toFixed(1))+' mi</b>'):'')}
+  function picked(id){ return [...document.querySelectorAll('#'+id+' input:checked')].map(function(i){return i.value}); }
+  function msLabel(id){ var v=picked(id), b=document.querySelector('#'+id+' .msb'); b.textContent=v.length===0?'Any':v.length===1?(document.querySelector('#'+id+' input[value="'+v[0].replace(/"/g,'\\"')+'"]').parentNode.textContent.trim()):v.length+' selected'; }
+  var sortKey=null, sortAsc=false;
   function render(){
-    if(!data) return; var z=$('zip').value, b=$('beds').value, mx=Number($('max').value)||0, t=$('type').value, c=$('cue').value, s=$('sort').value;
-    var ar=$('area').value, rad=Number($('radius').value)||2; var rows=data.rows.filter(function(r){ if(near){ r.d=dist(near[0],near[1],r.lat,r.lon); if(r.d>rad) return false; } else r.d=null; if(ar&&r.area!==ar) return false; if(z&&r.zip!==z) return false; if(b!==''&&!(b==='4'?r.beds>=4:r.beds===Number(b))) return false; if(mx&&r.price>mx) return false; if(t&&r.type!==t) return false; if(c&&r.cue!==c) return false; return true;});
-    rows.sort(s==='dist'&&near?function(a,b){return a.d-b.d}:s==='pct'?function(a,b){return b.pct-a.pct}:s==='days'?function(a,b){return a.days-b.days}:s==='price'?function(a,b){return a.price-b.price}:function(a,b){return b.gap-a.gap||a.days-b.days});
+    if(!data) return; var zs=picked('zip'), bs=picked('beds'), mx=Number($('max').value)||0, mo=Number($('maxoffer').value)||0, ts=picked('type'), cs=picked('cue'), s=$('sort').value;
+    var ars=picked('area'), rad=Number($('radius').value)||2; ['area','zip','beds','type','cue'].forEach(msLabel);
+    var rows=data.rows.filter(function(r){ if(near){ r.d=dist(near[0],near[1],r.lat,r.lon); if(r.d>rad) return false; } else r.d=null;
+      if(ars.length&&ars.indexOf(r.area)<0) return false; if(zs.length&&zs.indexOf(r.zip)<0) return false;
+      if(bs.length&&!bs.some(function(b){return b==='4'?r.beds>=4:r.beds===Number(b)})) return false;
+      if(mx&&r.price>mx) return false; if(mo&&r.offer>mo) return false; if(ts.length&&ts.indexOf(r.type)<0) return false;
+      if(cs.length&&!cs.some(function(c){return c==='cut'?!!r.cut:r.cue===c})) return false; return true;});
+    if(sortKey){ rows.sort(function(a,b){ var x=sortKey==='cutamt'?(a.cut?a.cut.amt:-1):a[sortKey], y=sortKey==='cutamt'?(b.cut?b.cut.amt:-1):b[sortKey]; x=x==null?-1e9:x; y=y==null?-1e9:y; return sortAsc?x-y:y-x; }); } else
+    rows.sort(s==='walk'?function(a,b){return (b.walk==null?-1:b.walk)-(a.walk==null?-1:a.walk)||b.gap-a.gap}:s==='dist'&&near?function(a,b){return a.d-b.d}:s==='pct'?function(a,b){return b.pct-a.pct}:s==='days'?function(a,b){return a.days-b.days}:s==='price'?function(a,b){return a.price-b.price}:function(a,b){return b.gap-a.gap||a.days-b.days});
     var mapMode=$('view').value==='map'; $('list').style.display=mapMode?'none':''; $('map').style.display=mapMode?'':'none';
     $('count').textContent=rows.length.toLocaleString()+' listings'+(near?' within '+rad+' mi':'')+(!mapMode&&rows.length>LIMIT?' · showing top '+LIMIT:'')+' · as of '+data.asof;
     if(mapMode){ drawMap(rows); return; }
     var tb=$('rows'); tb.innerHTML='';
     rows.slice(0,LIMIT).forEach(function(r){
-      var tr=document.createElement('tr');
+      var tr=document.createElement('tr'); if(near&&r.d!=null&&r.d<0.05&&s==='dist'&&tb.children.length===0){ tr.style.background='#ECFDF3'; }
       var gap=r.gap>0?'<span class="gap">'+money(r.gap)+'/mo</span>':'<span class="gap neg">'+(r.gap<0?money(-r.gap)+'/mo over':'at typical')+'</span>';
       var cue=r.cue==='fast'?'<span class="pill fast">move fast</span>':r.cue==='wait'?'<span class="pill wait">can wait</span>':'';
       var cut=r.cut?'<span style="color:var(--amber);font-weight:600">cut '+money(r.cut.amt)+'</span>'+(r.cut.date?'<span style="color:var(--muted);font-size:12px"> · '+r.cut.date.slice(5).replace('-','/')+'</span>':''):'<span style="color:#98A2B3">—</span>';
@@ -77,18 +87,23 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
     if(layer) layer.remove(); layer=L.layerGroup().addTo(map); var pts=[];
     rows.slice(0,1500).forEach(function(r){ if(r.lat==null) return; var col=r.cue==='fast'?'#067647':r.cue==='wait'?'#B54708':(r.gap>0?'#157347':'#98A2B3');
       var m=L.circleMarker([r.lat,r.lon],{radius:r.gap>500?8:6,color:col,fillColor:col,fillOpacity:.75,weight:1}).addTo(layer); pts.push([r.lat,r.lon]);
-      m.bindPopup('<b>'+money(r.price)+'</b> · '+label(r)+'<br>typical nearby '+money(r.fair)+' · offer <b>'+money(r.offer)+'</b>'+(r.cut?' · cut '+money(r.cut.amt):'')+(r.gap>0?' · <b style="color:#067647">'+money(r.gap)+'/mo under</b>':'')+(r.cue?' · '+(r.cue==='fast'?'move fast':'can wait'):'')+'<br><a class="open" target="_blank" rel="noopener nofollow" href="https://www.zillow.com/homedetails/'+r.zpid+'_zpid/">Open on Zillow</a>'); });
+      m.bindPopup('<b>'+money(r.price)+'</b> · '+label(r)+'<br>typical nearby '+money(r.fair)+' · offer <b>'+money(r.offer)+'</b>'+(r.cut?' · cut '+money(r.cut.amt):'')+(r.walk!=null?' · walk '+r.walk+(r.bike!=null?' / bike '+r.bike:''):'')+(r.gap>0?' · <b style="color:#067647">'+money(r.gap)+'/mo under</b>':'')+(r.cue?' · '+(r.cue==='fast'?'move fast':'can wait'):'')+'<br><a class="open" target="_blank" rel="noopener nofollow" href="https://www.zillow.com/homedetails/'+r.zpid+'_zpid/">Open on Zillow</a>'); });
     if(near){ L.marker(near).addTo(layer).bindPopup('Your address'); pts.push(near); }
     if(pts.length){ map.fitBounds(pts,{padding:[20,20],maxZoom:14}); } setTimeout(function(){map.invalidateSize()},50);
   }
   fetch('data/all.json').then(function(r){return r.json()}).then(function(d){
     data=d; var zips={}, areas={}; d.rows.forEach(function(r){zips[r.zip]=(zips[r.zip]||0)+1; if(r.area) areas[r.area]=(areas[r.area]||0)+1});
-    Object.keys(areas).sort().forEach(function(a){var o=document.createElement('option');o.value=a;o.textContent=a+' ('+areas[a]+')';$('area').appendChild(o)});
-    Object.keys(zips).sort().forEach(function(z){var o=document.createElement('option');o.value=z;o.textContent=z+' ('+zips[z]+')';$('zip').appendChild(o)});
-    var q=new URLSearchParams(location.search); ['area','zip','beds','max','type','cue','sort','view'].forEach(function(k){if(q.get(k)!=null)$(k).value=q.get(k)});
+    function opt(id,v,txt){var l=document.createElement('label');var i=document.createElement('input');i.type='checkbox';i.value=v;l.appendChild(i);l.appendChild(document.createTextNode(txt));document.querySelector('#'+id+' .msd').appendChild(l)}
+    Object.keys(areas).sort().forEach(function(a){opt('area',a,a+' ('+areas[a]+')')});
+    Object.keys(zips).sort().forEach(function(z){opt('zip',z,z+' ('+zips[z]+')')});
+    document.querySelectorAll('.ms').forEach(function(m){ m.querySelector('.msb').addEventListener('click',function(e){e.stopPropagation(); document.querySelectorAll('.ms.open').forEach(function(o){if(o!==m)o.classList.remove('open')}); m.classList.toggle('open')}); m.addEventListener('change',render); m.querySelector('.msd').addEventListener('click',function(e){e.stopPropagation()}); });
+    document.addEventListener('click',function(){document.querySelectorAll('.ms.open').forEach(function(o){o.classList.remove('open')})});
+    document.querySelectorAll('th.sortable').forEach(function(th){ th.addEventListener('click',function(){ var k=th.dataset.k; if(sortKey===k) sortAsc=!sortAsc; else { sortKey=k; sortAsc=(k==='price'||k==='days'||k==='offer'||k==='fair'); } document.querySelectorAll('th.sortable').forEach(function(x){x.classList.remove('sorted','asc')}); th.classList.add('sorted'); if(sortAsc) th.classList.add('asc'); render(); }); });
+    $('sort').addEventListener('change',function(){ sortKey=null; document.querySelectorAll('th.sortable').forEach(function(x){x.classList.remove('sorted','asc')}); });
+    var q=new URLSearchParams(location.search); ['max','maxoffer','sort','view'].forEach(function(k){if(q.get(k)!=null)$(k).value=q.get(k)});
     render();
   });
-  ['area','zip','beds','max','type','cue','sort','view'].forEach(function(k){$(k).addEventListener('input',render);$(k).addEventListener('change',render)});
+  ['max','maxoffer','sort','view'].forEach(function(k){$(k).addEventListener('input',render);$(k).addEventListener('change',render)});
 })();
 </script>
 </body></html>
