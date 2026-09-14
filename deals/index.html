@@ -131,11 +131,15 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     });
   }
   function sorted(rows){
-    var s=$('sort').value||DEFSORT; var k={gap:function(a,b){return b.gap-a.gap||a.days-b.days},pct:function(a,b){return (MODE==='buy'?((a.pct>=20)-(b.pct>=20)):0)||b.pct-a.pct},cut:function(a,b){return (b.cut?b.cut.amt:-1)-(a.cut?a.cut.amt:-1)},days:function(a,b){return a.days-b.days||b.gap-a.gap},old:function(a,b){return b.days-a.days},price:function(a,b){return a.price-b.price},priced:function(a,b){return b.price-a.price},sqft:function(a,b){return (b.sqft||0)-(a.sqft||0)},ppsf:function(a,b){return (a.ppsf||1e9)-(b.ppsf||1e9)},dist:function(a,b){return (a.d==null?1e9:a.d)-(b.d==null?1e9:b.d)},walk:function(a,b){return (b.walk==null?-1:b.walk)-(a.walk==null?-1:a.walk)||b.gap-a.gap},transit:function(a,b){return (b.transit==null?-1:b.transit)-(a.transit==null?-1:a.transit)||b.gap-a.gap}}[s]||function(a,b){return b.gap-a.gap};
+    var s=$('sort').value||DEFSORT; var k={gap:function(a,b){return b.gap-a.gap||a.days-b.days},pct:function(a,b){return (MODE==='buy'?((a.pct>=20)-(b.pct>=20)):0)||b.pct-a.pct},bets:function(a,b){return bets(b)-bets(a)||b.pct-a.pct},cut:function(a,b){return (b.cut?b.cut.amt:-1)-(a.cut?a.cut.amt:-1)},days:function(a,b){return a.days-b.days||b.gap-a.gap},old:function(a,b){return b.days-a.days},price:function(a,b){return a.price-b.price},priced:function(a,b){return b.price-a.price},sqft:function(a,b){return (b.sqft||0)-(a.sqft||0)},ppsf:function(a,b){return (a.ppsf||1e9)-(b.ppsf||1e9)},dist:function(a,b){return (a.d==null?1e9:a.d)-(b.d==null?1e9:b.d)},walk:function(a,b){return (b.walk==null?-1:b.walk)-(a.walk==null?-1:a.walk)||b.gap-a.gap},transit:function(a,b){return (b.transit==null?-1:b.transit)-(a.transit==null?-1:a.transit)||b.gap-a.gap}}[s]||function(a,b){return b.gap-a.gap};
     return rows.slice().sort(k);
   }
 
   // ----- cards
+  // Best bets (buy): up to 15 points for asking under typical, falling away past 15% (a home far under similar homes usually has a reason), up to 8 for time
+  // listed (days on market is what predicts a cut: 4% cut by now at a week, 63% past 90 days), 4 for a cut already taken,
+  // minus for rows we would not stand behind. Says what the ranking is instead of leading with the biggest number.
+  function bets(r){ if(r.restricted||r.suspect||r.solid===false) return -100+Math.min(20,r.pct||0); var pc=r.pct||0, price=pc<=15?Math.max(-10,pc):15-(pc-15)*0.5; return price+8*Math.min(90,r.days||0)/90+(r.cut?4:0); }
   function offerWhy(r){
     if(r.restricted==='income') return 'set by the program, not negotiable';
     var pc=Math.round((1-r.offer/r.price)*100), why=[];
