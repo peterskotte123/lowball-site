@@ -1,0 +1,88 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Get Lowball · two quick taps</title><meta name="description" content="Two quick taps so Lowball shows you the right deals and drafts the right offer, then install the free extension."><meta name="robots" content="noindex">
+<link rel="icon" href="/img/mark.svg">
+<style>
+:root{--ink:#101828;--ink2:#344054;--muted:#475467;--muted2:#667085;--muted3:#98A2B3;--line:#EAECF0;--line2:#D0D5DD;--soft:#F8FAFC;--green:#157347;--deal:#067647}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--soft)}
+header{background:#fff;border-bottom:1px solid var(--line)}.nav{max-width:1080px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}.nav img{height:24px}.nav a{color:var(--muted);text-decoration:none;font-size:14px}
+main{max-width:560px;margin:34px auto;padding:0 20px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 24px;box-shadow:0 20px 50px -30px rgba(16,24,40,.35)}
+h1{font-size:24px;letter-spacing:-.02em;margin:0 0 6px;line-height:1.2}.lede{color:var(--muted);margin:0 0 18px;font-size:15px}
+.step{display:none}.step.on{display:block}.q{font-size:17px;font-weight:600;margin:0 0 12px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}.opt{font:15px inherit;padding:10px 14px;border:1px solid var(--line2);border-radius:999px;background:#fff;color:var(--ink);cursor:pointer}.opt:hover{border-color:var(--green)}.opt.on{background:#ECFDF3;border-color:#ABEFC6;color:var(--deal);font-weight:600}
+input.t{font:15px inherit;width:100%;padding:11px 13px;border:1px solid var(--line2);border-radius:10px;margin-bottom:10px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}.btn{font:inherit;font-weight:600;padding:12px 18px;border-radius:10px;border:0;cursor:pointer;text-decoration:none;display:inline-block}.btn.p{background:var(--green);color:#fff}.btn.p:hover{background:#0f5c38}.btn.g{background:#fff;color:var(--ink2);border:1px solid var(--line2)}
+.skip{margin-left:auto;font-size:13px;color:var(--muted2)}.skip a{color:var(--muted2)}
+.prog{display:flex;gap:6px;margin:0 0 18px}.prog i{height:4px;flex:1;border-radius:2px;background:var(--line)}.prog i.on{background:var(--green)}
+.notice{font-size:12.5px;color:var(--muted);line-height:1.5;border-top:1px solid var(--line);margin-top:14px;padding-top:12px}.notice a{color:var(--green)}
+label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink2);margin:8px 0 4px}label.ck input{margin-top:3px;flex:none}
+.done h2{font-size:20px;margin:0 0 8px}.foot{max-width:560px;margin:0 auto;padding:10px 20px 40px;color:var(--muted3);font-size:12px}
+</style></head><body>
+<header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/deals/">Deals</a><a href="/rent/">Rent by ZIP</a></div></header>
+<main><div class="card">
+  <div class="prog"><i class="on" id="p1"></i><i id="p2"></i><i id="p3"></i><i id="p4"></i></div>
+  <h1>Two quick taps</h1><p class="lede">So Lowball shows you the right deals, and drafts the right offer.</p>
+
+  <div class="step on" data-step="1">
+    <p class="q">Are you renting or buying?</p>
+    <div class="opts" data-k="intent"><button class="opt" data-v="rent">Renting</button><button class="opt" data-v="buy">Buying</button><button class="opt" data-v="both">Both</button></div>
+  </div>
+
+  <div class="step" data-step="2">
+    <p class="q" id="q2"></p>
+    <div class="opts" data-k="timeline"></div>
+  </div>
+
+  <div class="step" data-step="3">
+    <p class="q">Where are you looking?</p>
+    <input class="t" id="area" list="arealist" placeholder="Neighborhood, city or ZIP" autocomplete="off"><datalist id="arealist"></datalist>
+    <p class="q" id="q3b"></p>
+    <div class="opts" id="opts3b"></div>
+  </div>
+
+  <div class="step" data-step="4">
+    <p class="q" id="q4">Where should we send your deal alerts?</p>
+    <input class="t" id="email" type="email" placeholder="Email (optional)" autocomplete="email">
+    <label class="ck" id="sharerow"><input type="checkbox" id="share"><span>A licensed real-estate agent may email me about my search. <span style="color:var(--muted2)">Optional. Email only — nobody calls or texts you.</span></span></label>
+    <div class="notice" id="notice">We collect your answers and, if you give it, your email, to send deal alerts for your area and to draft the right offer. If you tick the box, we may share your email and answers with a licensed real-estate agent or brokerage, who may email you; that is a sale of personal information under California law, and you can opt out any time at <a href="/privacy#do-not-sell">Do Not Sell or Share My Personal Information</a>. We keep form entries 24 months. This form is separate from the extension, which never collects names or emails. <a href="/privacy">Privacy policy</a>.</div>
+  </div>
+
+  <div class="step done" data-step="5"><h2 id="doneh">You're set.</h2><p class="lede" id="donep"></p></div>
+
+  <div class="row" id="ctl"><button class="btn g" id="back" style="display:none">Back</button><button class="btn p" id="next" style="display:none">Next</button><a class="btn p" id="install" style="display:none" rel="noopener">Install Lowball, free</a><span class="skip"><a href="#" id="skip">Skip to install</a></span></div>
+</div></main>
+<div class="foot">Not affiliated with Zillow. Estimates are not advice or a guarantee. <a href="/privacy#do-not-sell" style="color:inherit">Do Not Sell or Share My Personal Information</a></div>
+<script>
+(function(){
+  var $=function(id){return document.getElementById(id)}, API='https://api.lowball.rent/v1', q=new URLSearchParams(location.search);
+  var STORE=q.get('next')||'https://chrome.google.com/webstore'; var page=q.get('from')||'/start';
+  var a={intent:null,timeline:null,area:'',helper:null,buy_soon:null}, step=1;
+  function opts(k,list){ var box=document.querySelector('.opts[data-k="'+k+'"]')||$('opts3b'); box.innerHTML=''; box.dataset.k=k; list.forEach(function(o){var b=document.createElement('button');b.className='opt';b.dataset.v=o[0];b.textContent=o[1];box.appendChild(b)}); }
+  function show(n){ step=n; document.querySelectorAll('.step').forEach(function(s){s.classList.toggle('on',Number(s.dataset.step)===n)}); for(var i=1;i<=4;i++) $('p'+i).classList.toggle('on',i<=Math.min(n,4));
+    $('back').style.display=n>1&&n<5?'':'none'; $('next').style.display=(n===3||n===4)?'':'none'; $('install').style.display=n>=2?'':'none'; $('install').href=STORE; $('skip').parentNode.style.display=n<5?'':'none';
+    if(n===4) $('next').textContent=$('email').value?'Save & install':'Install without email';
+    if(n===5){ $('ctl').style.display='none'; } }
+  function setup2(){ var buy=a.intent!=='rent';
+    $('q2').textContent=buy?'When do you want to be in a new home?':'When’s your move?';
+    opts('timeline', buy?[['0-3','Next 3 months'],['3-6','3–6 months'],['6-12','6–12 months'],['watch','Just watching']]:[['0-1','This month'],['1-3','1–3 months'],['later','Later'],['watch','Just checking prices']]);
+    $('q3b').textContent=buy?'Who’s helping with the search so far?':'Thinking about buying in the next couple of years?';
+    opts(buy?'helper':'buy_soon', buy?[['nobody','Nobody yet'],['few','Talking to a few agents'],['one','Working with one agent']]:[['yes','Yes, seriously'],['maybe','Maybe'],['no','No']]);
+    $('q4').textContent=buy?'Where should we send offer drafts and deal alerts?':'Where should we send deal alerts?';
+  }
+  document.addEventListener('click',function(e){ var b=e.target.closest('.opt'); if(!b) return; var box=b.parentNode, k=box.dataset.k; box.querySelectorAll('.opt').forEach(function(x){x.classList.remove('on')}); b.classList.add('on'); a[k]=b.dataset.v;
+    if(k==='intent'){ setup2(); show(2); } else if(k==='timeline'){ show(3); } });
+  $('next').addEventListener('click',function(){ if(step===3){ a.area=$('area').value.trim(); show(4); } else if(step===4){ submit(true); } });
+  $('back').addEventListener('click',function(){ show(step-1) });
+  $('skip').addEventListener('click',function(e){ e.preventDefault(); if(a.intent) submit(false); location.href=STORE; });
+  $('email').addEventListener('input',function(){ $('next').textContent=$('email').value?'Save & install':'Install without email' });
+  function submit(goInstall){
+    var email=$('email').value.trim(); var body={intent:a.intent,timeline:a.timeline,area:a.area||null,helper:a.helper,buy_soon:a.buy_soon,email:email||null,page:page,notice_v:1,gpc:navigator.globalPrivacyControl===true,share_ok:$('share').checked};
+    fetch(API+'/lead',{method:'POST',headers:{'Content-Type':'application/json','X-Lowball-Client':'web-start'},body:JSON.stringify(body),keepalive:true}).catch(function(){});
+    if(goInstall){ $('doneh').textContent=email?'You’re set.':'Thanks.'; $('donep').innerHTML=(email?'Deal alerts for '+(a.area||'your area')+' will come from hello@lowball.rent. ':'')+'Now install the extension: <a href="'+STORE+'" rel="noopener">Add Lowball to Chrome, free</a>.'; show(5); setTimeout(function(){location.href=STORE},1800); }
+  }
+  // area suggestions from the deals data (neighborhoods, cities, ZIPs) — nothing typed here leaves the page until submit
+  fetch('/deals/data/index.json').then(function(r){return r.json()}).then(function(d){ var dl=$('arealist'); Object.keys(d.zips||{}).forEach(function(z){var o=document.createElement('option');o.value=z;dl.appendChild(o)}); }).catch(function(){});
+  fetch('/deals/data/all.json').then(function(r){return r.json()}).then(function(d){ var dl=$('arealist'), seen={}; d.rows.forEach(function(r){[r.area,r.city].forEach(function(v){ if(v&&!seen[v]){seen[v]=1; var o=document.createElement('option');o.value=v;dl.appendChild(o)} })}); }).catch(function(){});
+  var pre=q.get('intent'); if(pre&&/^(rent|buy|both)$/.test(pre)){ a.intent=pre; setup2(); show(2); } else show(1);
+})();
+</script>
+</body></html>
