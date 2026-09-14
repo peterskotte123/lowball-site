@@ -84,7 +84,7 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
   $('skip').addEventListener('click',function(e){ e.preventDefault(); if(a.intent) submit(false); location.href=STORE; });
   $('email').addEventListener('input',function(){ $('next').textContent=$('email').value?'Save & install':'Install without email' });
   function submit(goInstall){
-    var email=$('email').value.trim(); var body={intent:a.intent,timeline:a.timeline,area:a.area||null,helper:a.helper,buy_soon:a.buy_soon,beds:a.beds,budget:a.budget,home_type:a.home_type,email:email||null,page:page,notice_v:2,gpc:navigator.globalPrivacyControl===true,share_ok:$('share').checked};
+    var email=$('email').value.trim(); var body={intent:a.intent,timeline:a.timeline,area:a.area||null,helper:a.helper,buy_soon:a.buy_soon,beds:a.beds,budget:a.budget,home_type:a.home_type,email:email||null,page:page,notice_v:2,gpc:navigator.globalPrivacyControl===true,share_ok:$('share').checked,consent_notice:$('notice').innerText.slice(0,1500),consent_box:$('sharetxt').innerText.slice(0,400),client_ts:Math.floor(Date.now()/1000)};
     fetch(API+'/lead',{method:'POST',headers:{'Content-Type':'application/json','X-Lowball-Client':'web-start'},body:JSON.stringify(body),keepalive:true}).catch(function(){});
     if(goInstall){ $('doneh').textContent=email?'You’re set.':'Thanks.'; $('donep').innerHTML=(email?'Deal alerts for '+(a.area||'your area')+' will come from hello@lowball.rent. ':'')+'Now install the extension: <a href="'+STORE+'" rel="noopener">Add Lowball to Chrome, free</a>.'; show(5); setTimeout(function(){location.href=STORE},1800); }
   }
