@@ -26,6 +26,8 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
   <div class="f"><span>Beds</span><div class="ms" id="beds" data-label="Any"><button type="button" class="msb">Any</button><div class="msd"><label><input type="checkbox" value="0">Studio</label><label><input type="checkbox" value="1">1</label><label><input type="checkbox" value="2">2</label><label><input type="checkbox" value="3">3</label><label><input type="checkbox" value="4">4+</label></div></div></div>
   <label class="f">Max rent<input id="max" type="number" placeholder="e.g. 3000" step="100" min="0"></label>
   <label class="f">Max suggested offer<input id="maxoffer" type="number" placeholder="e.g. 2800" step="50" min="0"></label>
+  <label class="f">Min sqft<input id="minsqft" type="number" placeholder="e.g. 800" step="50" min="0" style="min-width:100px"></label>
+  <label class="f">Max sqft<input id="maxsqft" type="number" placeholder="e.g. 1500" step="50" min="0" style="min-width:100px"></label>
   <div class="f"><span>Type</span><div class="ms" id="type" data-label="Any"><button type="button" class="msb">Any</button><div class="msd"><label><input type="checkbox" value="APARTMENT">Apartment</label><label><input type="checkbox" value="CONDO">Condo</label><label><input type="checkbox" value="TOWNHOUSE">Townhouse</label><label><input type="checkbox" value="SINGLE_FAMILY">House</label></div></div></div>
   <div class="f"><span>Show</span><div class="ms" id="cue" data-label="Any"><button type="button" class="msb">Any</button><div class="msd"><label><input type="checkbox" value="fast">Move fast</label><label><input type="checkbox" value="wait">Can wait</label><label><input type="checkbox" value="cut">Has a recent cut</label></div></div></div>
   <label class="f">Sort<select id="sort"><option value="gap">Most under typical</option><option value="dist">Nearest</option><option value="walk">Most walkable</option><option value="pct">Biggest % under</option><option value="days">Newest</option><option value="price">Cheapest</option></select></label>
@@ -33,7 +35,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
   <div class="count" id="count"></div>
 </div>
 <div id="mapwrap" style="display:none;position:relative;margin-bottom:18px"><div id="map" style="height:72vh;min-height:440px;border:1px solid var(--line);border-radius:12px;overflow:hidden"></div><div class="legend"><i style="background:#067647"></i>move fast<br><i style="background:#B54708"></i>can wait<br><i style="background:#157347"></i>under typical<br><i style="background:#98A2B3"></i>at or over</div></div>
-<div id="list" style="overflow-x:auto"><table><thead><tr><th class="sortable" data-k="price">Listing</th><th class="num sortable" data-k="price">Asking</th><th class="num sortable" data-k="fair">Typical nearby</th><th class="num sortable sorted" data-k="gap">Under by</th><th class="num sortable" data-k="offer">Suggested offer</th><th class="num hide sortable" data-k="walk" title="Walk Score / Bike Score as shown on the listing page; appears once someone has viewed it">Walk · Bike</th><th class="hide sortable" data-k="cutamt">Last cut</th><th class="num hide sortable" data-k="days">Listed</th><th></th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
+<div id="list" style="overflow-x:auto"><table><thead><tr><th class="sortable" data-k="sqft">Listing</th><th class="num sortable" data-k="price">Asking</th><th class="num sortable" data-k="fair">Typical nearby</th><th class="num sortable sorted" data-k="gap">Under by</th><th class="num sortable" data-k="offer">Suggested offer</th><th class="num hide sortable" data-k="walk" title="Walk Score / Bike Score as shown on the listing page; appears once someone has viewed it">Walk · Bike</th><th class="hide sortable" data-k="cutamt">Last cut</th><th class="num hide sortable" data-k="days">Listed</th><th></th><th></th></tr></thead><tbody id="rows"></tbody></table></div>
 <div class="cta"><div><b>Want the offer and the letter for any of these?</b><div style="color:var(--muted);font-size:14px">The free extension scores every listing on Zillow as you browse, drafts the message, and tells you when to move and when to wait.</div></div><a class="btn" href="/">Get Lowball, free</a></div>
 </main>
 <div class="foot" id="foot">Estimates compare each listing with similar active listings nearby; they are not advice or a guarantee, and a landlord can say no. Not affiliated with Zillow. Listings link to zillow.com; we show no address or photos here.</div>
@@ -46,12 +48,12 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
   function msLabel(id){ var v=picked(id), b=document.querySelector('#'+id+' .msb'); b.textContent=v.length===0?'Any':v.length===1?(document.querySelector('#'+id+' input[value="'+v[0].replace(/"/g,'\\"')+'"]').parentNode.textContent.trim()):v.length+' selected'; }
   var sortKey=null, sortAsc=false;
   function render(){
-    if(!data) return; var zs=picked('zip'), bs=picked('beds'), mx=Number($('max').value)||0, mo=Number($('maxoffer').value)||0, ts=picked('type'), cs=picked('cue'), s=$('sort').value;
+    if(!data) return; var zs=picked('zip'), bs=picked('beds'), mx=Number($('max').value)||0, mo=Number($('maxoffer').value)||0, sq0=Number($('minsqft').value)||0, sq1=Number($('maxsqft').value)||0, ts=picked('type'), cs=picked('cue'), s=$('sort').value;
     var ars=picked('area'), rad=Number($('radius').value)||2; ['area','zip','beds','type','cue'].forEach(msLabel);
     var rows=data.rows.filter(function(r){ if(near){ r.d=dist(near[0],near[1],r.lat,r.lon); if(r.d>rad) return false; } else r.d=null;
       if(ars.length&&ars.indexOf(r.area)<0) return false; if(zs.length&&zs.indexOf(r.zip)<0) return false;
       if(bs.length&&!bs.some(function(b){return b==='4'?r.beds>=4:r.beds===Number(b)})) return false;
-      if(mx&&r.price>mx) return false; if(mo&&r.offer>mo) return false; if(ts.length&&ts.indexOf(r.type)<0) return false;
+      if(mx&&r.price>mx) return false; if(mo&&r.offer>mo) return false; if((sq0||sq1)&&!r.sqft) return false; if(sq0&&r.sqft<sq0) return false; if(sq1&&r.sqft>sq1) return false; if(ts.length&&ts.indexOf(r.type)<0) return false;
       if(cs.length&&!cs.some(function(c){return c==='cut'?!!r.cut:r.cue===c})) return false; return true;});
     if(sortKey){ rows.sort(function(a,b){ var x=sortKey==='cutamt'?(a.cut?a.cut.amt:-1):a[sortKey], y=sortKey==='cutamt'?(b.cut?b.cut.amt:-1):b[sortKey]; x=x==null?-1e9:x; y=y==null?-1e9:y; return sortAsc?x-y:y-x; }); } else
     rows.sort(s==='walk'?function(a,b){return (b.walk==null?-1:b.walk)-(a.walk==null?-1:a.walk)||b.gap-a.gap}:s==='dist'&&near?function(a,b){return a.d-b.d}:s==='pct'?function(a,b){return b.pct-a.pct}:s==='days'?function(a,b){return a.days-b.days}:s==='price'?function(a,b){return a.price-b.price}:function(a,b){return b.gap-a.gap||a.days-b.days});
@@ -118,10 +120,10 @@ td.num{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.ga
     document.addEventListener('click',function(){document.querySelectorAll('.ms.open').forEach(function(o){o.classList.remove('open')})});
     document.querySelectorAll('th.sortable').forEach(function(th){ th.addEventListener('click',function(){ var k=th.dataset.k; if(sortKey===k) sortAsc=!sortAsc; else { sortKey=k; sortAsc=(k==='price'||k==='days'||k==='offer'||k==='fair'); } document.querySelectorAll('th.sortable').forEach(function(x){x.classList.remove('sorted','asc')}); th.classList.add('sorted'); if(sortAsc) th.classList.add('asc'); render(); }); });
     $('sort').addEventListener('change',function(){ sortKey=null; document.querySelectorAll('th.sortable').forEach(function(x){x.classList.remove('sorted','asc')}); });
-    var q=new URLSearchParams(location.search); ['max','maxoffer','sort','view'].forEach(function(k){if(q.get(k)!=null)$(k).value=q.get(k)});
+    var q=new URLSearchParams(location.search); ['max','maxoffer','minsqft','maxsqft','sort','view'].forEach(function(k){if(q.get(k)!=null)$(k).value=q.get(k)});
     render();
   });
-  ['max','maxoffer','sort','view'].forEach(function(k){$(k).addEventListener('input',render);$(k).addEventListener('change',render)});
+  ['max','maxoffer','minsqft','maxsqft','sort','view'].forEach(function(k){$(k).addEventListener('input',render);$(k).addEventListener('change',render)});
 })();
 </script>
 </body></html>
