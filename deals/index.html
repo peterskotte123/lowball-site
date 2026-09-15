@@ -71,7 +71,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
   <div class="dd" id="pricedd"><button type="button" class="db" id="priceb">Price</button><div class="dp"><h4>rent</h4><div class="row"><input id="minp" type="number" aria-label="Minimum price" placeholder="No min" step="100" min="0"><span class="sep">–</span><input id="max" type="number" aria-label="Maximum price" placeholder="No max" step="100" min="0"></div><h4>Max suggested offer</h4><div class="row"><input id="maxoffer" type="number" aria-label="Maximum suggested offer" placeholder="Any" step="50" min="0"></div><div class="apply"><button type="button" class="p" data-close>Done</button></div></div></div>
   <div class="dd" id="bbdd"><button type="button" class="db" id="bbb">Beds &amp; Baths</button><div class="dp"><h4>Bedrooms</h4><div class="seg" id="beds"><button type="button" data-v="0">Studio</button><button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4+</button></div><h4 style="margin-top:12px">Bathrooms</h4><div class="seg" id="baths"><button type="button" data-v="0" class="on">Any</button><button type="button" data-v="1">1+</button><button type="button" data-v="1.5">1.5+</button><button type="button" data-v="2">2+</button><button type="button" data-v="3">3+</button></div><div class="apply"><button type="button" class="p" data-close>Done</button></div></div></div>
   <div class="dd" id="typedd"><button type="button" class="db" id="typeb">Home Type</button><div class="dp" id="typep"><div class="apply"><button type="button" class="p" data-close>Done</button></div></div></div>
-  <div class="dd" id="moredd"><button type="button" class="db" id="moreb">More</button><div class="dp r" style="min-width:320px"><h4>Square feet</h4><div class="row"><input id="minsqft" type="number" aria-label="Minimum square feet" placeholder="No min" step="50"><span class="sep">–</span><input id="maxsqft" type="number" aria-label="Maximum square feet" placeholder="No max" step="50"></div><h4>ZIP codes</h4><div class="row"><input id="zipq" type="text" aria-label="Filter ZIP codes" placeholder="Type a ZIP…"></div><div class="list" id="ziplist"></div><div class="row" style="margin-top:12px"><label class="ck"><input type="checkbox" id="bymap"> Only what's in the map view</label></div><div class="row"><label class="ck"><input type="checkbox" id="follow" checked> Update the list as I move the map</label></div><div class="row"><label class="ck"><input type="checkbox" id="hideprog"> Hide income- and age-restricted listings</label></div><div class="apply"><button type="button" class="p" data-close>Done</button></div></div></div>
+  <div class="dd" id="moredd"><button type="button" class="db" id="moreb">More</button><div class="dp r" style="min-width:320px"><h4>Square feet</h4><div class="row"><input id="minsqft" type="number" aria-label="Minimum square feet" placeholder="No min" step="50"><span class="sep">–</span><input id="maxsqft" type="number" aria-label="Maximum square feet" placeholder="No max" step="50"></div><h4>ZIP codes</h4><div class="row"><input id="zipq" type="text" aria-label="Filter ZIP codes" placeholder="Type a ZIP…"></div><div class="list" id="ziplist"></div><div class="row" style="margin-top:12px"><label class="ck"><input type="checkbox" id="hideprog"> Hide income- and age-restricted listings</label></div><div class="apply"><button type="button" class="p" data-close>Done</button></div></div></div>
   <div class="spacer"></div>
   <div class="dd" id="metrodd"><button type="button" class="db" id="metrob">San Diego, CA</button><div class="dp r" id="metrop" style="min-width:200px;padding:6px"></div></div>
   <button type="button" class="reset" id="reset">Reset</button>
@@ -79,7 +79,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
 <div class="applied" id="applied"></div>
 
 <div class="wrap">
-  <div class="mapcol" id="mapcol"><div id="map"></div><div class="mapui"><button type="button" class="pillw act" id="searchhere" style="display:none">Search this area</button><button type="button" class="pillw" id="closemap" style="display:none">List</button></div><div class="legend"><span><i style="background:#065F46"></i>move fast</span><span><i style="background:#B54708"></i>can wait</span><span><i style="background:#2E9E5B"></i>under typical</span><span><i style="background:#667085"></i>at or over</span></div></div>
+  <div class="mapcol" id="mapcol"><div id="map"></div><div class="mapui"><button type="button" class="pillw" id="closemap" style="display:none">List</button></div><div class="legend"><span><i style="background:#065F46"></i>move fast</span><span><i style="background:#B54708"></i>can wait</span><span><i style="background:#2E9E5B"></i>under typical</span><span><i style="background:#667085"></i>at or over</span></div></div>
   <div class="list" id="list">
     <div class="lh"><h1 id="h1">Rental deals in San Diego, CA</h1><div class="meta"><span class="n" id="count"></span><span class="asof" id="asof"></span><label class="sortw">Sort: <select id="sort"><option value="gap">Most under typical</option><option value="pct">Biggest % under</option><option value="cut">Biggest recent cut</option><option value="days">Newest</option><option value="old">Longest listed</option><option value="price">Price: low to high</option><option value="priced">Price: high to low</option><option value="sqft">Largest</option><option value="ppsf">Cheapest per sqft</option><option value="dist">Nearest to address</option><option value="walk">Most walkable</option><option value="transit">Best transit</option></select></label></div></div>
     <div class="chips">
@@ -102,8 +102,8 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
 <script>
 (function(){
   var MODE='rent', DEFSORT='gap', PER='/mo';
-  var $=function(id){return document.getElementById(id)}, data=null, refit=false, near=null, nearLabel='', tmr=null, shown=40, mapReady=false, map=null, pendingRows=null, popup=null, hovered=null, filterByMap=false, mapMoved=false, viewRows=[], byId={};
-  var METROS={}, metro='sd', M=null, userMoved=false, followMap=true;
+  var $=function(id){return document.getElementById(id)}, data=null, refit=false, near=null, nearLabel='', tmr=null, shown=40, mapReady=false, map=null, pendingRows=null, popup=null, hovered=null, mapMoved=false, viewRows=[], byId={};
+  var METROS={}, metro='sd', M=null, userMoved=false, initView=null;
   var TYPES={APARTMENT:'Apartment',CONDO:'Condo',TOWNHOUSE:'Townhouse',SINGLE_FAMILY:'House',MULTI_FAMILY:'Multi-family',MANUFACTURED:'Manufactured'};
   var TYPE_OPTS=[["SINGLE_FAMILY","House"],["CONDO","Condo"],["TOWNHOUSE","Townhouse"],["APARTMENT","Apartment"],["MULTI_FAMILY","Multi-family"]];
   var loc={city:[],area:[],zip:[]}, beds=[], minBaths=0, types=[], chips={deals:true,fast:false,wait:false,cut:false}, hideProg=false;
@@ -117,7 +117,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
   // ----- filtering and sorting
   function filtered(){
     var mn=Number($('minp').value)||0, mx=Number($('max').value)||0, mo=Number($('maxoffer').value)||0, sq0=Number($('minsqft').value)||0, sq1=Number($('maxsqft').value)||0, rad=near?Number((document.getElementById('radius')||{}).value||2):0;
-    var bounds=(filterByMap&&map&&mapReady&&!refit)?map.getBounds():null;
+    var bounds=(map&&mapReady&&!refit)?map.getBounds():null;   // the list is the map view, as on Zillow; a pending fit renders again when it lands
     return data.rows.filter(function(r){
       if(near){ r.d=dist(near[0],near[1],r.lat,r.lon); if(r.d>rad) return false; } else r.d=null;
       if(chips.deals&&!(r.gap>0&&true&&!r.restricted)) return false; if(hideProg&&r.restricted) return false; if(chips.fast&&r.cue!=='fast') return false; if(chips.wait&&r.cue!=='wait') return false; if(chips.cut&&!r.cut) return false;
@@ -171,7 +171,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     if(!data) return; if(!keepShown) shown=40;
     paintButtons(); paintApplied();
     var rows=sorted(filtered()); viewRows=rows; viewPlace=placeOf(rows); paintButtons();
-    $('count').innerHTML='<b>'+rows.length.toLocaleString()+'</b> '+(chips.deals?'deals':'listings')+(near?' within '+(($('radius')||{}).value||2)+' mi':'')+(filterByMap?' in view':'')+' <span style="color:var(--muted3)">of '+data.rows.length.toLocaleString()+' scored</span>';
+    $('count').innerHTML='<b>'+rows.length.toLocaleString()+'</b> '+(chips.deals?'deals':'listings')+(near?' within '+(($('radius')||{}).value||2)+' mi':'')+((map&&mapReady)?' in view':'')+' <span style="color:var(--muted3)">of '+data.rows.length.toLocaleString()+' scored</span>';
     var c=$('cards'); c.innerHTML='';
     if(!rows.length){ c.innerHTML='<div class="empty">Nothing matches. Loosen a filter or turn off "Deals only".</div>'; }
     rows.slice(0,shown).forEach(function(r){c.appendChild(card(r))});
@@ -183,7 +183,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     var mn=$('minp').value, mx=$('max').value, mo=$('maxoffer').value; var pb=$('priceb'); pb.classList.toggle('set',!!(mn||mx||mo)); pb.textContent=(mn&&mx)?(moneyK(+mn)+' – '+moneyK(+mx)):mx?('Up to '+moneyK(+mx)):mn?(moneyK(+mn)+'+'):(mo?'Offer ≤ '+moneyK(+mo):'Price');
     var bb=$('bbb'); bb.classList.toggle('set',beds.length>0||minBaths>0); bb.textContent=(beds.length||minBaths)?[beds.length?beds.slice().sort().map(function(b){return b===0?'Studio':b===4?'4+':b}).join(', ')+' bd':'',minBaths?minBaths+'+ ba':''].filter(Boolean).join(' · '):'Beds & Baths';
     var tb=$('typeb'); tb.classList.toggle('set',types.length>0); tb.textContent=types.length===1?TYPES[types[0]]:types.length>1?'Type · '+types.length:'Home Type';
-    var more=(loc.zip.length?1:0)+(($('minsqft').value||$('maxsqft').value)?1:0)+(filterByMap?1:0)+(hideProg?1:0); var mb=$('moreb'); mb.classList.toggle('set',more>0); mb.textContent=more?'More · '+more:'More';
+    var more=(loc.zip.length?1:0)+(($('minsqft').value||$('maxsqft').value)?1:0)+(hideProg?1:0); var mb=$('moreb'); mb.classList.toggle('set',more>0); mb.textContent=more?'More · '+more:'More';
     document.querySelectorAll('#beds button').forEach(function(b){b.classList.toggle('on',beds.indexOf(Number(b.dataset.v))>=0)}); document.querySelectorAll('#baths button').forEach(function(b){b.classList.toggle('on',Number(b.dataset.v)===minBaths)});
     document.querySelectorAll('#typep input').forEach(function(i){i.checked=types.indexOf(i.value)>=0}); document.querySelectorAll('#ziplist input').forEach(function(i){i.checked=loc.zip.indexOf(i.value)>=0});
     Object.keys(chips).forEach(function(k){var c=document.querySelector('[data-chip="'+k+'"]'); c.classList.toggle('on',chips[k]); c.setAttribute('aria-pressed',chips[k]?'true':'false')});
@@ -201,7 +201,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
   }
   var radiusVal='2', viewPlace=null;
   // Where is the map? The neighbourhood that holds half the rows in view, else the city that holds 60%, else nothing (metro name).
-  function placeOf(rows){ if(!filterByMap||!rows.length||rows.length>1500) return null; var a={},c={}; rows.forEach(function(r){ if(r.area) a[r.area]=(a[r.area]||0)+1; if(r.city) c[r.city]=(c[r.city]||0)+1; }); var ta=Object.keys(a).sort(function(x,y){return a[y]-a[x]})[0], tc=Object.keys(c).sort(function(x,y){return c[y]-c[x]})[0]; if(ta&&a[ta]>=0.5*rows.length) return ta; if(tc&&c[tc]>=0.6*rows.length) return tc; return null; }
+  function placeOf(rows){ if(!(map&&mapReady)||!rows.length||rows.length>1500) return null; var a={},c={}; rows.forEach(function(r){ if(r.area) a[r.area]=(a[r.area]||0)+1; if(r.city) c[r.city]=(c[r.city]||0)+1; }); var ta=Object.keys(a).sort(function(x,y){return a[y]-a[x]})[0], tc=Object.keys(c).sort(function(x,y){return c[y]-c[x]})[0]; if(ta&&a[ta]>=0.5*rows.length) return ta; if(tc&&c[tc]>=0.6*rows.length) return tc; return null; }
 
   // ----- URL state
   function writeUrl(){
@@ -209,14 +209,15 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     ['city','area','zip'].forEach(function(p){ if(loc[p].length) q.set(p,loc[p].join(',')) }); if(beds.length) q.set('beds',beds.join(',')); if(minBaths) q.set('baths',String(minBaths)); if(types.length) q.set('type',types.join(','));
     ['minp','max','maxoffer','minsqft','maxsqft'].forEach(function(k){if($(k).value) q.set(k,$(k).value)}); if($('sort').value!==DEFSORT) q.set('sort',$('sort').value);
     Object.keys(chips).forEach(function(k){ if(chips[k]!==(k==='deals')) q.set(k,chips[k]?'1':'0') });
-    if(hideProg) q.set('noprog','1'); if(!followMap) q.set('follow','0'); if(near) { q.set('near',nearLabel); q.set('at',near[0].toFixed(5)+','+near[1].toFixed(5)); if(radiusVal!=='2') q.set('r',radiusVal); } if(filterByMap) q.set('bymap','1');
+    if(hideProg) q.set('noprog','1'); if(map&&mapReady&&!refit){ var c=map.getCenter(); q.set('m',c.lng.toFixed(4)+','+c.lat.toFixed(4)+','+map.getZoom().toFixed(2)); } if(near) { q.set('near',nearLabel); q.set('at',near[0].toFixed(5)+','+near[1].toFixed(5)); if(radiusVal!=='2') q.set('r',radiusVal); }
     var s=q.toString(); history.replaceState(null,'',location.pathname+(s?'?'+s:''));
   }
   function readUrl(){
     var q=new URLSearchParams(location.search);
     ['city','area','zip'].forEach(function(p){ loc[p]=(q.get(p)||'').split(',').filter(Boolean) }); beds=(q.get('beds')||'').split(',').filter(Boolean).map(Number); minBaths=Number(q.get('baths'))||0; types=(q.get('type')||'').split(',').filter(Boolean);
     ['minp','max','maxoffer','minsqft','maxsqft'].forEach(function(k){if(q.get(k)) $(k).value=q.get(k)}); if(q.get('sort')) $('sort').value=q.get('sort'); if(q.get('r')) radiusVal=q.get('r');
-    Object.keys(chips).forEach(function(k){ if(q.get(k)!=null) chips[k]=q.get(k)==='1' }); if(q.get('bymap')==='1'){filterByMap=true;$('bymap').checked=true} if(q.get('noprog')==='1'){hideProg=true;$('hideprog').checked=true} if(q.get('follow')==='0'){followMap=false;$('follow').checked=false}
+    Object.keys(chips).forEach(function(k){ if(q.get(k)!=null) chips[k]=q.get(k)==='1' }); if(q.get('noprog')==='1'){hideProg=true;$('hideprog').checked=true}
+    if(q.get('m')){ var mv=q.get('m').split(',').map(Number); if(mv.length===3&&mv.every(isFinite)) initView={center:[mv[0],mv[1]],zoom:mv[2]}; }
     if(q.get('near')&&q.get('at')){ var at=q.get('at').split(',').map(Number); if(at.length===2&&!isNaN(at[0])){ near=at; nearLabel=q.get('near'); refit=true; } }
   }
 
@@ -267,10 +268,8 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
   (function(){ var p=$('typep'), ap=p.querySelector('.apply'); TYPE_OPTS.forEach(function(t){var l=document.createElement('label');l.className='ck';var i=document.createElement('input');i.type='checkbox';i.value=t[0];i.addEventListener('change',function(){ types=i.checked?types.concat([t[0]]):types.filter(function(x){return x!==t[0]}); render()}); l.appendChild(i); l.appendChild(document.createTextNode(t[1])); p.insertBefore(l,ap)}); })();
   $('zipq').addEventListener('input',function(){var q=$('zipq').value; document.querySelectorAll('#ziplist label').forEach(function(l){l.style.display=l.textContent.indexOf(q)>=0?'':'none'})});
   document.querySelectorAll('.chip').forEach(function(ch){ch.addEventListener('click',function(){var k=ch.dataset.chip; chips[k]=!chips[k]; if(k==='fast'&&chips.fast) chips.wait=false; if(k==='wait'&&chips.wait) chips.fast=false; render()})});
-  $('bymap').addEventListener('change',function(){filterByMap=$('bymap').checked; $('searchhere').style.display='none'; render()});
   $('hideprog').addEventListener('change',function(){hideProg=$('hideprog').checked; render()});
-  $('follow').addEventListener('change',function(){followMap=$('follow').checked; if(!followMap){ filterByMap=false; $('bymap').checked=false; render(); }});
-  $('reset').addEventListener('click',function(){ ['minp','max','maxoffer','minsqft','maxsqft','q','zipq'].forEach(function(k){$(k).value=''}); near=null; nearLabel=''; loc={city:[],area:[],zip:[]}; beds=[]; minBaths=0; types=[]; radiusVal='2'; $('sort').value=DEFSORT; chips={deals:true,fast:false,wait:false,cut:false}; filterByMap=false; $('bymap').checked=false; hideProg=false; $('hideprog').checked=false; followMap=true; $('follow').checked=true; refit=true; render(); });
+  $('reset').addEventListener('click',function(){ ['minp','max','maxoffer','minsqft','maxsqft','q','zipq'].forEach(function(k){$(k).value=''}); near=null; nearLabel=''; loc={city:[],area:[],zip:[]}; beds=[]; minBaths=0; types=[]; radiusVal='2'; $('sort').value=DEFSORT; chips={deals:true,fast:false,wait:false,cut:false}; hideProg=false; $('hideprog').checked=false; refit=true; render(); });
   $('help').querySelector('.hb').addEventListener('click',function(e){e.stopPropagation(); $('help').classList.toggle('open')});
 
   // ----- map (MapLibre on OpenFreeMap): clusters far out, price pills close in, hover synced with the cards
@@ -289,7 +288,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     if(!mapVisible()) { pendingRows=rows; return; }
     if(!map){ pendingRows=rows; loadMapLib(function(){
       if(map) return;
-      map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/positron',center:M?M.center:[-117.16,32.80],zoom:M?M.zoom:10.3,attributionControl:{compact:true}});
+      map=new maplibregl.Map({container:'map',style:'https://tiles.openfreemap.org/styles/positron',center:initView?initView.center:(M?M.center:[-117.16,32.80]),zoom:initView?initView.zoom:(M?M.zoom:10.3),attributionControl:{compact:true}});
       map.addControl(new maplibregl.NavigationControl({showCompass:false}),'top-right');
       map.on('load',function(){
         Object.keys(COL).forEach(function(k){ var p=pillImage(COL[k]); map.addImage('pill-'+k,p.img,p.opts); });
@@ -309,8 +308,8 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
         });
         map.on('mouseenter','clusters',function(){map.getCanvas().style.cursor='pointer'}); map.on('mouseleave','clusters',function(){map.getCanvas().style.cursor=''});
         ['dragstart','zoomstart','rotatestart'].forEach(function(ev){ map.on(ev,function(e){ if(e&&e.originalEvent) userMoved=true; }); });
-        map.on('moveend',function(){ if(!userMoved) return; userMoved=false; if(followMap){ if(!filterByMap){ filterByMap=true; $('bymap').checked=true; } render(true); } else { $('searchhere').style.display=''; } });   // programmatic moves (fits, resizes) never re-render: the code that moved the map renders itself
-        mapReady=true; window.__lbMap=map; var pr=pendingRows||[]; pendingRows=null; drawMap(pr);
+        map.on('moveend',function(){ if(!userMoved) return; userMoved=false; render(true); });   // a move by the person re-renders the list; programmatic moves (fits, resizes) never do, the code that moved the map renders itself
+        mapReady=true; window.__lbMap=map; pendingRows=null; if(initView){ initView=null; refit=false; } render(true);   // the first render ran before the map existed: render again against its bounds
       });
     }); return; }
     if(!mapReady){ pendingRows=rows; return; }
@@ -318,14 +317,13 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     rows.forEach(function(r,i){ if(r.lat==null) return; byId[r.zpid]=r; feats.push({type:'Feature',id:r.zpid,geometry:{type:'Point',coordinates:[r.lon,r.lat]},properties:{id:r.zpid,cat:cat(r),col:COL[cat(r)],lab:moneyK(r.price),rank:i}}); });
     map.getSource('deals').setData({type:'FeatureCollection',features:feats});
     map.getSource('me').setData({type:'FeatureCollection',features:near?[{type:'Feature',geometry:{type:'Point',coordinates:[near[1],near[0]]},properties:{}}]:[]});
-    if(refit){ mapMoved=false; refit=false; var after=function(){ if(filterByMap) render(true); }; map.once('moveend',after);
+    if(refit){ mapMoved=false; refit=false; map.once('moveend',function(){ render(true); });
       if(feats.length&&(near||loc.city.length||loc.area.length||loc.zip.length)){ var bb=null; feats.forEach(function(f){var c=f.geometry.coordinates; bb=bb?bb.extend(c):new maplibregl.LngLatBounds(c,c)}); map.fitBounds(bb,{padding:60,maxZoom:14,duration:400}); } else if(M){ map.easeTo({center:M.center,zoom:M.zoom,duration:400}); }
-      setTimeout(function(){mapMoved=false; $('searchhere').style.display='none'},600); }
+    }
     refit=false;   // no map.resize() here: resize fires move events, and with the list following the map that looped render -> resize -> moveend -> render (2026-09-14, drags died after the second)
   }
   function showSheet(r){ var sh=$('sheet'); sh.innerHTML=''; var c=card(r); var x=document.createElement('button'); x.type='button'; x.className='shx'; x.setAttribute('aria-label','Close'); x.textContent='×'; x.addEventListener('click',function(){sh.hidden=true}); sh.appendChild(x); sh.appendChild(c); sh.hidden=false; }
   window.__lbSheet=function(i){ showSheet(viewRows[i||0]) };
-  $('searchhere').addEventListener('click',function(){ filterByMap=true; $('bymap').checked=true; $('searchhere').style.display='none'; render(); });
   $('fab').addEventListener('click',function(){ document.body.classList.add('mapmode'); $('mapcol').classList.add('show'); $('closemap').style.display=''; $('fab').style.display='none'; drawMap(viewRows); setTimeout(function(){ if(map) map.resize(); },100); });
   $('closemap').addEventListener('click',function(){ document.body.classList.remove('mapmode'); $('mapcol').classList.remove('show'); $('closemap').style.display='none'; $('fab').style.display=''; });
   window.addEventListener('resize',function(){ if(mapVisible()&&pendingRows) drawMap(pendingRows); if(map) map.resize(); });
@@ -336,7 +334,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     $('metrop').innerHTML=''; Object.keys(METROS).forEach(function(m){var a=document.createElement('a');a.className='it';a.href='#';a.style.cssText='display:block;padding:8px 10px;color:var(--ink);text-decoration:none;border-radius:6px'+(m===k?';font-weight:600;background:var(--soft)':'');a.textContent=METROS[m].short;a.addEventListener('click',function(e){e.preventDefault(); document.querySelectorAll('.dd.open').forEach(function(o){o.classList.remove('open')}); if(m!==metro) setMetro(m)});$('metrop').appendChild(a)});
     document.querySelectorAll('#kind .dp a').forEach(function(a){ a.href=a.getAttribute('href').split('?')[0]+(k!=='sd'?'?metro='+k:''); });
     var cb=$('ctabtn'); if(cb) cb.href=cb.href.replace(/([?&])metro=[^&]*&?/,'$1').replace(/[?&]$/,'')+(k!=='sd'?'&metro='+k:''); var sb=$('sellbtn'); if(sb) sb.href=sb.href.replace(/([?&])metro=[^&]*&?/,'$1').replace(/[?&]$/,'')+(k!=='sd'?'&metro='+k:'');
-    if(!first){ loc={city:[],area:[],zip:[]}; near=null; nearLabel=''; filterByMap=false; $('bymap').checked=false; $('searchhere').style.display='none'; data=null; viewRows=[]; $('cards').innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div>'; $('count').textContent=''; $('asof').textContent=''; $('morerows').style.display='none'; paintButtons(); paintApplied(); writeUrl(); drawMap([]); }
+    if(!first){ loc={city:[],area:[],zip:[]}; near=null; nearLabel=''; initView=null; data=null; viewRows=[]; $('cards').innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div>'; $('count').textContent=''; $('asof').textContent=''; $('morerows').style.display='none'; paintButtons(); paintApplied(); writeUrl(); drawMap([]); }
     fetch('data/'+k+'/all.json').then(function(r){return r.json()}).then(function(d){
       data=d; $('asof').textContent='as of '+d.asof+' · updated nightly'; buildIndex(); refit=true; render();
       if(window.loadSell) loadSell(k);

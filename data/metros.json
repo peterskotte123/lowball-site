@@ -67,7 +67,9 @@
    "price_max": 3000000,
    "sqft_max": 8000
   },
-  "gtfs": [],
+  "gtfs": [
+   "https://maps.huntsvilleal.gov/googletransit/google_transit.zip"
+  ],
   "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
  },
  "mgm": {
@@ -89,7 +91,9 @@
    "price_max": 3000000,
    "sqft_max": 8000
   },
-  "gtfs": [],
+  "gtfs": [
+   "https://data.trilliumtransit.com/gtfs/montgomerytransit-al-us/montgomerytransit-al-us.zip"
+  ],
   "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
  },
  "mob": {
@@ -111,7 +115,9 @@
    "price_max": 3000000,
    "sqft_max": 8000
   },
-  "gtfs": [],
+  "gtfs": [
+   "https://realtimemobile.availtec.com/infopoint/gtfs-zip.ashx"
+  ],
   "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
  },
  "tcl": {
@@ -133,7 +139,9 @@
    "price_max": 3000000,
    "sqft_max": 8000
   },
-  "gtfs": [],
+  "gtfs": [
+   "https://passio3.com/tuscaloosatransit/passioTransit/gtfs/google_transit.zip"
+  ],
   "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
  },
  "aub": {
