@@ -117,7 +117,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
   // ----- filtering and sorting
   function filtered(){
     var mn=Number($('minp').value)||0, mx=Number($('max').value)||0, mo=Number($('maxoffer').value)||0, sq0=Number($('minsqft').value)||0, sq1=Number($('maxsqft').value)||0, rad=near?Number((document.getElementById('radius')||{}).value||2):0;
-    var bounds=(filterByMap&&map&&mapReady)?map.getBounds():null;
+    var bounds=(filterByMap&&map&&mapReady&&!refit)?map.getBounds():null;
     return data.rows.filter(function(r){
       if(near){ r.d=dist(near[0],near[1],r.lat,r.lon); if(r.d>rad) return false; } else r.d=null;
       if(chips.deals&&!(r.gap>0&&r.solid!==false&&!r.restricted)) return false; if(hideProg&&r.restricted) return false; if(chips.fast&&r.cue!=='fast') return false; if(chips.wait&&r.cue!=='wait') return false; if(chips.cut&&!r.cut) return false;
@@ -170,7 +170,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
   function render(keepShown){
     if(!data) return; if(!keepShown) shown=40;
     paintButtons(); paintApplied();
-    var rows=sorted(filtered()); viewRows=rows;
+    var rows=sorted(filtered()); viewRows=rows; viewPlace=placeOf(rows); paintButtons();
     $('count').innerHTML='<b>'+rows.length.toLocaleString()+'</b> '+(chips.deals?'deals':'homes')+(near?' within '+(($('radius')||{}).value||2)+' mi':'')+(filterByMap?' in view':'')+' <span style="color:var(--muted3)">of '+data.rows.length.toLocaleString()+' scored</span>';
     var c=$('cards'); c.innerHTML='';
     if(!rows.length){ c.innerHTML='<div class="empty">Nothing matches. Loosen a filter or turn off "Deals only".</div>'; }
@@ -188,7 +188,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     document.querySelectorAll('#typep input').forEach(function(i){i.checked=types.indexOf(i.value)>=0}); document.querySelectorAll('#ziplist input').forEach(function(i){i.checked=loc.zip.indexOf(i.value)>=0});
     Object.keys(chips).forEach(function(k){var c=document.querySelector('[data-chip="'+k+'"]'); c.classList.toggle('on',chips[k]); c.setAttribute('aria-pressed',chips[k]?'true':'false')});
     document.querySelectorAll('#beds button,#baths button').forEach(function(b){b.setAttribute('aria-pressed',b.classList.contains('on')?'true':'false')});
-    $('h1').textContent='Home deals in '+(loc.area.length===1?loc.area[0]:loc.city.length===1?loc.city[0]:(M?M.short:'San Diego, CA'));
+    $('h1').textContent='Home deals in '+(loc.area.length===1?loc.area[0]:loc.city.length===1?loc.city[0]:(viewPlace||(M?M.short:'San Diego, CA')));
     document.title=(chips.deals?'Home deals in ':'homes in ').replace(/^[a-z]/,function(c){return c.toUpperCase()})+' '+(M?M.short:'')+' · Lowball';
   }
   function paintApplied(){
@@ -199,7 +199,9 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     loc.city.forEach(function(v){tag('',v,function(){loc.city=loc.city.filter(function(x){return x!==v});refit=true;render()})});
     loc.zip.forEach(function(v){tag('ZIP',v,function(){loc.zip=loc.zip.filter(function(x){return x!==v});refit=true;render()})});
   }
-  var radiusVal='2';
+  var radiusVal='2', viewPlace=null;
+  // Where is the map? The neighbourhood that holds half the rows in view, else the city that holds 60%, else nothing (metro name).
+  function placeOf(rows){ if(!filterByMap||!rows.length||rows.length>1500) return null; var a={},c={}; rows.forEach(function(r){ if(r.area) a[r.area]=(a[r.area]||0)+1; if(r.city) c[r.city]=(c[r.city]||0)+1; }); var ta=Object.keys(a).sort(function(x,y){return a[y]-a[x]})[0], tc=Object.keys(c).sort(function(x,y){return c[y]-c[x]})[0]; if(ta&&a[ta]>=0.5*rows.length) return ta; if(tc&&c[tc]>=0.6*rows.length) return tc; return null; }
 
   // ----- URL state
   function writeUrl(){
@@ -226,7 +228,8 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
   }
   function geocode(q,cb){
     if(!M) return cb([]);
-    fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(q)+'&limit=5&lat='+M.geo[0]+'&lon='+M.geo[1]+'&bbox='+M.bbox).then(function(r){return r.json()}).then(function(d){
+    var ctr=(map&&mapReady)?map.getCenter():null;
+    fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(q)+'&limit=5&lat='+(ctr?ctr.lat:M.geo[0])+'&lon='+(ctr?ctr.lng:M.geo[1])+'&bbox='+M.bbox).then(function(r){return r.json()}).then(function(d){
       var out=[]; (d.features||[]).forEach(function(f){var p=f.properties; var name=[p.housenumber,p.street].filter(Boolean).join(' ')||p.name||''; var lab=[name,p.city||p.county,p.postcode].filter(Boolean).join(', '); if(lab&&!out.some(function(o){return o.v===lab})) out.push({g:'Addresses',k:'addr',v:lab,pt:[f.geometry.coordinates[1],f.geometry.coordinates[0]]})});
       cb(out);
     }).catch(function(){cb([])});
@@ -306,8 +309,8 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
         });
         map.on('mouseenter','clusters',function(){map.getCanvas().style.cursor='pointer'}); map.on('mouseleave','clusters',function(){map.getCanvas().style.cursor=''});
         ['dragstart','zoomstart','rotatestart'].forEach(function(ev){ map.on(ev,function(e){ if(e&&e.originalEvent) userMoved=true; }); });
-        map.on('moveend',function(){ if(userMoved){ userMoved=false; if(followMap){ if(!filterByMap){ filterByMap=true; $('bymap').checked=true; } render(true); } else { $('searchhere').style.display=''; } } else if(filterByMap){ render(true); } });
-        mapReady=true; var pr=pendingRows||[]; pendingRows=null; drawMap(pr);
+        map.on('moveend',function(){ if(!userMoved) return; userMoved=false; if(followMap){ if(!filterByMap){ filterByMap=true; $('bymap').checked=true; } render(true); } else { $('searchhere').style.display=''; } });   // programmatic moves (fits, resizes) never re-render: the code that moved the map renders itself
+        mapReady=true; window.__lbMap=map; var pr=pendingRows||[]; pendingRows=null; drawMap(pr);
       });
     }); return; }
     if(!mapReady){ pendingRows=rows; return; }
@@ -315,8 +318,10 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     rows.forEach(function(r,i){ if(r.lat==null) return; byId[r.zpid]=r; feats.push({type:'Feature',id:r.zpid,geometry:{type:'Point',coordinates:[r.lon,r.lat]},properties:{id:r.zpid,cat:cat(r),col:COL[cat(r)],lab:moneyK(r.price),rank:i}}); });
     map.getSource('deals').setData({type:'FeatureCollection',features:feats});
     map.getSource('me').setData({type:'FeatureCollection',features:near?[{type:'Feature',geometry:{type:'Point',coordinates:[near[1],near[0]]},properties:{}}]:[]});
-    if(refit&&!filterByMap){ mapMoved=false; if(feats.length&&(near||loc.city.length||loc.area.length||loc.zip.length)){ var bb=null; feats.forEach(function(f){var c=f.geometry.coordinates; bb=bb?bb.extend(c):new maplibregl.LngLatBounds(c,c)}); map.fitBounds(bb,{padding:60,maxZoom:14,duration:400}); } else if(M){ map.easeTo({center:M.center,zoom:M.zoom,duration:400}); } setTimeout(function(){mapMoved=false; $('searchhere').style.display='none'},600); }
-    refit=false; setTimeout(function(){map.resize()},50);
+    if(refit){ mapMoved=false; refit=false; var after=function(){ if(filterByMap) render(true); }; map.once('moveend',after);
+      if(feats.length&&(near||loc.city.length||loc.area.length||loc.zip.length)){ var bb=null; feats.forEach(function(f){var c=f.geometry.coordinates; bb=bb?bb.extend(c):new maplibregl.LngLatBounds(c,c)}); map.fitBounds(bb,{padding:60,maxZoom:14,duration:400}); } else if(M){ map.easeTo({center:M.center,zoom:M.zoom,duration:400}); }
+      setTimeout(function(){mapMoved=false; $('searchhere').style.display='none'},600); }
+    refit=false;   // no map.resize() here: resize fires move events, and with the list following the map that looped render -> resize -> moveend -> render (2026-09-14, drags died after the second)
   }
   function showSheet(r){ var sh=$('sheet'); sh.innerHTML=''; var c=card(r); var x=document.createElement('button'); x.type='button'; x.className='shx'; x.setAttribute('aria-label','Close'); x.textContent='×'; x.addEventListener('click',function(){sh.hidden=true}); sh.appendChild(x); sh.appendChild(c); sh.hidden=false; }
   window.__lbSheet=function(i){ showSheet(viewRows[i||0]) };

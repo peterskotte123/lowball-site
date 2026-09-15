@@ -47,5 +47,115 @@
    "https://maxtransit.org/GTFS/2026/google_transit_Working.zip"
   ],
   "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
+ },
+ "hsv": {
+  "name": "Huntsville",
+  "short": "Huntsville, AL",
+  "tag": "huntsville-al",
+  "center": [
+   -86.661,
+   34.755
+  ],
+  "zoom": 10.5,
+  "bbox": "-87.25,34.45,-86.24,35.08",
+  "geo": [
+   34.755,
+   -86.661
+  ],
+  "bounds": {
+   "price_min": 40000,
+   "price_max": 3000000,
+   "sqft_max": 8000
+  },
+  "gtfs": [],
+  "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
+ },
+ "mgm": {
+  "name": "Montgomery",
+  "short": "Montgomery, AL",
+  "tag": "montgomery-al",
+  "center": [
+   -86.267,
+   32.356
+  ],
+  "zoom": 10.5,
+  "bbox": "-86.96,31.87,-85.75,32.79",
+  "geo": [
+   32.356,
+   -86.267
+  ],
+  "bounds": {
+   "price_min": 40000,
+   "price_max": 3000000,
+   "sqft_max": 8000
+  },
+  "gtfs": [],
+  "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
+ },
+ "mob": {
+  "name": "Mobile",
+  "short": "Mobile, AL",
+  "tag": "mobile-al",
+  "center": [
+   -87.991,
+   30.659
+  ],
+  "zoom": 10.5,
+  "bbox": "-88.48,30.15,-86.36,31.42",
+  "geo": [
+   30.659,
+   -87.991
+  ],
+  "bounds": {
+   "price_min": 40000,
+   "price_max": 3000000,
+   "sqft_max": 8000
+  },
+  "gtfs": [],
+  "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
+ },
+ "tcl": {
+  "name": "Tuscaloosa",
+  "short": "Tuscaloosa, AL",
+  "tag": "tuscaloosa-al",
+  "center": [
+   -87.52,
+   33.238
+  ],
+  "zoom": 11.2,
+  "bbox": "-87.94,32.96,-87.04,33.50",
+  "geo": [
+   33.238,
+   -87.52
+  ],
+  "bounds": {
+   "price_min": 40000,
+   "price_max": 3000000,
+   "sqft_max": 8000
+  },
+  "gtfs": [],
+  "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
+ },
+ "aub": {
+  "name": "Auburn",
+  "short": "Auburn-Opelika, AL",
+  "tag": "auburn-al",
+  "center": [
+   -85.393,
+   32.608
+  ],
+  "zoom": 11.2,
+  "bbox": "-85.74,32.44,-84.95,32.86",
+  "geo": [
+   32.608,
+   -85.393
+  ],
+  "bounds": {
+   "price_min": 40000,
+   "price_max": 3000000,
+   "sqft_max": 8000
+  },
+  "gtfs": [],
+  "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
  }
 }
