@@ -88,7 +88,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
       <button type="button" class="chip" data-chip="fast">Move fast</button>
       <button type="button" class="chip amber" data-chip="wait">Can wait</button>
       <button type="button" class="chip" data-chip="cut">Has a recent cut</button>
-      <div class="help" id="help"><button type="button" class="hb">How to read these numbers</button><div class="hp"><b>Typical asking nearby</b> is what similar active listings ask: the lower of our model and the median of the real comparable listings, so it is a number you can point at. It is an asking-price benchmark, not what places rent for. <b>Under by</b> is asking minus that. <b>Suggested offer</b> is where to open; on a fresh, fairly priced listing it equals asking, because under-bidding there costs you the unit. Apply, then ask for the fair number once approved. <b>Move fast</b> = priced right and fresh. <b>Can wait</b> = over typical and sitting; listings like it usually cut. Estimates are not advice or a guarantee.</div></div>
+      <div class="help" id="help"><button type="button" class="hb">How to read these numbers</button><div class="hp"><b>Typical asking nearby</b> is what similar active listings ask: the lower of our model and the median of the real comparable listings, so it is a number you can point at. It is an asking-price benchmark, not what places rent for. <b>Under by</b> is asking minus that. <b>Suggested offer</b> is where to open; on a fresh, fairly priced listing it equals asking, because under-bidding there costs you the unit. Apply, then ask for the fair number once approved. <b>Move fast</b> = priced right and fresh. <b>Can wait</b> = over typical and sitting; listings like it usually cut. Rows tagged <b>thin data</b> sit in a ZIP with fewer than 30 listings we have priced; they are shown but never called deals. Estimates are not advice or a guarantee.</div></div>
     </div>
     
     <div class="grid" id="cards"><div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div></div>
@@ -121,7 +121,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     var bounds=(map&&mapReady&&!refit)?map.getBounds():null;   // the list is the map view, as on Zillow; a pending fit renders again when it lands
     return data.rows.filter(function(r){
       if(near){ r.d=dist(near[0],near[1],r.lat,r.lon); if(r.d>rad) return false; } else r.d=null;
-      if(chips.deals&&!(r.gap>0&&true&&!r.restricted)) return false; if(hideProg&&r.restricted) return false; if(chips.fast&&r.cue!=='fast') return false; if(chips.wait&&r.cue!=='wait') return false; if(chips.cut&&!r.cut) return false;
+      if(chips.deals&&!(r.gap>0&&r.solid!==false&&!r.restricted)) return false; if(hideProg&&r.restricted) return false; if(chips.fast&&r.cue!=='fast') return false; if(chips.wait&&r.cue!=='wait') return false; if(chips.cut&&!r.cut) return false;
       if(loc.city.length&&loc.city.indexOf(r.city||'')<0) return false; if(loc.area.length&&loc.area.indexOf(r.area)<0) return false; if(loc.zip.length&&loc.zip.indexOf(r.zip)<0) return false;
       if(beds.length&&!beds.some(function(b){return b===4?r.beds>=4:r.beds===b})) return false;
       if(minBaths&&!(r.baths>=minBaths)) return false;
