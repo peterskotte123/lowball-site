@@ -31,6 +31,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
 .legend{position:absolute;left:12px;bottom:28px;z-index:5;background:rgba(255,255,255,.95);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12px;color:var(--muted);line-height:1.7;display:flex;gap:12px}.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:-1px}
 .list{overflow-y:auto;padding:0 20px 30px;min-width:0;scroll-behavior:smooth}
 .lh{padding:14px 0 6px}.lh h1{font-size:20px;letter-spacing:-.01em;margin:0 0 2px;line-height:1.25}.meta{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.meta .n{font-size:14px;color:var(--ink2)}.meta .n b{color:var(--ink)}.meta .asof{font-size:12px;color:var(--muted3)}.meta .sortw{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted)}.meta select{border:0;background:none;font:inherit;font-weight:600;color:var(--ink);cursor:pointer;max-width:220px}
+.fsum{margin-top:6px;font-size:13.5px;color:var(--ink2);line-height:1.5}.fsum b{color:var(--deal)}.fsum .f{display:inline-block;background:var(--soft2);border-radius:6px;padding:1px 8px;margin:2px 4px 2px 0;color:var(--ink)}.fsum a{color:var(--muted);margin-left:6px}
 .chips{display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:8px 0 10px;border-bottom:1px solid var(--line);margin-bottom:12px}
 .chip{font-size:13px;padding:6px 11px;border-radius:999px;border:1px solid var(--line2);background:#fff;color:var(--ink2);cursor:pointer}.chip.on{background:#ECFDF3;border-color:#ABEFC6;color:var(--deal);font-weight:600}.chip.on.amber{background:#FFFAEB;border-color:#FEDF89;color:var(--amber)}
 .help{position:relative;margin-left:auto}.help .hb{border:0;background:none;color:var(--green);text-decoration:underline;cursor:pointer;font-size:13px;padding:0}.help .hp{display:none;position:absolute;right:0;top:120%;z-index:40;width:min(380px,calc(100vw - 40px));background:#fff;border:1px solid var(--line2);border-radius:10px;box-shadow:0 12px 30px -12px rgba(16,24,40,.35);padding:12px 14px;font-size:13px;color:var(--ink2);line-height:1.5}.help.open .hp{display:block}.hp b{color:var(--ink)}
@@ -63,7 +64,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
 }
 @media (min-width:1024px) and (max-width:1279px){.grid{grid-template-columns:1fr}}
 </style></head><body>
-<header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/rent/">Rent by ZIP</a><a href="/renew">Renewing?</a><a href="/deals/" class="on">Deals</a><a href="/buy/">Buy</a></div></header>
+<header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/deals/" class="on">Deals</a><a href="/buy/">Buy</a><a href="/renew">Renewing?</a><a href="/">Extension</a></div></header>
 
 <div class="bar"><div class="in">
   <div class="sbox"><input id="q" placeholder="City, neighborhood, ZIP or address" autocomplete="off" aria-label="Search location" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><div class="sugg" id="sugg" role="listbox"></div></div>
@@ -81,7 +82,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
 <div class="wrap">
   <div class="mapcol" id="mapcol"><div id="map"></div><div class="mapui"><button type="button" class="pillw" id="closemap" style="display:none">List</button></div><div class="legend"><span><i style="background:#065F46"></i>move fast</span><span><i style="background:#B54708"></i>can wait</span><span><i style="background:#2E9E5B"></i>under typical</span><span><i style="background:#667085"></i>at or over</span></div></div>
   <div class="list" id="list">
-    <div class="lh"><h1 id="h1">Rental deals in San Diego, CA</h1><div class="meta"><span class="n" id="count"></span><span class="asof" id="asof"></span><label class="sortw">Sort: <select id="sort"><option value="gap">Most under typical</option><option value="pct">Biggest % under</option><option value="cut">Biggest recent cut</option><option value="days">Newest</option><option value="old">Longest listed</option><option value="price">Price: low to high</option><option value="priced">Price: high to low</option><option value="sqft">Largest</option><option value="ppsf">Cheapest per sqft</option><option value="dist">Nearest to address</option><option value="walk">Most walkable</option><option value="transit">Best transit</option></select></label></div></div>
+    <div class="lh"><h1 id="h1">Rental deals in San Diego, CA</h1><div class="meta"><span class="n" id="count"></span><span class="asof" id="asof"></span><label class="sortw">Sort: <select id="sort"><option value="gap">Most under typical</option><option value="pct">Biggest % under</option><option value="cut">Biggest recent cut</option><option value="days">Newest</option><option value="old">Longest listed</option><option value="price">Price: low to high</option><option value="priced">Price: high to low</option><option value="sqft">Largest</option><option value="ppsf">Cheapest per sqft</option><option value="dist">Nearest to address</option><option value="walk">Most walkable</option><option value="transit">Best transit</option></select></label></div><div class="fsum" id="fsum"></div></div>
     <div class="chips">
       <button type="button" class="chip on" data-chip="deals">Deals only</button>
       <button type="button" class="chip" data-chip="fast">Move fast</button>
@@ -171,6 +172,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     if(!data) return; if(!keepShown) shown=40;
     paintButtons(); paintApplied();
     var rows=sorted(filtered()); viewRows=rows; viewPlace=placeOf(rows); paintButtons();
+    paintSummary(rows.length);
     $('count').innerHTML='<b>'+rows.length.toLocaleString()+'</b> '+(chips.deals?'deals':'listings')+(near?' within '+(($('radius')||{}).value||2)+' mi':'')+((map&&mapReady)?' in view':'')+' <span style="color:var(--muted3)">of '+data.rows.length.toLocaleString()+' scored</span>';
     var c=$('cards'); c.innerHTML='';
     if(!rows.length){ c.innerHTML='<div class="empty">Nothing matches. Loosen a filter or turn off "Deals only".</div>'; }
@@ -200,6 +202,19 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     loc.zip.forEach(function(v){tag('ZIP',v,function(){loc.zip=loc.zip.filter(function(x){return x!==v});refit=true;render()})});
   }
   var radiusVal='2', viewPlace=null;
+  // One sentence that says what the list is: the deal rule when it is on, then every filter in force, then a way out.
+  function paintSummary(n){
+    var f=[]; var mn=Number($('minp').value)||0, mx=Number($('max').value)||0, mo=Number($('maxoffer').value)||0, sq0=Number($('minsqft').value)||0, sq1=Number($('maxsqft').value)||0;
+    if(chips.fast) f.push('priced right and fresh (move fast)'); if(chips.wait) f.push('over typical and sitting (can wait)'); if(chips.cut) f.push('with a recent price cut');
+    if(mn||mx) f.push((mn&&mx)?moneyK(mn)+' to '+moneyK(mx):mx?'up to '+moneyK(mx):moneyK(mn)+' and up'); if(mo) f.push('offer up to '+moneyK(mo));
+    if(beds.length) f.push(beds.slice().sort().map(function(b){return b===0?'studio':b===4?'4+ bd':b+' bd'}).join(' or ')); if(minBaths) f.push(minBaths+'+ baths');
+    if(types.length) f.push(types.map(function(t){return (TYPES[t]||t).toLowerCase()}).join(' or ')); if(sq0||sq1) f.push((sq0&&sq1)?sq0+' to '+sq1+' sqft':sq1?'under '+sq1+' sqft':sq0+'+ sqft');
+    if(loc.area.length) f.push(loc.area.join(', ')); if(loc.city.length) f.push(loc.city.join(', ')); if(loc.zip.length) f.push('ZIP '+loc.zip.join(', ')); if(near) f.push('within '+radiusVal+' mi of '+nearLabel); if(hideProg) f.push('no income- or age-restricted listings');
+    var lead=chips.deals?'<b>Deals only</b>: listings asking <b>under</b> what similar listings nearby ask':'All listings, at, over and under typical';
+    var where=(map&&mapReady)?' in the map view':(M?' in '+M.short:'');
+    $('fsum').innerHTML=lead+where+(f.length?', filtered to '+f.map(function(x){return '<span class=f>'+esc(x)+'</span>'}).join(''):'')+'.'+(f.length||!chips.deals?' <a href="#" id="fsumclear">Clear filters</a>':'');
+    var c=$('fsumclear'); if(c) c.addEventListener('click',function(e){e.preventDefault(); $('reset').click();});
+  }
   // Where is the map? The neighbourhood that holds half the rows in view, else the city that holds 60%, else nothing (metro name).
   function placeOf(rows){ if(!(map&&mapReady)||!rows.length||rows.length>1500) return null; var a={},c={}; rows.forEach(function(r){ if(r.area) a[r.area]=(a[r.area]||0)+1; if(r.city) c[r.city]=(c[r.city]||0)+1; }); var ta=Object.keys(a).sort(function(x,y){return a[y]-a[x]})[0], tc=Object.keys(c).sort(function(x,y){return c[y]-c[x]})[0]; if(ta&&a[ta]>=0.5*rows.length) return ta; if(tc&&c[tc]>=0.6*rows.length) return tc; return null; }
 

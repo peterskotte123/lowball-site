@@ -20,5 +20,17 @@
     }
    ]
   }
+ ],
+ "redirects": [
+  {
+   "source": "/rent",
+   "destination": "/deals/",
+   "permanent": true
+  },
+  {
+   "source": "/rent/",
+   "destination": "/deals/",
+   "permanent": true
+  }
  ]
 }

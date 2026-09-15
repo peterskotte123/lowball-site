@@ -1,6 +1,12 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>How accurate is Lowball? · Lowball</title><meta name="description" content="Cross-validated error of Lowball's rent estimate against asking rents, interval coverage, and a held-out test outside San Diego."><link rel="canonical" href="https://lowball.rent/accuracy">
 <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball">
+<meta property="og:url" content="https://lowball.rent/accuracy"><meta property="og:title" content="How accurate is Lowball? · Lowball">
+<meta property="og:description" content="Cross-validated error of Lowball's rent estimate against asking rents, interval coverage, and a held-out test outside San Diego."><meta property="og:image" content="https://lowball.rent/img/share/rent.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="How accurate is Lowball? · Lowball">
+<meta name="twitter:description" content="Cross-validated error of Lowball's rent estimate against asking rents, interval coverage, and a held-out test outside San Diego."><meta name="twitter:image" content="https://lowball.rent/img/share/rent.png">
 <style>:root{--ink:#101828;--muted:#475467;--line:#EAECF0;--soft:#F8FAFC;--green:#157347}*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:#fff}
 .wrap{max-width:900px;margin:0 auto;padding:0 24px}header{display:flex;align-items:center;justify-content:space-between;padding:20px 0}.brand img{height:38px;display:block}nav a{color:var(--muted);text-decoration:none;margin-left:22px;font-weight:500;font-size:15px}
 h1{font-size:clamp(28px,4.5vw,42px);line-height:1.1;letter-spacing:-.02em;margin:20px 0 8px}.lede{font-size:18px;color:var(--muted);max-width:40em;margin:0 0 24px}
@@ -8,58 +14,13 @@ h1{font-size:clamp(28px,4.5vw,42px);line-height:1.1;letter-spacing:-.02em;margin
 .btn{display:inline-flex;gap:8px;padding:12px 20px;border-radius:10px;background:var(--ink);color:#fff;font-weight:600;text-decoration:none}.btn.ghost{background:#fff;color:var(--ink);border:1px solid #D0D5DD}
 p,li{color:#344054}.fine{font-size:13px;color:#98A2B3}table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}td.n,th.n{text-align:right}
 footer{border-top:1px solid var(--line);padding:26px 0 40px;font-size:13px;color:#98A2B3;margin-top:48px}footer a{color:#667085}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}.grid a{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--soft);font-size:14px}
-@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}  header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; }
-  nav { display:flex; align-items:center; gap:22px; }
-  nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:15px; white-space:nowrap; }
-  nav a:hover { color:var(--ink); }
-  /* Mobile menu: a right-side drawer. No JavaScript: a hidden checkbox drives it, so it works with scripts off
-     and cannot get stuck in a half-open state. One nav element serves as both the desktop row and the mobile drawer, so the
-     links exist once in the markup. */
-  .navt { position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
-  .burger, .scrim, .navclose { display:none; }
-  @media (max-width:720px) {
-    header { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
-    .burger { display:flex; flex-direction:column; justify-content:center; gap:5px;
-              width:44px; height:44px; margin-right:-10px; padding:10px; cursor:pointer; z-index:70; }
-    .burger span { display:block; height:2px; border-radius:2px; background:var(--ink,#101828);
-                   transition:transform .25s ease, opacity .2s ease; }
-    .navt:focus-visible ~ .burger { outline:2px solid var(--green,#157347); outline-offset:2px; border-radius:8px; }
-    .navt:checked ~ .burger span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
-    .navt:checked ~ .burger span:nth-child(2) { opacity:0; }
-    .navt:checked ~ .burger span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
-    .scrim { display:block; position:fixed; inset:0; background:rgba(16,24,40,.45);
-             opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:55; }
-    .navt:checked ~ .scrim { opacity:1; pointer-events:auto; }
-    nav { position:fixed; top:0; right:0; height:100dvh; width:min(80vw,320px);
-          flex-direction:column; align-items:stretch; gap:0;
-          background:#fff; box-shadow:-24px 0 48px -24px rgba(16,24,40,.35);
-          padding:72px 24px 32px; z-index:60; overflow-y:auto;
-          transform:translateX(100%); transition:transform .28s cubic-bezier(.4,0,.2,1);
-          visibility:hidden; }
-    .navt:checked ~ nav { transform:translateX(0); visibility:visible; }
-    nav a { font-size:17px; padding:15px 0; border-bottom:1px solid var(--line,#EAECF0); }
-    nav a:last-of-type { border-bottom:0; }
-    .navclose { display:block; position:absolute; top:12px; right:14px; width:44px; height:44px;
-                line-height:44px; text-align:center; font-size:26px; color:var(--muted,#475467); cursor:pointer; }
-    /* 64px between sections reads as dead space at phone width */
-    section { padding:44px 0; }
-    h1 { margin-bottom:14px; }
-    h2 { font-size:27px; }
-    .hero { padding:28px 0 24px; gap:32px; }
-    .privacy { padding:26px; border-radius:14px; }
-    .sub { font-size:16px; margin-bottom:24px; }
-  }
-  /* Keep the page still while the drawer is open. Ignored by browsers without :has(), which only means the
-     page can scroll behind the drawer. */
-  body:has(.navt:checked) { overflow:hidden; }
-</style><meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/accuracy"><meta property="og:title" content="How accurate is Lowball?"><meta property="og:description" content="Our error rates, published, against the listings we score."><meta property="og:image" content="https://lowball.rent/img/share/accuracy.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. How accurate is Lowball?"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="How accurate is Lowball?"><meta name="twitter:description" content="Our error rates, published, against the listings we score."><meta name="twitter:image" content="https://lowball.rent/img/share/accuracy.png">
-</head><body><div class="wrap">
-<header><a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball"></a><input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="/">Extension</a><a href="/renew">Renewing?</a><a href="/rent/">Rent by&nbsp;ZIP</a><a href="/deals/">Deals</a><a href="/buy/">Buy</a><a href="/roulette">Roulette</a><a href="/privacy">Privacy</a></nav></header>
+@media(max-width:640px){.stats{grid-template-columns:1fr 1fr}}</style></head><body><div class="wrap">
+<header><a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball"></a><nav><a href="/deals/">Deals</a><a href="/buy/">Buy</a><a href="/renew">Renewing?</a><a href="/">Extension</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a></nav></header>
 <h1>How accurate is the estimate?</h1><p class="lede">Every number below is measured on listings the model did not train on. We publish this so the figure in the panel has a receipt.</p>
-<div class="stats"><div class="stat"><b>9.5%</b><span>Median error versus asking rent, 5-fold cross-validation, 5,317 listings</span></div><div class="stat"><b>52%</b><span>Estimates within 10% of asking</span></div><div class="stat"><b>79%</b><span>Within 20%</span></div>
+<div class="stats"><div class="stat"><b>10.0%</b><span>Median error versus asking rent, 5-fold cross-validation, 7,530 listings</span></div><div class="stat"><b>50%</b><span>Estimates within 10% of asking</span></div><div class="stat"><b>78%</b><span>Within 20%</span></div>
 <div class="stat"><b>80%</b><span>Share of listings whose asking rent falls inside the panel's 80% band, after calibration</span></div></div>
 <h2>What this means</h2><ul><li>Asking rent is the only ground truth available at scale, so both numbers are measured against it. A listing priced far above the market counts as error for the estimate, which is the point: the panel is supposed to disagree with those.</li>
 <li>Outside San Diego County the estimate comes from a public ZIP rent index with a size and property-type correction. On a held-out set of 201 Dana Point listings the median error was 15% with local data in the model and 23% from the index alone, versus about 9% inside San Diego. The panel labels those estimates as lower confidence.</li>
 <li>The offer and the "likely to settle" number are rules on top of the estimate: expected price cuts by time listed, vacancy, and comparable units. They will be measured against reported outcomes once enough renters report what landlords accepted.</li></ul>
-<p class="fine">Updated 2026-09-09. Method: gradient-boosted model on beds, baths, size, year, location, type, and ZIP; grouped 5-fold cross-validation by address; median absolute percentage error. Zillow's Rent Zestimate is never an input to our estimate.</p><footer><div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Figures are estimates from public listing data, not advice or a guarantee.</div>
-<div><a href="/support">Support</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div></footer></div></body></html>
+<p class="fine">Updated 2026-09-14. Method: gradient-boosted model on beds, baths, size, year, location, type, and ZIP; grouped 5-fold cross-validation by address; median absolute percentage error. Zillow's Rent Zestimate is never an input to our estimate.</p><footer><div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Figures are estimates from public listing data, not advice or a guarantee.</div>
+<div><a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div></footer></div></body></html>
