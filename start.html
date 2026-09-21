@@ -57,7 +57,9 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
 <script>
 (function(){
   var $=function(id){return document.getElementById(id)}, API='https://api.lowball.rent/v1', q=new URLSearchParams(location.search);
-  var STORE=q.get('next')||'https://chrome.google.com/webstore'; var page=q.get('from')||'/start';
+  var LISTING='https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno';
+  // `next` is only honoured for the two stores we publish to: an unchecked redirect target would let anyone mint lowball.rent links that land on their own site
+  var STORE=/^https:\/\/(chromewebstore\.google\.com|addons\.mozilla\.org)\//.test(q.get('next')||'')?q.get('next'):LISTING; var page=q.get('from')||'/start';
   var a={intent:null,timeline:null,area:'',market:(q.get('metro')||'sd'),helper:null,buy_soon:null,beds:null,budget:null,home_type:null}, step=1, METROS={};
   function opts(k,list){ var box=document.querySelector('.opts[data-k="'+k+'"]')||$('opts3b'); box.innerHTML=''; box.dataset.k=k; list.forEach(function(o){var b=document.createElement('button');b.className='opt';b.dataset.v=o[0];b.textContent=o[1];box.appendChild(b)}); }
   function show(n){ step=n; document.querySelectorAll('.step').forEach(function(s){s.classList.toggle('on',Number(s.dataset.step)===n)}); for(var i=1;i<=4;i++) $('p'+i).classList.toggle('on',i<=Math.min(n,4));
