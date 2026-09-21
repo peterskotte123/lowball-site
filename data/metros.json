@@ -165,5 +165,29 @@
   },
   "gtfs": [],
   "osm_pbf": "https://download.geofabrik.de/north-america/us/alabama-latest.osm.pbf"
+ },
+ "scz": {
+  "name": "Santa Cruz",
+  "short": "Santa Cruz, CA",
+  "tag": "santa-cruz-ca",
+  "center": [
+   -121.994,
+   37.013
+  ],
+  "zoom": 11.0,
+  "bbox": "-122.31,36.83,-121.66,37.23",
+  "geo": [
+   37.013,
+   -121.994
+  ],
+  "bounds": {
+   "price_min": 100000,
+   "price_max": 15000000,
+   "sqft_max": 10000
+  },
+  "gtfs": [
+   "https://developer.scmetro.org/gtfs.zip"
+  ],
+  "osm_pbf": "https://download.geofabrik.de/north-america/us/california/norcal-latest.osm.pbf"
  }
 }
