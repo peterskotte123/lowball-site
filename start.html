@@ -57,7 +57,8 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
 <script>
 (function(){
   var $=function(id){return document.getElementById(id)}, API='https://api.lowball.rent/v1', q=new URLSearchParams(location.search);
-  var LISTING='https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno';
+  // Firefox users go to the Firefox listing (desktop and Android); everyone else to the Chrome Web Store, which Edge, Brave and the other Chromium browsers install from too
+  var LISTING=/Firefox/.test(navigator.userAgent)?'https://addons.mozilla.org/firefox/addon/lowball/':'https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno';
   // `next` is only honoured for the two stores we publish to: an unchecked redirect target would let anyone mint lowball.rent links that land on their own site
   var STORE=/^https:\/\/(chromewebstore\.google\.com|addons\.mozilla\.org)\//.test(q.get('next')||'')?q.get('next'):LISTING; var page=q.get('from')||'/start';
   var a={intent:null,timeline:null,area:'',market:(q.get('metro')||'sd'),helper:null,buy_soon:null,beds:null,budget:null,home_type:null}, step=1, METROS={};
