@@ -10,6 +10,7 @@ h1{font-size:24px;letter-spacing:-.02em;margin:0 0 6px;line-height:1.2}.lede{col
 .step{display:none}.step.on{display:block}.q{font-size:17px;font-weight:600;margin:0 0 12px}
 .opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}.opt{font:15px inherit;padding:10px 14px;border:1px solid var(--line2);border-radius:999px;background:#fff;color:var(--ink);cursor:pointer}.opt:hover{border-color:var(--green)}.opt.on{background:#ECFDF3;border-color:#ABEFC6;color:var(--deal);font-weight:600}
 input.t{font:15px inherit;width:100%;padding:11px 13px;border:1px solid var(--line2);border-radius:10px;margin-bottom:10px}
+.sugg{position:absolute;left:0;right:0;top:100%;margin-top:-8px;background:#fff;border:1px solid var(--line2);border-radius:10px;box-shadow:0 8px 24px rgba(16,24,40,.12);z-index:5;overflow:hidden}.sugg .it{display:block;width:100%;text-align:left;font:15px inherit;padding:10px 13px;border:0;background:#fff;cursor:pointer}.sugg .it:hover,.sugg .it.hi{background:#F2F4F7}.sugg .it small{color:var(--muted2);margin-left:6px}
 .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}.btn{font:inherit;font-weight:600;padding:12px 18px;border-radius:10px;border:0;cursor:pointer;text-decoration:none;display:inline-block}.btn.p{background:var(--green);color:#fff}.btn.p:hover{background:#0f5c38}.btn.g{background:#fff;color:var(--ink2);border:1px solid var(--line2)}
 .skip{margin-left:auto;font-size:13px;color:var(--muted2)}.skip a{color:var(--muted2)}
 .prog{display:flex;gap:6px;margin:0 0 18px}.prog i{height:4px;flex:1;border-radius:2px;background:var(--line)}.prog i.on{background:var(--green)}
@@ -34,8 +35,9 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
 
   <div class="step" data-step="3">
     <p class="q">Where are you looking?</p>
+    <div style="position:relative"><input class="t" id="area" placeholder="City, neighborhood or ZIP, anywhere in the US" autocomplete="off"><div id="sugg" class="sugg" style="display:none"></div></div>
+    <p class="fine" style="margin:-4px 0 10px">Markets with full data, or type any place:</p>
     <div class="opts" data-k="market" id="markets"></div>
-    <input class="t" id="area" list="arealist" placeholder="Neighborhood, city or ZIP" autocomplete="off"><datalist id="arealist"></datalist>
     <p class="q" id="q3b"></p>
     <div class="opts" id="opts3b"></div>
     <p class="q" id="q3c" style="display:none"></p>
@@ -82,8 +84,8 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
     $('sharetxt').innerHTML=(sell||buy)?'A licensed real-estate agent may email me about '+(sell?'selling my home':'my search')+'. <span style="color:var(--muted2)">Optional. Email only. Nobody calls or texts you.</span>':'Property managers, landlords, and moving, internet or renters-insurance providers may email me about my move. <span style="color:var(--muted2)">Optional. Email only. Nobody calls or texts you.</span>';
   }
   document.addEventListener('click',function(e){ var b=e.target.closest('.opt'); if(!b) return; var box=b.parentNode, k=box.dataset.k; box.querySelectorAll('.opt').forEach(function(x){x.classList.remove('on')}); b.classList.add('on'); a[k]=b.dataset.v;
-    if(k==='intent'){ setup2(); show(2); } else if(k==='timeline'){ show(3); } else if(k==='market'){ loadAreas(); } });
-  $('next').addEventListener('click',function(){ if(step===3){ a.area=$('area').value.trim(); show(4); } else if(step===4){ submit(true); } });
+    if(k==='intent'){ setup2(); show(2); } else if(k==='timeline'){ show(3); } else if(k==='market'){ a.area=''; $('area').value=METROS[b.dataset.v]?METROS[b.dataset.v].short:''; picked=$('area').value; $('sugg').style.display='none'; loadAreas(); } });
+  $('next').addEventListener('click',function(){ if(step===3){ settle(); show(4); } else if(step===4){ submit(true); } });
   $('back').addEventListener('click',function(){ show(step-1) });
   $('skip').addEventListener('click',function(e){ e.preventDefault(); if(a.intent) submit(false); location.href=STORE; });
   $('email').addEventListener('input',function(){ $('next').textContent=$('email').value?'Save & install':'Install without email' });
@@ -92,11 +94,34 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
     fetch(API+'/lead',{method:'POST',headers:{'Content-Type':'application/json','X-Lowball-Client':'web-start'},body:JSON.stringify(body),keepalive:true}).catch(function(){});
     if(goInstall){ $('doneh').textContent=email?'You’re set.':'Thanks.'; $('donep').innerHTML=(email?'Deal alerts for '+(a.area||'your area')+' will come from hello@lowball.rent. ':'')+'Now install the extension: <a href="'+STORE+'" rel="noopener">Add Lowball to Chrome, free</a>.'; show(5); setTimeout(function(){location.href=STORE},1800); }
   }
-  // markets we cover, then area suggestions from that market's deals data (neighborhoods, cities, ZIPs); nothing typed here leaves the page until submit
-  function loadAreas(){ var m=a.market; if(!METROS[m]) return; var dl=$('arealist'); dl.innerHTML='';
-    fetch('/deals/data/'+m+'/index.json').then(function(r){return r.json()}).then(function(d){ Object.keys(d.zips||{}).forEach(function(z){var o=document.createElement('option');o.value=z;dl.appendChild(o)}); }).catch(function(){});
-    fetch('/deals/data/'+m+'/all.json').then(function(r){return r.json()}).then(function(d){ var seen={}; d.rows.forEach(function(r){[r.area,r.city].forEach(function(v){ if(v&&!seen[v]){seen[v]=1; var o=document.createElement('option');o.value=v;dl.appendChild(o)} })}); }).catch(function(){}); }
-  fetch('/data/metros.json').then(function(r){return r.json()}).then(function(ms){ METROS=ms; var box=$('markets'); Object.keys(ms).forEach(function(k){var b=document.createElement('button');b.className='opt'+(k===a.market?' on':'');b.dataset.v=k;b.textContent=ms[k].short;box.appendChild(b)}); var o=document.createElement('button');o.className='opt';o.dataset.v='other';o.textContent='Somewhere else';box.appendChild(o); if(!ms[a.market]) a.market='sd'; loadAreas(); }).catch(function(){});
+  // Any place in the US: our markets match first, then the chosen market's own neighborhoods and ZIPs (from its deals data),
+  // then places from the Photon geocoder (OpenStreetMap). Only the text typed goes to Photon, never the rest of the form;
+  // nothing else leaves the page until submit. A typed place outside our markets is sent as market "other" with the place in area.
+  var areas={}, suggTimer=null, suggSeq=0;
+  function loadAreas(){ var m=a.market; if(!METROS[m]||areas[m]) return; areas[m]=[];
+    fetch('/deals/data/'+m+'/all.json').then(function(r){return r.json()}).then(function(d){ var seen={}; d.rows.forEach(function(r){[r.area,r.city,r.zip].forEach(function(v){ if(v&&!seen[v]){seen[v]=1; areas[m].push(String(v))} })}); }).catch(function(){}); }
+  function suggest(q){ var box=$('sugg'); q=q.trim(); if(q.length<2){ box.style.display='none'; return; } var my=++suggSeq, ql=q.toLowerCase(), items=[];
+    Object.keys(METROS).forEach(function(k){ var n=METROS[k].short||METROS[k].name||k; if(n.toLowerCase().indexOf(ql)>=0) items.push({label:n,small:'full data',market:k,area:''}); });
+    (areas[a.market]||[]).forEach(function(v){ if(items.length<9&&v.toLowerCase().indexOf(ql)>=0) items.push({label:v,small:METROS[a.market].short,market:a.market,area:v}); });
+    paint(items); if(items.length>=8) return;
+    fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(q)+'&limit=6&lang=en').then(function(r){return r.json()}).then(function(d){ if(my!==suggSeq) return;
+      (d.features||[]).forEach(function(f){ var p=f.properties||{}; if(p.countrycode!=='US') return; var kind=p.osm_value||''; if(!/city|town|village|hamlet|suburb|neighbourhood|quarter|postcode|county|borough|locality/.test(kind)&&p.type!=='city') return;
+        var name=p.name||p.city||p.postcode||''; var st=p.state||''; var label=name+(st&&st!==name?', '+abbr(st):''); if(!name||items.some(function(x){return x.label===label})) return; items.push({label:label,small:kind==='postcode'?'ZIP':(p.county&&kind!=='city'?p.county:''),market:'other',area:label}); });
+      paint(items); }).catch(function(){}); }
+  var ST={alabama:'AL',alaska:'AK',arizona:'AZ',arkansas:'AR',california:'CA',colorado:'CO',connecticut:'CT',delaware:'DE','district of columbia':'DC',florida:'FL',georgia:'GA',hawaii:'HI',idaho:'ID',illinois:'IL',indiana:'IN',iowa:'IA',kansas:'KS',kentucky:'KY',louisiana:'LA',maine:'ME',maryland:'MD',massachusetts:'MA',michigan:'MI',minnesota:'MN',mississippi:'MS',missouri:'MO',montana:'MT',nebraska:'NE',nevada:'NV','new hampshire':'NH','new jersey':'NJ','new mexico':'NM','new york':'NY','north carolina':'NC','north dakota':'ND',ohio:'OH',oklahoma:'OK',oregon:'OR',pennsylvania:'PA','rhode island':'RI','south carolina':'SC','south dakota':'SD',tennessee:'TN',texas:'TX',utah:'UT',vermont:'VT',virginia:'VA',washington:'WA','west virginia':'WV',wisconsin:'WI',wyoming:'WY'};
+  function abbr(st){ return ST[String(st).toLowerCase()]||st; }
+  function paint(items){ var box=$('sugg'); box.innerHTML=''; if(!items.length){ box.style.display='none'; return; } items.slice(0,9).forEach(function(it){ var b=document.createElement('button'); b.type='button'; b.className='it'; b.innerHTML=esc(it.label)+(it.small?'<small>'+esc(it.small)+'</small>':''); b.addEventListener('click',function(){ pickPlace(it); }); box.appendChild(b); }); box.style.display=''; }
+  function esc(s){ return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]}); }
+  function pickPlace(it){ a.market=it.market; a.area=it.area||''; $('area').value=it.area||it.label; picked=$('area').value; $('sugg').style.display='none';
+    document.querySelectorAll('#markets .opt').forEach(function(x){ x.classList.toggle('on', x.dataset.v===it.market); }); if(METROS[it.market]) loadAreas(); }
+  var picked=null;   // the last suggestion or market button chosen; typing clears it, Next settles what typed text means
+  function settle(){ var v=$('area').value.trim(); if(picked&&picked===v) return; var known=Object.keys(METROS).filter(function(k){return (METROS[k].short||'')===v})[0];
+    if(known){ a.market=known; a.area=''; } else if(v&&(areas[a.market]||[]).some(function(x){return x.toLowerCase()===v.toLowerCase()})){ a.area=v; } else if(v){ a.market='other'; a.area=v; } else { a.area=''; }
+    document.querySelectorAll('#markets .opt').forEach(function(x){ x.classList.toggle('on', x.dataset.v===a.market); }); }
+  $('area').addEventListener('input',function(){ clearTimeout(suggTimer); picked=null; var v=$('area').value; if(!v.trim()) { $('sugg').style.display='none'; return; } suggTimer=setTimeout(function(){ suggest(v); },250); });
+  $('area').addEventListener('keydown',function(e){ if(e.key==='Escape') $('sugg').style.display='none'; if(e.key==='Enter'){ e.preventDefault(); var first=$('sugg').querySelector('.it'); if(first&&$('sugg').style.display!=='none') first.click(); } });
+  document.addEventListener('click',function(e){ if(!e.target.closest('#sugg')&&e.target!==$('area')) $('sugg').style.display='none'; });
+  fetch('/data/metros.json').then(function(r){return r.json()}).then(function(ms){ METROS=ms; var box=$('markets'); Object.keys(ms).forEach(function(k){var b=document.createElement('button');b.className='opt'+(k===a.market?' on':'');b.dataset.v=k;b.textContent=ms[k].short;box.appendChild(b)}); if(!ms[a.market]) a.market='sd'; loadAreas(); }).catch(function(){});
   var pre=q.get('intent'); if(pre&&/^(rent|buy|sell|both)$/.test(pre)){ a.intent=pre; setup2(); show(2); } else show(1);
 })();
 </script>
