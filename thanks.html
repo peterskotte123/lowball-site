@@ -1,0 +1,39 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>You’re set · Lowball</title><meta name="description" content="Thanks for telling us what you’re looking for. Install Lowball to score listings and draft your offer."><meta name="robots" content="noindex">
+<link rel="icon" href="/img/mark.svg">
+<style>
+:root{--ink:#101828;--ink2:#344054;--muted:#475467;--muted2:#667085;--muted3:#98A2B3;--line:#EAECF0;--line2:#D0D5DD;--soft:#F8FAFC;--green:#157347;--deal:#067647}
+*{box-sizing:border-box}body{margin:0;font:16px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--soft)}
+header{background:#fff;border-bottom:1px solid var(--line)}.nav{max-width:1080px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:18px}.nav img{height:24px}.nav a{color:var(--muted);text-decoration:none;font-size:14px}
+main{max-width:560px;margin:34px auto;padding:0 20px}.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px 24px;box-shadow:0 20px 50px -30px rgba(16,24,40,.35)}
+h1{font-size:24px;letter-spacing:-.02em;margin:0 0 6px;line-height:1.2}.lede{color:var(--muted);margin:0 0 18px;font-size:15px}
+.step{display:none}.step.on{display:block}.q{font-size:17px;font-weight:600;margin:0 0 12px}
+.opts{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px}.opt{font:15px inherit;padding:10px 14px;border:1px solid var(--line2);border-radius:999px;background:#fff;color:var(--ink);cursor:pointer}.opt:hover{border-color:var(--green)}.opt.on{background:#ECFDF3;border-color:#ABEFC6;color:var(--deal);font-weight:600}
+input.t{font:15px inherit;width:100%;padding:11px 13px;border:1px solid var(--line2);border-radius:10px;margin-bottom:10px}
+.sugg{position:absolute;left:0;right:0;top:100%;margin-top:-8px;background:#fff;border:1px solid var(--line2);border-radius:10px;box-shadow:0 8px 24px rgba(16,24,40,.12);z-index:5;overflow:hidden}.sugg .it{display:block;width:100%;text-align:left;font:15px inherit;padding:10px 13px;border:0;background:#fff;cursor:pointer}.sugg .it:hover,.sugg .it.hi{background:#F2F4F7}.sugg .it small{color:var(--muted2);margin-left:6px}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:6px}.btn{font:inherit;font-weight:600;padding:12px 18px;border-radius:10px;border:0;cursor:pointer;text-decoration:none;display:inline-block}.btn.p{background:var(--green);color:#fff}.btn.p:hover{background:#0f5c38}.btn.g{background:#fff;color:var(--ink2);border:1px solid var(--line2)}
+.skip{margin-left:auto;font-size:13px;color:var(--muted2)}.skip a{color:var(--muted2)}
+.prog{display:flex;gap:6px;margin:0 0 18px}.prog i{height:4px;flex:1;border-radius:2px;background:var(--line)}.prog i.on{background:var(--green)}
+.notice{font-size:12.5px;color:var(--muted);line-height:1.5;border-top:1px solid var(--line);margin-top:14px;padding-top:12px}.notice a{color:var(--green)}
+label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink2);margin:8px 0 4px}label.ck input{margin-top:3px;flex:none}
+.done h2{font-size:20px;margin:0 0 8px}.foot{max-width:560px;margin:0 auto;padding:10px 20px 40px;color:var(--muted3);font-size:12px}
+</style><!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head><body>
+<header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/deals/">Deals</a><a href="/buy/">Buy</a></div></header>
+<main><div class="card done">
+  <h2 id="doneh">Thanks.</h2>
+  <p class="lede" id="donep"></p>
+  <div class="row"><a class="btn p" id="install" rel="noopener">Add Lowball to Chrome</a></div>
+</div></main>
+<div class="foot">Not affiliated with Zillow. Estimates are not advice or a guarantee. <a href="/privacy#do-not-sell" style="color:inherit">Do Not Sell or Share My Personal Information</a></div>
+<script>
+(function(){
+  // Reached only after the /start form is sent. ?e=1 means an email was given; the email itself never goes in the URL.
+  var ff=/Firefox/.test(navigator.userAgent), STORE=ff?'https://addons.mozilla.org/firefox/addon/lowball/':'https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno';
+  var e=new URLSearchParams(location.search).get('e')==='1', b=document.getElementById('install');
+  b.href=STORE; b.textContent=ff?'Add Lowball to Firefox':'Add Lowball to Chrome';
+  document.getElementById('doneh').textContent=e?'You\u2019re set.':'Thanks.';
+  document.getElementById('donep').textContent=(e?'Deal alerts will come from hello@lowball.rent. ':'')+'Now install the extension to score listings and draft your offer.';
+  setTimeout(function(){location.href=STORE},2500);
+})();
+</script>
+</body></html>
