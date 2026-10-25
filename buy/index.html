@@ -45,7 +45,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
 .l1{display:flex;align-items:center;gap:8px}.price{font-size:20px;font-weight:700;letter-spacing:-.01em;color:var(--ink);text-decoration:none}.price small{font-size:12px;font-weight:500;color:var(--muted)}
 .cue{margin-left:auto;font-size:11.5px;font-weight:700;border-radius:4px;padding:3px 7px;text-transform:uppercase;letter-spacing:.03em}.cue.fast{background:#ECFDF3;color:var(--deal)}.cue.wait{background:#FFFAEB;color:var(--amber)}
 .l2{font-size:14px;color:var(--ink2)}.l2 span+span:before{content:"·";color:var(--muted3);margin:0 6px}
-.l3{font-size:12.5px;color:var(--muted2)}.l3 b{color:var(--amber);font-weight:600}.l3.warn{color:var(--amber)}.warnchip{font:inherit;font-size:12px;font-weight:600;color:var(--amber);background:#FFFAEB;border:1px solid #FEDF89;border-radius:999px;padding:3px 9px;cursor:pointer}.warntxt{display:block;color:var(--amber);margin-top:4px}
+.l3{font-size:12.5px;color:var(--muted2)}.l3 b{color:var(--amber);font-weight:600}.l3.warn{color:var(--amber)}.l3.fee{color:var(--ink2)}.warnchip{font:inherit;font-size:12px;font-weight:600;color:var(--amber);background:#FFFAEB;border:1px solid #FEDF89;border-radius:999px;padding:3px 9px;cursor:pointer}.warntxt{display:block;color:var(--amber);margin-top:4px}
 .ft{display:flex;align-items:flex-end;justify-content:space-between;gap:8px;margin-top:auto;padding-top:8px;border-top:1px dashed var(--line)}.offer{font-size:11.5px;color:var(--muted2);text-transform:uppercase;letter-spacing:.05em;font-weight:600}.offer b{display:block;color:var(--green);font-size:22px;letter-spacing:-.01em;line-height:1.15;text-transform:none;letter-spacing:-.01em}.offer small{display:block;font-size:12px;color:var(--muted2);text-transform:none;letter-spacing:0;font-weight:500}.typ{font-size:12px;color:var(--muted2);text-transform:none;letter-spacing:0;font-weight:500;margin-top:2px}.zlink{align-self:flex-end;padding-bottom:2px}
 .zlink{font-size:13px;font-weight:600;color:var(--green);text-decoration:none;white-space:nowrap}.zlink:hover{text-decoration:underline}
 .morebtn{display:block;width:100%;padding:12px;border:1px solid var(--line2);border-radius:8px;background:#fff;cursor:pointer;font-weight:600;color:var(--ink2);margin:14px 0}.empty{padding:30px;border:1px dashed var(--line2);border-radius:10px;color:var(--muted);text-align:center;grid-column:1/-1}
@@ -64,7 +64,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
 }
 @media (min-width:1024px) and (max-width:1279px){.grid{grid-template-columns:1fr}}
 </style><!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head><body>
-<header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/deals/">Deals</a><a href="/buy/" class="on">Buy</a><a href="/rent/">Fair rent</a><a href="/renew">Renewing?</a><a href="/">Extension</a></div></header>
+<header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/deals/">Deals</a><a href="/buy/" class="on">Buy</a><a href="/rent/">Rent by city</a><a href="/renew">Renewing?</a><a href="/">Extension</a></div></header>
 
 <div class="bar"><div class="in">
   <div class="sbox"><input id="q" placeholder="City, neighborhood, ZIP or address" autocomplete="off" aria-label="Search location" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugg"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><div class="sugg" id="sugg" role="listbox"></div></div>
@@ -96,6 +96,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     <button type="button" class="morebtn" id="morerows" style="display:none">Show 40 more</button>
     <div class="cta"><div><b>Want an agent who'll write this offer?</b><div class="sub">Tell us where and when, and we'll connect you with a licensed agent who works from the numbers.</div></div><a class="btn" id="ctabtn" href="/start?intent=buy&from=%2Fbuy">Talk to an agent</a></div>
     <div class="foot">Estimates compare each listing with similar active listings nearby; they are not advice or a guarantee, and the other side can say no. Not affiliated with Zillow. Listings link to zillow.com; we show no address or photos here, and pins are placed to the nearest block. Walk, bike and transit scores are computed by Lowball from OpenStreetMap data (© OpenStreetMap contributors, ODbL) and public transit schedules. Typical asking is a per-square-foot comparison of active listings, not an appraisal.</div>
+    
   </div>
 </div>
 <button type="button" class="fab" id="fab">Map</button>
@@ -111,6 +112,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
   var loc={city:[],area:[],zip:[]}, beds=[], minBaths=0, types=[], chips={deals:true,fast:false,wait:false,cut:false}, hideProg=false;
   var PROG={income:['Income-restricted','Rent is set by income limits (AMI bands), not the market, so it is not negotiable and the comparison does not apply.'],age:['55+ community','Senior housing compares with other senior housing; the whole-market benchmark can read as under or over when it is neither.'],land_lease:['Land lease','The price leaves out the monthly land rent, so it will look far under similar homes.']};
   function money(v){return '$'+Math.round(v).toLocaleString('en-US')}
+  function todayISO(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')}
   function moneyK(v){return v>=1e6?'$'+(v/1e6).toFixed(2).replace(/\.?0+$/,'')+'M':v>=1e4?'$'+Math.round(v/1000)+'K':money(v)}
   function bedsTxt(r){return r.beds===0?'Studio':(r.beds+' bd'+(r.beds>1?'s':''))}
   function dist(a,b,c,d){var R=3958.8,p=Math.PI/180,x=(c-a)*p,y=(d-b)*p,h=Math.sin(x/2)*Math.sin(x/2)+Math.cos(a*p)*Math.cos(c*p)*Math.sin(y/2)*Math.sin(y/2);return 2*R*Math.asin(Math.sqrt(h))}
@@ -126,15 +128,17 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
       if(loc.city.length&&loc.city.indexOf(r.city||'')<0) return false; if(loc.area.length&&loc.area.indexOf(r.area)<0) return false; if(loc.zip.length&&loc.zip.indexOf(r.zip)<0) return false;
       if(beds.length&&!beds.some(function(b){return b===4?r.beds>=4:r.beds===b})) return false;
       if(minBaths&&!(r.baths>=minBaths)) return false;
-      if(types.length&&types.indexOf(r.type)<0) return false; if(mn&&r.price<mn) return false; if(mx&&r.price>mx) return false; if(mo&&r.offer>mo) return false;
+      if(types.length&&types.indexOf(r.type)<0) return false; if(mn&&tm(r)<mn) return false; if(mx&&tm(r)>mx) return false; if(mo&&r.offer>mo) return false;
       if((sq0||sq1)&&!r.sqft) return false; if(sq0&&r.sqft<sq0) return false; if(sq1&&r.sqft>sq1) return false;
       if(bmax&&!(r.beach!=null&&r.beach<=bmax)) return false;
       if(bounds&&!bounds.contains([r.lon,r.lat])) return false;
       return true;
     });
   }
+  // what the place costs a month: asking plus required fees when the shown price leaves them out (build_deals.py total_monthly)
+  function tm(r){ return r.total_monthly||r.price; }
   function sorted(rows){
-    var s=$('sort').value||DEFSORT; var k={gap:function(a,b){return b.gap-a.gap||a.days-b.days},pct:function(a,b){return (MODE==='buy'?((a.pct>=20)-(b.pct>=20)):0)||b.pct-a.pct},bets:function(a,b){return bets(b)-bets(a)||b.pct-a.pct},cut:function(a,b){return (b.cut?b.cut.amt:-1)-(a.cut?a.cut.amt:-1)},days:function(a,b){return a.days-b.days||b.gap-a.gap},old:function(a,b){return b.days-a.days},price:function(a,b){return a.price-b.price},priced:function(a,b){return b.price-a.price},sqft:function(a,b){return (b.sqft||0)-(a.sqft||0)},ppsf:function(a,b){return (a.ppsf||1e9)-(b.ppsf||1e9)},dist:function(a,b){return (a.d==null?1e9:a.d)-(b.d==null?1e9:b.d)},walk:function(a,b){return (b.walk==null?-1:b.walk)-(a.walk==null?-1:a.walk)||b.gap-a.gap},transit:function(a,b){return (b.transit==null?-1:b.transit)-(a.transit==null?-1:a.transit)||b.gap-a.gap},beach:function(a,b){return (a.beach==null?1e9:a.beach)-(b.beach==null?1e9:b.beach)}}[s]||function(a,b){return b.gap-a.gap};
+    var s=$('sort').value||DEFSORT; var k={gap:function(a,b){return b.gap-a.gap||a.days-b.days},pct:function(a,b){return (MODE==='buy'?((a.pct>=20)-(b.pct>=20)):0)||b.pct-a.pct},bets:function(a,b){return bets(b)-bets(a)||b.pct-a.pct},cut:function(a,b){return (b.cut?b.cut.amt:-1)-(a.cut?a.cut.amt:-1)},days:function(a,b){return a.days-b.days||b.gap-a.gap},old:function(a,b){return b.days-a.days},price:function(a,b){return tm(a)-tm(b)},priced:function(a,b){return tm(b)-tm(a)},sqft:function(a,b){return (b.sqft||0)-(a.sqft||0)},ppsf:function(a,b){return (a.ppsf||1e9)-(b.ppsf||1e9)},dist:function(a,b){return (a.d==null?1e9:a.d)-(b.d==null?1e9:b.d)},walk:function(a,b){return (b.walk==null?-1:b.walk)-(a.walk==null?-1:a.walk)||b.gap-a.gap},transit:function(a,b){return (b.transit==null?-1:b.transit)-(a.transit==null?-1:a.transit)||b.gap-a.gap},beach:function(a,b){return (a.beach==null?1e9:a.beach)-(b.beach==null?1e9:b.beach)}}[s]||function(a,b){return b.gap-a.gap};
     return rows.slice().sort(k);
   }
 
@@ -159,13 +163,16 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     var gtxt=r.restricted?'<b style="color:#175CD3">'+PROG[r.restricted][0]+'</b> · program pricing':r.gap>0?'<b>'+money(r.gap)+PER+' under</b> typical':(r.gap<0?'<b>'+money(-r.gap)+PER+' over</b> typical':'<b>at typical</b>');
     var band='<div class="band'+(r.restricted?' prog':over?' over':' deal')+'"><div class="g"><span>'+gtxt+'</span><span title="against typical asking nearby">'+(pctTyp?pctTyp+'% '+(over?'over':'under'):'')+'</span></div><div class="trk"><div class="fill" style="left:'+a+'%;width:'+Math.max(2,b-a)+'%"></div><div class="tk" style="left:'+pos(bench)+'%" title="typical asking nearby '+money(bench)+'"></div></div></div>';
     var cue=r.cue==='fast'?'<span class="cue fast">Move fast</span>':r.cue==='wait'?'<span class="cue wait">Can wait</span>':'';
-    var l3=[r.area||r.city||'', r.zip, (r.days===0?'listed today':r.days===1?'1 day':r.days+' days'), r.cut?'<b>cut '+money(r.cut.amt)+(r.cut.date?' '+r.cut.date.slice(5).replace('-','/'):'')+'</b>':'', r.ppsf?'$'+Math.round(r.ppsf)+'/sqft':'', r.beach!=null&&r.beach<=5?'<b style="color:#157347">'+(r.beach<0.1?'steps from the beach':r.beach.toFixed(1)+' mi to beach')+'</b>':'', r.walk!=null?'<span title="'+(r.scores_src==='page'?'scores shown on the listing page':'Lowball scores from OpenStreetMap and transit schedules')+'">walk '+r.walk+(r.bike!=null?' · bike '+r.bike:'')+(r.transit!=null?' · transit '+r.transit:'')+'</span>':'', (r.tags||[]).join(' · '), r.d!=null?(r.d<0.05?'<b style="color:#067647">this address</b>':(r.d<0.1?'<0.1':r.d.toFixed(1))+' mi'):''].filter(Boolean).join(' · ');
+    var l3=[r.area||r.city||'', r.zip, (r.days===0?'listed today':r.days===1?'1 day':r.days+' days'), r.avail&&r.avail>todayISO()?'available '+new Date(r.avail+'T12:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}):'', r.cut?'<b>cut '+money(r.cut.amt)+(r.cut.date?' '+r.cut.date.slice(5).replace('-','/'):'')+'</b>':'', r.ppsf?'$'+Math.round(r.ppsf)+'/sqft':'', r.beach!=null&&r.beach<=5?'<b style="color:#157347">'+(r.beach<0.1?'steps from the beach':r.beach.toFixed(1)+' mi to beach')+'</b>':'', r.walk!=null?'<span title="'+(r.scores_src==='page'?'scores shown on the listing page':'Lowball scores from OpenStreetMap and transit schedules')+'">walk '+r.walk+(r.bike!=null?' · bike '+r.bike:'')+(r.transit!=null?' · transit '+r.transit:'')+'</span>':'', (r.tags||[]).join(' · '), r.d!=null?(r.d<0.05?'<b style="color:#067647">this address</b>':(r.d<0.1?'<0.1':r.d.toFixed(1))+' mi'):''].filter(Boolean).join(' · ');
     var offerNote=offerWhy(r);
     var caveat=r.restricted?'<div class="l3" style="color:#175CD3">'+PROG[r.restricted][1]+'</div>':(Math.abs(r.pct)>=20&&r.gap>0?'<div class="l3"><button type="button" class="warnchip" aria-expanded="false">Check why it\u2019s cheap</button><span class="warntxt" hidden>Far under similar homes. Check for a land lease, HOA dues, an age restriction or condition before you get excited; ask the agent why it is priced there.</span></div>':'');
     el.innerHTML=band+'<div class="body"><div class="l1"><a class="price" target="_blank" rel="noopener nofollow" href="'+zurl+'">'+money(r.price)+(PER?'<small>'+PER+'</small>':'')+'</a>'+cue+'</div>'
+      +(tm(r)>r.price?'<div class="l3 fee">about '+money(tm(r))+'/mo with required fees</div>':'')
       +'<div class="l2"><span>'+bedsTxt(r)+'</span>'+(r.baths?'<span>'+r.baths+' ba</span>':'')+(r.sqft?'<span>'+Math.round(r.sqft).toLocaleString()+' sqft</span>':'')+'<span>'+(TYPES[r.type]||'Home')+'</span></div>'
       +'<div class="l3">'+l3+'</div>'+caveat
       +'<div class="ft"><div class="offer">Offer <b>'+money(r.offer)+'</b>'+(offerNote?'<small>'+offerNote+'</small>':'')+'<div class="typ">typical nearby '+money(bench)+(r.typ_ppsf&&r.sqft?' = $'+r.typ_ppsf+'/sqft × '+Math.round(r.sqft).toLocaleString()+' sqft':'')+(r.ncomps?' · vs '+r.ncomps+' similar homes':' · ZIP-level, no close comps')+'</div></div><a class="zlink" target="_blank" rel="noopener nofollow" href="'+zurl+'">Open on Zillow ↗</a></div></div>';
+    var wt=$('wtpl'); if(wt){ var wr=document.createElement('div'); wr.className='wrow'; wr.innerHTML='<button type="button" class="wopen">Alert me if the price drops</button>'; el.querySelector('.body').appendChild(wr);
+      wr.firstChild.addEventListener('click',function(){ var f=wt.content.firstElementChild.cloneNode(true); wr.innerHTML=''; wr.appendChild(f); lbWatch(f, r.zpid, null); f.querySelector('[name=email]').focus(); }); }
     var wc=el.querySelector('.warnchip'); if(wc) wc.addEventListener('click',function(){var t=el.querySelector('.warntxt'); t.hidden=!t.hidden; wc.setAttribute('aria-expanded',t.hidden?'false':'true')});
     el.addEventListener('mouseenter',function(){hoverPin(r.zpid,true)}); el.addEventListener('mouseleave',function(){hoverPin(r.zpid,false)});
     return el;
@@ -216,7 +223,9 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     if(loc.area.length) f.push(loc.area.join(', ')); if(loc.city.length) f.push(loc.city.join(', ')); if(loc.zip.length) f.push('ZIP '+loc.zip.join(', ')); if(near) f.push('within '+radiusVal+' mi of '+nearLabel); if(hideProg) f.push('no income- or age-restricted listings');
     var lead=chips.deals?'<b>Deals only</b>: homes asking <b>under</b> what similar homes nearby ask':'All homes, at, over and under typical';
     var where=(map&&mapReady)?' in the map view':(M?' in '+M.short:'');
-    $('fsum').innerHTML=lead+where+(f.length?', filtered to '+f.map(function(x){return '<span class=f>'+esc(x)+'</span>'}).join(''):'')+'.'+(f.length||!chips.deals?' <a href="#" id="fsumclear">Clear filters</a>':'');
+    var fr=viewRows.filter(function(r){return r.price_incl_fees!=null}), fw=fr.filter(function(r){return r.fees_min>0}), fo=fw.filter(function(r){return r.price_incl_fees===false});
+    var fees=fr.length>=30?' '+Math.round(fw.length/fr.length*100)+'% of these list required monthly fees'+(fo.length?', '+Math.round(fo.length/fr.length*100)+'% on top of the price shown':'')+'.':'';
+    $('fsum').innerHTML=lead+where+(f.length?', filtered to '+f.map(function(x){return '<span class=f>'+esc(x)+'</span>'}).join(''):'')+'.'+fees+(f.length||!chips.deals?' <a href="#" id="fsumclear">Clear filters</a>':'');
     var c=$('fsumclear'); if(c) c.addEventListener('click',function(e){e.preventDefault(); $('reset').click();});
   }
   // Where is the map? The neighbourhood that holds half the rows in view, else the city that holds 60%, else nothing (metro name).
@@ -354,7 +363,7 @@ header{border-bottom:1px solid var(--line);background:#fff;height:var(--navh)}.n
     if(!METROS[k]) k='sd'; metro=k; M=METROS[k]; $('metrob').textContent=M.short;
     $('metrop').innerHTML=''; Object.keys(METROS).forEach(function(m){var a=document.createElement('a');a.className='it';a.href='#';a.style.cssText='display:block;padding:8px 10px;color:var(--ink);text-decoration:none;border-radius:6px'+(m===k?';font-weight:600;background:var(--soft)':'');a.textContent=METROS[m].short;a.addEventListener('click',function(e){e.preventDefault(); document.querySelectorAll('.dd.open').forEach(function(o){o.classList.remove('open')}); if(m!==metro) setMetro(m)});$('metrop').appendChild(a)});
     document.querySelectorAll('#kind .dp a').forEach(function(a){ a.href=a.getAttribute('href').split('?')[0]+(k!=='sd'?'?metro='+k:''); });
-    var cb=$('ctabtn'); if(cb) cb.href=cb.href.replace(/([?&])metro=[^&]*&?/,'$1').replace(/[?&]$/,'')+(k!=='sd'?'&metro='+k:''); var sb=$('sellbtn'); if(sb) sb.href=sb.href.replace(/([?&])metro=[^&]*&?/,'$1').replace(/[?&]$/,'')+(k!=='sd'?'&metro='+k:'');
+    var cb=$('ctabtn'); if(cb&&cb.href.indexOf('/start')>=0) cb.href=cb.href.replace(/([?&])metro=[^&]*&?/,'$1').replace(/[?&]$/,'')+(k!=='sd'?'&metro='+k:''); var sb=$('sellbtn'); if(sb) sb.href=sb.href.replace(/([?&])metro=[^&]*&?/,'$1').replace(/[?&]$/,'')+(k!=='sd'?'&metro='+k:'');
     if(!first){ loc={city:[],area:[],zip:[]}; near=null; nearLabel=''; initView=null; data=null; viewRows=[]; $('cards').innerHTML='<div class="sk"></div><div class="sk"></div><div class="sk"></div><div class="sk"></div>'; $('count').textContent=''; $('asof').textContent=''; $('morerows').style.display='none'; paintButtons(); paintApplied(); writeUrl(); drawMap([]); }
     fetch('data/'+k+'/all.json').then(function(r){return r.json()}).then(function(d){
       data=d; $('asof').textContent='as of '+d.asof+' · updated nightly';

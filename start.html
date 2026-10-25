@@ -1,5 +1,5 @@
 <!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Get Lowball · two quick taps</title><meta name="description" content="Two quick taps so Lowball shows you the right deals and drafts the right offer, then install the free extension."><meta name="robots" content="noindex">
+<title>Deal alerts for your area, optional · Lowball</title><meta name="description" content="Optional deal alerts for your area. Separate from the free Lowball extension, which you can install without this form."><meta name="robots" content="noindex">
 <link rel="icon" href="/img/mark.svg">
 <style>
 :root{--ink:#101828;--ink2:#344054;--muted:#475467;--muted2:#667085;--muted3:#98A2B3;--line:#EAECF0;--line2:#D0D5DD;--soft:#F8FAFC;--green:#157347;--deal:#067647}
@@ -21,11 +21,12 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
 <header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/deals/">Deals</a><a href="/buy/">Buy</a></div></header>
 <main><div class="card">
   <div class="prog"><i class="on" id="p1"></i><i id="p2"></i><i id="p3"></i><i id="p4"></i></div>
-  <h1>Two quick taps</h1><p class="lede">So Lowball shows you the right deals, and drafts the right offer.</p>
+  <h1>Deal alerts for your area, optional</h1><p class="lede">This form is separate from the extension. You do not need it to use Lowball: install the extension straight from the store with the button below.</p>
+  <p style="margin:0 0 18px"><a class="btn p" id="installtop" rel="noopener">Install Lowball, free</a></p>
 
   <div class="step on" data-step="1">
     <p class="q">Are you renting or buying?</p>
-    <div class="opts" data-k="intent"><button class="opt" data-v="rent">Renting</button><button class="opt" data-v="buy">Buying</button><button class="opt" data-v="sell">Selling</button><button class="opt" data-v="both">Renting now, buying later</button></div>
+    <div class="opts" data-k="intent"><button class="opt" data-v="rent">Renting</button><button class="opt" data-v="buy">Buying</button><button class="opt" data-v="both">Renting now, buying later</button></div>
   </div>
 
   <div class="step" data-step="2">
@@ -47,7 +48,7 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
   <div class="step" data-step="4">
     <p class="q" id="q4">Where should we send your deal alerts?</p>
     <input class="t" id="email" type="email" placeholder="Email (optional)" autocomplete="email">
-    <label class="ck" id="sharerow"><input type="checkbox" id="share"><span id="sharetxt">A licensed real-estate agent may email me about my search. <span style="color:var(--muted2)">Optional. Email only. Nobody calls or texts you.</span></span></label>
+    <label class="ck" id="sharerow"><input type="checkbox" id="share"><span id="sharetxt">Licensed real-estate agents or brokerages may email me about my search. <span style="color:var(--muted2)">Optional. We share your email and answers only, never a phone number; we do not ask for one.</span></span></label>
     <div class="notice" id="notice">We collect your answers and, if you give it, your email, to send deal alerts for your area and to draft the right offer. If you tick the box, we may share your email and answers with the businesses on <a href="https://api.lowball.rent/partners" target="_blank" rel="noopener">our partner list</a>, of the kinds named beside it (licensed real-estate agents and brokerages for buying and selling; property managers, landlords, and moving, internet or renters-insurance providers for renting), who may email you; that is a sale of personal information under California law, and you can opt out any time at <a href="/privacy#do-not-sell">Do Not Sell or Share My Personal Information</a>. We keep form entries 24 months. This form is separate from the extension, which never collects names or emails. <a href="/privacy">Privacy policy</a>.</div>
   </div>
 
@@ -59,14 +60,14 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
 <script>
 (function(){
   var $=function(id){return document.getElementById(id)}, API='https://api.lowball.rent/v1', q=new URLSearchParams(location.search);
-  // Firefox users go to the Firefox listing (desktop and Android); everyone else to the Chrome Web Store, which Edge, Brave and the other Chromium browsers install from too
+  // Firefox users go to the Firefox listing; everyone else to the Chrome Web Store, which Edge, Brave and the other Chromium browsers install from too
   var LISTING=/Firefox/.test(navigator.userAgent)?'https://addons.mozilla.org/firefox/addon/lowball/':'https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno';
   // `next` is only honoured for the two stores we publish to: an unchecked redirect target would let anyone mint lowball.rent links that land on their own site
   var STORE=/^https:\/\/(chromewebstore\.google\.com|addons\.mozilla\.org)\//.test(q.get('next')||'')?q.get('next'):LISTING; var page=q.get('from')||'/start';
   var a={intent:null,timeline:null,area:'',market:(q.get('metro')||'sd'),helper:null,buy_soon:null,beds:null,budget:null,home_type:null}, step=1, METROS={};
   function opts(k,list){ var box=document.querySelector('.opts[data-k="'+k+'"]')||$('opts3b'); box.innerHTML=''; box.dataset.k=k; list.forEach(function(o){var b=document.createElement('button');b.className='opt';b.dataset.v=o[0];b.textContent=o[1];box.appendChild(b)}); }
   function show(n){ step=n; document.querySelectorAll('.step').forEach(function(s){s.classList.toggle('on',Number(s.dataset.step)===n)}); for(var i=1;i<=4;i++) $('p'+i).classList.toggle('on',i<=Math.min(n,4));
-    $('back').style.display=n>1&&n<5?'':'none'; $('next').style.display=(n===3||n===4)?'':'none'; $('install').style.display=n>=2?'':'none'; $('install').href=STORE; $('skip').parentNode.style.display=n<5?'':'none';
+    $('back').style.display=n>1&&n<5?'':'none'; $('next').style.display=(n===3||n===4)?'':'none'; $('install').style.display=n>=2?'':'none'; $('install').href=STORE; $('installtop').href=STORE; $('skip').parentNode.style.display=n<5?'':'none';
     if(n===4) $('next').textContent=$('email').value?'Save & install':'Install without email';
     if(n===5){ $('ctl').style.display='none'; } }
   function setup2(){ var it=a.intent, buy=(it==='buy'||it==='both'), sell=(it==='sell');
@@ -81,7 +82,7 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
     else { c.style.display='none'; cb.style.display='none'; }
     if(it==='both'){ c.style.display=''; cb.style.display=''; c.textContent='Thinking about buying in the next couple of years?'; cb.dataset.k='buy_soon'; cb.innerHTML=''; [['yes','Yes, seriously'],['maybe','Maybe']].forEach(function(o){var b=document.createElement('button');b.className='opt';b.dataset.v=o[0];b.textContent=o[1];cb.appendChild(b)}); }
     $('q4').textContent=sell?'Where should we send what homes like yours are listing and selling for?':buy?'Where should we send offer drafts and deal alerts?':'Where should we send deal alerts?';
-    $('sharetxt').innerHTML=(sell||buy)?'A licensed real-estate agent may email me about '+(sell?'selling my home':'my search')+'. <span style="color:var(--muted2)">Optional. Email only. Nobody calls or texts you.</span>':'Property managers, landlords, and moving, internet or renters-insurance providers may email me about my move. <span style="color:var(--muted2)">Optional. Email only. Nobody calls or texts you.</span>';
+    $('sharetxt').innerHTML=(sell||buy)?'Licensed real-estate agents or brokerages may email me about '+(sell?'selling my home':'my search')+'. <span style="color:var(--muted2)">Optional. We share your email and answers only, never a phone number; we do not ask for one.</span>':'Property managers, landlords, and moving, internet or renters-insurance providers may email me about my move. <span style="color:var(--muted2)">Optional. We share your email and answers only, never a phone number; we do not ask for one.</span>';
   }
   document.addEventListener('click',function(e){ var b=e.target.closest('.opt'); if(!b) return; var box=b.parentNode, k=box.dataset.k; box.querySelectorAll('.opt').forEach(function(x){x.classList.remove('on')}); b.classList.add('on'); a[k]=b.dataset.v;
     if(k==='intent'){ setup2(); show(2); } else if(k==='timeline'){ show(3); } else if(k==='market'){ a.area=''; $('area').value=METROS[b.dataset.v]?METROS[b.dataset.v].short:''; picked=$('area').value; $('sugg').style.display='none'; loadAreas(); } });
@@ -90,7 +91,7 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
   $('skip').addEventListener('click',function(e){ e.preventDefault(); if(a.intent) submit(false); location.href=STORE; });
   $('email').addEventListener('input',function(){ $('next').textContent=$('email').value?'Save & install':'Install without email' });
   function submit(goInstall){
-    var email=$('email').value.trim(); var body={intent:a.intent,timeline:a.timeline,area:a.area||null,market:a.market||null,helper:a.helper,buy_soon:a.buy_soon,beds:a.beds,budget:a.budget,home_type:a.home_type,email:email||null,page:page,notice_v:2,gpc:navigator.globalPrivacyControl===true,share_ok:$('share').checked,consent_notice:$('notice').innerText.slice(0,1500),consent_box:$('sharetxt').innerText.slice(0,400),client_ts:Math.floor(Date.now()/1000)};
+    var email=$('email').value.trim(); var body={intent:a.intent,timeline:a.timeline,area:a.area||null,market:a.market||null,helper:a.helper,buy_soon:a.buy_soon,beds:a.beds,budget:a.budget,home_type:a.home_type,email:email||null,page:page,notice_v:3,gpc:navigator.globalPrivacyControl===true,share_ok:$('share').checked,consent_notice:$('notice').innerText.slice(0,1500),consent_box:$('sharetxt').innerText.slice(0,400),client_ts:Math.floor(Date.now()/1000)};
     fetch(API+'/lead',{method:'POST',headers:{'Content-Type':'application/json','X-Lowball-Client':'web-start'},body:JSON.stringify(body),keepalive:true}).catch(function(){});
     if(goInstall){ $('doneh').textContent=email?'You’re set.':'Thanks.'; $('donep').innerHTML=(email?'Deal alerts for '+(a.area||'your area')+' will come from hello@lowball.rent. ':'')+'Now install the extension: <a href="'+STORE+'" rel="noopener">Add Lowball to Chrome, free</a>.'; location.href='/thanks'+(email?'?e=1':''); }
   }

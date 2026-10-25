@@ -2,9 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fair rent and an offer for any Zillow rental · Lowball</title>
+<title>Stop paying the sticker price on rent · Lowball</title>
 <link rel="canonical" href="https://lowball.rent/"><script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Lowball","url":"https://lowball.rent/"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"Organization","name":"Lowball","url":"https://lowball.rent/","logo":"https://lowball.rent/img/icon-512.png","email":"peterskotte@lowball.rent"}</script><script type="application/ld+json">{"@context":"https://schema.org","@type":"SoftwareApplication","name":"Lowball","applicationCategory":"BrowserApplication","operatingSystem":"Chrome, Firefox","description":"Free browser extension that shows an estimate of fair rent, the comparable listings behind it, and a suggested opening offer on Zillow rental listings.","url":"https://lowball.rent/","installUrl":"https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno","offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"Lowball"}}</script>
-<meta name="description" content="A free Chrome extension that shows our estimate of fair rent, a suggested opening offer, and a likely landing range on every rental listing you open, as you browse.">
+<meta name="description" content="Asking rent is a number somebody typed in. Lowball, a free extension for Chrome and Firefox, shows what a zillow.com rental is worth, a price to offer, and writes the message.">
+<script>(function(){var u=navigator.userAgent||"";if(/Android|iPhone|iPad|iPod|Mobile|Silk|Kindle/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))document.documentElement.classList.add("phone")})();</script>
 <link rel="icon" type="image/svg+xml" href="/img/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png"><link rel="apple-touch-icon" href="/img/apple-touch-icon.png">
 <style>
   :root { --ink:#101828; --muted:#475467; --line:#EAECF0; --paper:#fff; --soft:#F8FAFC; --green:#157347; --amber:#B45309; --red:#B42318; }
@@ -26,7 +27,7 @@
   .fine { font-size:13px; color:#98A2B3; margin-top:12px; }
   .shot { border-radius:16px; box-shadow:0 30px 60px -30px rgba(16,24,40,.45), 0 1px 2px rgba(16,24,40,.08); border:1px solid var(--line); max-width:100%; }
   .strip { background:var(--soft); border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:28px 0; }
-  .strip .wrap { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+  .strip .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
   .stat b { display:block; font-size:28px; letter-spacing:-0.01em; }
   .stat span { font-size:13px; color:var(--muted); }
   section { padding:64px 0; }
@@ -47,7 +48,7 @@
   footer { border-top:1px solid var(--line); padding:26px 0 40px; font-size:13px; color:#98A2B3; display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
   footer a { color:#667085; }
   @media (max-width:820px) { .hero, .privacy { grid-template-columns:1fr; } .grid3 { grid-template-columns:1fr 1fr; } }
-  @media (max-width:520px) { .strip .wrap, .grid3 { grid-template-columns:1fr; } nav a { margin-left:14px; } }
+  @media (max-width:520px) { .strip .stats, .grid3 { grid-template-columns:1fr; } nav a { margin-left:14px; } }
   header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; }
   nav { display:flex; align-items:center; gap:22px; }
   nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:15px; white-space:nowrap; }
@@ -92,85 +93,192 @@
   /* Keep the page still while the drawer is open. Ignored by browsers without :has(), which only means the
      page can scroll behind the drawer. */
   body:has(.navt:checked) { overflow:hidden; }
+  /* 2026-10-24 site review: phone detection, HTML panel mock, FAQ */
+  .only-phone { display:none; }
+  html.phone .only-phone { display:block; }
+  html.phone .only-desk { display:none !important; }
+  nav a.navbtn { color:#fff; padding:9px 14px; font-size:14px; }
+  nav a.navbtn:hover { color:#fff; }
+  .more { color:var(--muted); text-decoration:none; font-weight:500; }
+  .hero { grid-template-areas:"title mock" "lede mock" "act mock"; align-items:start; }
+  .h-title { grid-area:title; align-self:end; } .h-lede { grid-area:lede; margin-bottom:0; } .h-act { grid-area:act; } .h-mock { grid-area:mock; align-self:center; }
+  .hero { row-gap:20px; }
+  .mock { margin:0; }
+  .mock figcaption { font-size:13px; color:#667085; margin-top:10px; text-align:center; }
+  .pm { background:#fff; border:1px solid var(--line); border-radius:16px; box-shadow:0 30px 60px -30px rgba(16,24,40,.45), 0 1px 2px rgba(16,24,40,.08); max-width:420px; margin:0 auto; overflow:hidden; }
+  .pm-h { display:flex; align-items:center; gap:10px; padding:14px 18px; border-bottom:1px solid var(--line); }
+  .pm-ic { width:28px; height:28px; border-radius:7px; }
+  .pm-h b { font-size:18px; } .pm-addr { color:#667085; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .pm-b { padding:16px 18px 18px; }
+  .pm-lead { font-weight:700; font-size:15px; line-height:1.4; margin:0 0 14px; }
+  .pm-k { display:block; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:#667085; }
+  .pm-ao { display:grid; grid-template-columns:1fr 1.3fr; gap:12px; align-items:end; }
+  .pm-ask { font-size:30px; letter-spacing:-.02em; color:#344054; }
+  .pm-offer { font-size:44px; line-height:1; letter-spacing:-.03em; color:var(--green); }
+  .pm-year { color:var(--green); font-weight:700; font-size:15px; margin:10px 0 12px; }
+  .pm-settle { display:inline-block; border:1px solid var(--line); background:var(--soft); border-radius:10px; padding:8px 12px; font-size:14px; color:#344054; }
+  .pm-settle b { font-size:17px; color:var(--ink); margin:0 4px; } .pm-settle span { color:#667085; }
+  .pm-cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .pm-cards div { background:var(--soft); border-radius:10px; padding:10px 12px; } .pm-cards b { font-size:18px; }
+  .pm-how { color:#1D4ED8; font-weight:600; font-size:14px; margin:12px 0 8px; } .pm-how::before { content:"\25B8  "; }
+  .pm-lev { display:flex; align-items:center; gap:5px; font-size:13px; color:#475467; }
+  .pm-lev i { display:block; width:34px; height:7px; border-radius:4px; background:#16A34A; } .pm-lev span { margin-left:8px; }
+  .phonebox { background:#ECFDF3; border:1px solid #ABEFC6; border-radius:14px; padding:18px; }
+  .phonebox p { margin:0 0 12px; }
+  button.btn { font:inherit; font-weight:600; border:0; cursor:pointer; } button.btn.ghost { border:1px solid #D0D5DD; }
+  .listen { padding:20px 0 48px; max-width:46em; } .listen p { font-size:18px; color:#344054; margin:0; }
+  .strip h2 { margin-bottom:18px; }
+  .grid2 { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .faq { display:grid; grid-template-columns:1fr 1fr; gap:20px 32px; }
+  .faq h3 { margin:0 0 6px; font-size:17px; } .faq p { margin:0; color:var(--muted); }
+  @media (max-width:820px) {
+    .hero { grid-template-columns:1fr; grid-template-areas:"title" "mock" "lede" "act"; }
+    .grid2, .faq { grid-template-columns:1fr; }
+    .pm-offer { font-size:48px; } .pm-ask { font-size:34px; }
+  }
+  @media (max-width:720px) { nav a.navbtn { margin-top:18px; justify-content:center; padding:13px 16px; border-bottom:0; } }
 </style>
-<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/"><meta property="og:title" content="Lowball"><meta property="og:description" content="Know what it's worth before you waste a Saturday. Lowball scores every Zillow rental on the page, so you skip the overpriced ones and negotiate the rest with evidence."><meta property="og:image" content="https://lowball.rent/img/share/home.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Lowball"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Lowball"><meta name="twitter:description" content="Know what it's worth before you waste a Saturday. Lowball scores every Zillow rental on the page, so you skip the overpriced ones and negotiate the rest with evidence."><meta name="twitter:image" content="https://lowball.rent/img/share/home.png">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/"><meta property="og:title" content="Lowball"><meta property="og:description" content="Stop paying the sticker price on rent. Lowball shows what a zillow.com rental is worth, whether the owner is in a position to cut, a price to offer, and writes the message."><meta property="og:image" content="https://lowball.rent/img/share/home.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Lowball"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Lowball"><meta name="twitter:description" content="Stop paying the sticker price on rent. Lowball shows what a zillow.com rental is worth, whether the owner is in a position to cut, a price to offer, and writes the message."><meta name="twitter:image" content="https://lowball.rent/img/share/home.png">
 <!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head>
 <body>
 <div class="wrap">
   <header>
     <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
-    <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="/deals/">Deals</a><a href="/buy/">Buy</a><a href="/rent/">Fair rent</a><a href="#why">Why</a><a href="#how">How it&nbsp;works</a><a href="/renew">Renewing?</a><a href="/roulette">Roulette</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a></nav>
+    <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="#how">How it&nbsp;works</a><a href="#why">Why</a><a href="/renew">Renewing?</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a><a class="btn navbtn only-desk" href="https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno" rel="noopener">Add to Chrome, free</a><a class="btn navbtn only-phone" href="#get">Get it on your computer</a></nav>
   </header>
   <div class="hero">
-    <div>
-      <h1>Know what it's worth <em>before you waste a Saturday</em>.</h1>
-      <p class="lede">Lowball sits on top of zillow.com. It scores every rental on the page at once, so you can rule out the overpriced ones without opening fifty tabs. When a place is worth asking for, it shows how many listings like it have already cut, what a year of the difference is worth, and drafts the message for you.</p>
-      <div class="cta">
-        <a class="btn" href="#install">Add to Chrome, free</a>
-        <a class="btn ghost" href="#how">See how it works</a>
+    <h1 class="h-title">Stop paying the <em>sticker price</em> on rent.</h1>
+    <p class="lede h-lede">Asking rent is a number somebody typed in. Lowball sits on top of zillow.com. Open any rental and it shows what the place is worth against similar listings nearby, how long it has really been sitting, whether the owner is in a position to cut, and a price to offer. Then it writes the message, comps attached, ready to paste into the contact form. You decide whether to send it.</p>
+    <figure class="mock h-mock" aria-label="Example of the Lowball panel">
+      <div class="pm">
+        <div class="pm-h"><img src="/img/icon128.png" alt="" class="pm-ic"><b>Lowball</b><span class="pm-addr">850 Example St, Unit 4</span></div>
+        <div class="pm-b">
+          <p class="pm-lead">31 days listed · 46% of listings like this have already cut, typically 4.1%</p>
+          <div class="pm-ao"><div><span class="pm-k">Asking</span><b class="pm-ask">$2,900</b></div><div><span class="pm-k">Offer this</span><b class="pm-offer">$2,175</b></div></div>
+          <p class="pm-year">$6,300 a year below asking, if it lands near $2,375</p>
+          <div class="pm-settle">Likely to settle at <b>$2,375</b> <span>$525/mo off</span></div>
+          <div class="pm-cards"><div><span class="pm-k">Similar nearby (8)</span><b>$2,488</b></div><div><span class="pm-k">Typical asking</span><b>$2,404</b></div></div>
+          <p class="pm-how">How we got this</p>
+          <div class="pm-lev"><i></i><i></i><i></i><span>Leverage <b>High</b> · confidence medium</span></div>
+        </div>
       </div>
-      <p class="fine">No account. No ads. Data sharing is optional and anonymous. Works on zillow.com listings and search results.</p>
+      <figcaption>Example panel. Numbers are illustrative; your listing gets its own.</figcaption>
+    </figure>
+    <div class="h-act">
+      <div class="cta only-desk">
+        <a class="btn" href="https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno" rel="noopener">Add to Chrome, free</a>
+        <a class="btn ghost" href="https://addons.mozilla.org/firefox/addon/lowball/" rel="noopener">Get it for Firefox</a>
+        <a class="more" href="#how">See how it works ↓</a>
+      </div>
+      <div class="phonebox only-phone" id="get">
+        <p><b>You're on a phone.</b> Lowball is a browser extension for Chrome or Firefox on a computer. It will not install here.</p>
+        <div class="cta"><button type="button" class="btn sendlink">Send lowball.rent to my laptop</button><button type="button" class="btn ghost copylink">Copy link</button></div>
+        <p class="fine sharemsg">We never see who you send it to.</p>
+        <p class="fine">Lease ending instead? The renewal letter works on your phone: <a href="/renew">lowball.rent/renew</a></p>
+        <!-- 20-second vertical demo goes here (plan step 17, not built yet) -->
+      </div>
+      <p class="fine">Free. No account. No ads. A browser extension for Chrome and Firefox on a computer. Works on zillow.com listings and search results anywhere in the US. Sharing listing data to improve estimates is optional and anonymous; nothing about you is sold. Not affiliated with Zillow.</p>
     </div>
-    <img class="shot" src="/img/panel.png" alt="The Lowball panel on a rental listing: 31 days listed and 48% of comparable listings have already cut, so offer $2,175 on a $2,900 ask, expect to land near $2,375, which is $6,300 a year">
   </div>
+  <section id="listen" class="listen">
+    <h2>The landlord has a reason to listen</h2>
+    <p>Every month a place sits empty costs the owner a full month of rent. At 45 days on market, three more weeks empty costs more than a 6% cut spread over a year. Lowball shows that math for the listing in front of you, so you are not asking blind.</p>
+  </section>
 </div>
 <div class="strip"><div class="wrap">
-  <div class="stat"><b>29%</b><span>of San Diego listings we track have cut their price so far</span></div>
-  <div class="stat"><b>4%</b><span>median San Diego cut, larger the longer a listing sits</span></div>
-  <div class="stat"><b>42%</b><span>of San Diego listings older than 30 days have already cut</span></div>
-</div><div class="wrap" style="display:block"><p class="fine" style="margin:14px 0 0">From our September 2026 snapshot of San Diego County rentals, 5,370 listings. These count listings still posted, so a listing that cut and then rented has already left the sample. Past cuts do not predict any one listing.</p></div></div>
+  <h2>Asking is a guess. Here is how often it moves.</h2>
+  <div class="stats">
+    <div class="stat"><b>42%</b><span>of listings past 30 days have already cut the price. Median cut 4.2%.</span></div>
+    <div class="stat"><b>46%</b><span>of listings that have sat 31 to 60 days have cut, typically 4.1%. By 61 to 90 days, 51%. Past 90 days the share drops to 30%: those are the holdouts.</span></div>
+    <div class="stat"><b>3.6%</b><span>more is what stale listings ask over fresh ones with the same bedroom count in the same ZIP. The sitters are the overpriced ones.</span></div>
+  </div>
+  <p class="fine" style="margin:16px 0 0">From our September 2026 snapshot of San Diego County rentals, 5,370 listings. These count listings still posted, so a listing that cut and then rented has already left the sample. Counts are about listings, never about any landlord. Past cuts do not predict any one listing. Estimates are estimates. The extension itself works on any zillow.com rental in the US. <a href="/accuracy">How we measure</a>.</p>
+</div></div>
 <div class="wrap">
-  <section id="why">
-    <h2>Nobody knows what rent should&nbsp;cost</h2>
-    <p class="sub">If rent feels impossible, that is not a you problem. 67% of Gen&nbsp;Z and 53% of millennials say they struggle to afford rent or a mortgage. Half of all tenants spend more than 30% of their income on it; 27% spend more than 70%.</p>
-    <p>And almost nobody on either side of the deal knows what a place is actually worth. Individual owners, not corporations, own about 70% of US rental properties &mdash; smaller properties, about 38% of all rental units &mdash; and the standard advice for pricing one is to look at a few nearby listings and adjust. But those listings are asking prices, not signed rents. A listing that has been sitting is a high guess &mdash; and it becomes the comparison for the next owner down the street. The error does not correct itself. It spreads.</p>
-    <p>In our own San Diego data, listings that have sat ask <b>3.6% more</b> than fresh listings with the same number of bedrooms in the same ZIP. The places that sit are usually the overpriced ones, and they are the ones everyone else is pricing against.</p>
-    <p>That is the gap Lowball closes. It prices a listing against every comparable listing nearby at once, then tells you how listings like it have actually behaved: how many cut, by how much, and how much longer they sat.</p>
-    <p class="fine">Sources: Redfin renter survey; Americans for Financial Reform; US Census Rental Housing Finance Survey via Congressional Research Service. The 3.6% figure is from our own September 2026 San Diego County snapshot.</p>
-  </section>
   <section id="how">
     <h2>How it&nbsp;works</h2>
-    <p class="sub">Every number comes with its evidence: nearby comps, days on market, price cuts, posted specials, and the listing site's own rent estimate shown for comparison. You see the reasoning, not just a figure.</p>
-    <div class="grid3">
-      <div class="card"><div class="num">1</div><h3>Triage a whole search page</h3><p>Search results get a chip on each card: how much a month it asks above similar listings nearby, or at market, or under, with an opening number. Triage the whole page at a glance.</p></div>
-      <div class="card"><div class="num">2</div><h3>See how it compares</h3><p>The panel opens with what happens next: days listed, the share of listings like it that have already cut, and how much longer it is likely to sit. Then the offer, the difference over a year if it is accepted, and why. Big buildings get per-unit numbers and the posted specials called out.</p></div>
-      <div class="card"><div class="num">3</div><h3>Walk away, or ask</h3><p>Most of the time the answer is simple. If a place asks well over what similar listings nearby get and you do not love it, move on and spend the afternoon somewhere better. If you do want it, one click drafts a polite, evidence-backed note with one number and the comps behind it.</p></div>
+    <p class="sub">Every number comes with its evidence: the nearby comps, the real days on market, price cuts, posted specials, and the listing site's own rent estimate shown beside ours for comparison. You see the reasoning, not just a figure.</p>
+    <div class="grid2">
+      <div class="card"><div class="num">1</div><h3>Open a listing. See what it's worth.</h3><p>The panel shows what similar places nearby ask and how long this one has really been up: Lowball reads the price history, so a relist that reset the site's counter still shows its true age. It shows the share of listings like it that have already cut and by how much, how much longer it is likely to sit (a listing under two months old typically has 24 more days to go; past two months, 66), and what another empty month costs the owner. That last number is the landlord's side of the table.</p></div>
+      <div class="card"><div class="num">2</div><h3>Get your number.</h3><p>An offer price, a likely-to-settle price, and the difference over a year if it lands there. Apartment buildings get per-unit numbers and their posted specials turned into the real effective rent.</p></div>
+      <div class="card"><div class="num">3</div><h3>Send the message.</h3><p>One click writes a polite note with one number and the comps behind it, ready to paste into Zillow's contact form. Tap the levers you can offer, flexible move-in, a longer lease, autopay, and they go into the letter. Then it is their move. If a place asks well over what similar listings nearby ask and you do not love it, skip it and spend the afternoon somewhere better.</p></div>
+      <div class="card"><div class="num">4</div><h3>Or scan the whole search page first.</h3><p>On search results every listing gets a tag at once: how much a month it asks over or under similar listings nearby, with a number to offer. The most negotiable ones rise to the top, so you know which are worth the email before you open a single listing.</p></div>
     </div>
     <div class="badges" style="margin-top:22px">
-      <span class="b red">Cut $150 · $310/mo over comps · open $2,325</span><span class="b amber">$95/mo over comps · open $2,650</span><span class="b gray">At market · open $2,275</span><span class="b green">Under market · open $1,925</span>
+      <span class="b red">Cut $150 · $310/mo over similar · offer $2,325</span><span class="b amber">$95/mo over similar · offer $2,650</span><span class="b gray">At market · offer $2,275</span><span class="b green">Under market · offer $1,925</span>
+    </div>
+    <p class="fine">Example tags from a search page. Numbers are illustrative.</p>
+  </section>
+  <section id="faq">
+    <h2>Wait. Can I actually do this?</h2>
+    <div class="faq">
+      <div><h3>Can I negotiate rent at all?</h3><p>Yes. About 70% of US rental properties are owned by individuals, not corporations, and the standard advice for pricing a unit is to pull three to five nearby active listings plus a couple of recent rentals and adjust. Those are asking prices, not signed leases. Lowball shows you the comps that number was built on, and what the listings like it did next.</p></div>
+      <div><h3>Won't the landlord be annoyed?</h3><p>You are sending one polite message with a number and the evidence for it. That is what a serious tenant looks like. They can say no, and you are exactly where you were. Every empty month costs an owner a full month of rent; once a listing has sat past a month, the letter says so in one line.</p></div>
+      <div><h3>It's a big complex and the rent ends in $47. They won't budge.</h3><p>Not on base rent. Software-priced buildings cannot cut the number at the leasing desk. The desk can give a month free and waive fees, about 8% off. Lowball reads the posted specials, shows the effective rent, and the letter asks for the version of the discount the desk can actually say yes to. <a href="#specials">More below</a>.</p></div>
+      <div><h3>Is this legit?</h3><p>It is a free browser extension that runs only on zillow.com and sends listing facts to one server, ours. Every estimate opens to show how it was built, and we publish how often our estimates land at <a href="/accuracy">lowball.rent/accuracy</a>. Lowball is not affiliated with Zillow. Estimates are estimates.</p></div>
+      <div><h3>Is it free?</h3><p>Yes. No account, no ads, no card. The extension does not sell your personal information. Sharing the listings you view to improve estimates is optional and anonymous.</p></div>
     </div>
   </section>
   <section id="specials">
-    <h2>If they will not cut the rent</h2>
-    <p class="sub">Some buildings never lower rent. They offer a month free instead. That is a real discount this year &mdash; but your lease usually still says the higher number, and next year's increase is typically calculated from that, not from what you actually paid.</p>
+    <h2>Big buildings don't cut rent. They give months free.</h2>
+    <p class="sub">Managed buildings almost never cut base rent. They offer a month free instead: one month free on a 12-month lease is 8.3% off, two months is 16.7%. At the leasing desk, a month free plus waived fees is about 8%. That is a real discount this year, but your lease usually still says the higher number, and next year's increase is typically calculated from that, not from what you actually paid.</p>
     <div class="grid3">
       <div class="card"><h3>You pay $2,610</h3><p>A $2,847 unit with one month free on a 12-month lease. That is your effective rent.</p></div>
       <div class="card"><h3>Your lease says $2,847</h3><p>A concession usually does not change the number on the agreement, and that number is what carries forward.</p></div>
-      <div class="card"><h3>Year two: $2,961</h3><p>A 4% increase, applied to $2,847. Against the $2,610 you were actually paying, that is a <b>13.4%</b> jump.</p></div>
+      <div class="card"><h3>Year two: $2,961</h3><p>Say the building raises rent 4%, applied to $2,847. Against the $2,610 you were actually paying, that is a <b>13.4%</b> jump.</p></div>
     </div>
-    <p style="margin-top:22px">The day to deal with this is the day you sign, when you have nothing at stake. At renewal you have moving costs, a deposit and time off work all arguing against you. Many renters in this position ask for both: the free month, and either a lower base rent or a cap on the renewal increase, written into the lease.</p>
-    <p>Lowball reads posted specials and shows the effective rent behind them, so you can compare the real number against the lease number before you sign.</p>
+    <p style="margin-top:22px">The day to deal with this is the day you sign, when you have nothing at stake. At renewal you have moving costs, a deposit and time off work all arguing against you. You can ask for both: the free month, and either a lower base rent or a cap on the renewal increase, written into the lease.</p>
+    <p>Lowball reads posted specials and shows the effective rent behind them, so you can compare the real number against the lease number before you sign. Lease already ending? Lowball writes the renewal letter too: <a href="/renew">lowball.rent/renew</a></p>
   </section>
-  <!--lb-cities--><section id="cities"><h2>Rent prices by city</h2><p class="sub">Median asking rent by bedroom count and neighborhood, and how many listings ask well above similar ones nearby: <a href="/rent/san-diego-ca/">San Diego, CA</a> · <a href="/rent/birmingham-al/">Birmingham, AL</a> · <a href="/rent/santa-cruz-ca/">Santa Cruz, CA</a> · <a href="/rent/huntsville-al/">Huntsville, AL</a> · <a href="/rent/mobile-al/">Mobile, AL</a> · <a href="/rent/tuscaloosa-al/">Tuscaloosa, AL</a> · <a href="/rent/montgomery-al/">Montgomery, AL</a> · <a href="/rent/auburn-opelika-al/">Auburn-Opelika, AL</a>. <a href="/rent/">All markets and ZIP codes</a>.</p></section><!--/lb-cities-->
+  <section id="why">
+    <h2>The asking price is a guess</h2>
+    <p>Individual owners, not corporations, own about 70% of US rental properties, the smaller buildings, about 38% of all rental units. The standard advice for pricing one is to pull three to five nearby active listings plus a couple of recent rentals and adjust. Those are asking prices, not signed rents. A listing that has been sitting is a high guess, and it becomes the comparison for the next owner down the street. The error does not correct itself. It spreads.</p>
+    <p>In our own data, listings that have sat ask <b>3.6% more</b> than fresh listings with the same bedroom count in the same ZIP. The places that sit are usually the overpriced ones, and they are the ones everyone else is pricing against.</p>
+    <p>Lowball prices a listing against the comparable listings nearby, all at once, shows how listings like it have actually behaved, how many cut, by how much, how much longer they sat, and gives you the number and the note. Then you ask.</p>
+    <p class="fine">Sources: US Census Rental Housing Finance Survey via Congressional Research Service report R47332; landlord pricing guidance from Avail and Azibo, 2026. The 3.6% figure is from our September 2026 San Diego County snapshot; method on the <a href="/accuracy">accuracy page</a>.</p>
+  </section>
   <section id="install">
     <h2>Install</h2>
-    <p class="sub">Lowball is a browser extension for Chrome and Firefox (Edge, Brave and the other Chromium browsers install the Chrome version). It runs only on zillow.com and talks to one server, ours, to score listings.</p>
-    <a class="btn" href="/start?next=https%3A%2F%2Fchromewebstore.google.com%2Fdetail%2Flowball%2Fllampbkdlfhcfgpegkifhcghfcjgkkno&from=%2F" rel="noopener">Add to Chrome</a>
-    <p class="fine"><a href="https://addons.mozilla.org/firefox/addon/lowball/" rel="noopener">Get it for Firefox</a>, on desktop or Android.</p>
+    <p class="sub">Lowball is a free browser extension for Chrome and Firefox on a computer (Edge, Brave and the other Chromium browsers install the Chrome version). It does not run in phone browsers. It runs only on zillow.com and sends listing facts to one server, ours. It works on any zillow.com rental in the US: in San Diego and some other areas the estimate comes from a model trained on local listings; everywhere else it comes from the comparable listings on the page you are already looking at. Houses, condos and apartment buildings, specials included.</p>
+    <div class="cta only-desk">
+      <a class="btn" href="https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno" rel="noopener">Add to Chrome, free</a>
+      <a class="btn ghost" href="https://addons.mozilla.org/firefox/addon/lowball/" rel="noopener">Get it for Firefox</a>
+    </div>
+    <div class="only-phone">
+      <p>On a phone right now? Send yourself the link and open it at a computer.</p>
+      <div class="cta"><button type="button" class="btn sendlink">Send lowball.rent to my laptop</button><button type="button" class="btn ghost copylink">Copy link</button></div>
+      <p class="fine sharemsg">We never see who you send it to.</p>
+    </div>
   </section>
+  <!--lb-cities--><section id="cities"><h2>Rent by city</h2><p class="sub">Lowball works anywhere Zillow lists a rental. Where we have the most data we publish median asking rent by bedroom count and neighborhood, and how many listings ask well above similar ones nearby: <a href="/rent/san-diego-ca/">San Diego, CA</a> · <a href="/rent/birmingham-al/">Birmingham, AL</a> · <a href="/rent/huntsville-al/">Huntsville, AL</a> · <a href="/rent/santa-cruz-ca/">Santa Cruz, CA</a> · <a href="/rent/mobile-al/">Mobile, AL</a> · <a href="/rent/tuscaloosa-al/">Tuscaloosa, AL</a> · <a href="/rent/auburn-opelika-al/">Auburn-Opelika, AL</a> · <a href="/rent/montgomery-al/">Montgomery, AL</a>. <a href="/rent/">All markets and ZIP codes</a>.</p></section><!--/lb-cities-->
   <section id="privacy">
     <div class="privacy">
       <div>
-        <h2>What we collect: listings, not people</h2>
-        <p>To score a listing, the extension sends that listing's facts to our server: price, beds, baths, size, location, days listed, price history. Nothing about you. If you opt in, the listings you view also help improve estimates for everyone. No names, emails, or searches, ever. Turn it off any time from the panel.</p>
+        <h2>What the extension collects: listing facts, not your identity</h2>
+        <p>To score a listing, the extension sends that listing's facts to our server: price, beds, baths, size, location, days listed, price history. No name, email, phone, Zillow account, or searches. Our server does not store your IP address; it holds it in memory briefly to limit request rates. If you opt in, the listings you view also help improve estimates for everyone, tagged with a random install ID so you can ask us to delete them. Turn sharing off any time from the panel. Nothing about you is sold.</p>
       </div>
       <div><a class="btn ghost" href="/privacy">Read the privacy policy</a></div>
     </div>
   </section>
   <footer>
     <div><img src="/img/logo.svg" alt="Lowball" class="logo">© 2026 Lowball. Lowball is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Zillow and Zestimate are trademarks of Zillow Group, Inc. Estimates and guidance on this site are for information only, not financial, legal, or real estate advice, and not a guarantee of any price or outcome. Confirm fees and terms with the property.</div>
-    <div><a href="/roulette">Rent roulette</a> · <a href="/renew">Renewal counter</a> · <a href="/deals/">Deals</a> · <a href="/buy/">Buy</a> · <a href="/rent/">Fair rent by city</a> · <a href="/accuracy">Accuracy</a> · <a href="/support">Support</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
+    <div><a href="/renew">Renewal letter</a> · <a href="/rent/">Rent by city</a> · <a href="/accuracy">Accuracy</a> · <a href="/roulette">Rent roulette</a> · <a href="/deals/">Deals</a> · <a href="/buy/">Buy</a> · <a href="/start">Deal alerts</a> · <a href="/support">Support</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
   </footer>
 </div>
+<script>
+(function(){
+  var LINK='https://lowball.rent/go';
+  function say(t){ document.querySelectorAll('.sharemsg').forEach(function(m){ m.textContent=t; }); }
+  function copy(){
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(LINK).then(function(){ say('Link copied: lowball.rent/go. Open it on your computer.'); },function(){ window.prompt('Copy this link',LINK); }); }
+    else window.prompt('Copy this link',LINK);
+  }
+  document.querySelectorAll('.copylink').forEach(function(b){ b.addEventListener('click',copy); });
+  document.querySelectorAll('.sendlink').forEach(function(b){ b.addEventListener('click',function(){
+    if(navigator.share) navigator.share({title:'Lowball',text:'Open this on your computer to add Lowball to Chrome or Firefox.',url:LINK}).catch(function(){});
+    else copy();
+  }); });
+})();
+</script>
 </body>
 </html>
