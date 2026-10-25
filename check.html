@@ -156,7 +156,7 @@
 </div>
 <script>
 (function () {
-  var API = (new URLSearchParams(location.search).get('api')) || 'https://api.lowball.rent';
+  var API = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('api')) || 'https://api.lowball.rent';
   var $ = function (id) { return document.getElementById(id); };
   var money = function (v) { return '$' + Math.round(v).toLocaleString('en-US'); };
   var num = function (id) { var v = Number(String($(id).value).replace(/[^0-9.]/g, '')); return v > 0 ? v : null; };
