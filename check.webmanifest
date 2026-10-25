@@ -1,0 +1,14 @@
+{
+  "name": "Lowball: check a rental",
+  "short_name": "Lowball",
+  "start_url": "/check",
+  "scope": "/check",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#157347",
+  "icons": [
+    {"src": "/img/apple-touch-icon.png", "sizes": "180x180", "type": "image/png"},
+    {"src": "/img/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"}
+  ],
+  "share_target": {"action": "/check", "method": "GET", "params": {"title": "title", "text": "text", "url": "url"}}
+}
