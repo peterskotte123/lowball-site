@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script>(function(){var u=navigator.userAgent||"";if(/Android|iPhone|iPad|iPod|Mobile|Silk|Kindle/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))document.documentElement.classList.add("phone")})();</script>
+<title>Check a rental listing · Lowball</title>
+<link rel="canonical" href="https://lowball.rent/check"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lowball","item":"https://lowball.rent/"},{"@type":"ListItem","position":2,"name":"Check a listing","item":"https://lowball.rent/check"}]}</script>
+<meta name="description" content="Type in a rental listing from any site and see what similar places nearby ask, what to offer, and the message to send. Free, works on your phone.">
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+<style>
+  :root { --ink:#101828; --muted:#475467; --line:#EAECF0; --paper:#fff; --soft:#F8FAFC; --green:#157347; --amber:#B45309; --red:#B42318; }
+  * { box-sizing:border-box; }
+  body { margin:0; font:16px/1.55 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif; color:var(--ink); background:var(--paper); }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+  header { display:flex; align-items:center; justify-content:space-between; padding:20px 0; }
+  .brand img.logo { height:38px; width:auto; display:block; }
+  nav a { color:var(--muted); text-decoration:none; margin-left:22px; font-weight:500; font-size:15px; }
+  h1 { font-size:clamp(30px,4.5vw,46px); line-height:1.08; letter-spacing:-0.02em; margin:24px 0 10px; }
+  .lede { font-size:18px; color:var(--muted); max-width:36em; margin:0 0 28px; }
+  .two { display:grid; grid-template-columns:1fr 1fr; gap:28px; align-items:start; }
+  form { background:var(--soft); border:1px solid var(--line); border-radius:14px; padding:22px; }
+  label { display:block; font-size:13px; font-weight:600; color:var(--muted); margin:12px 0 4px; }
+  input, select { width:100%; padding:10px 12px; border:1px solid #D0D5DD; border-radius:10px; font-size:15px; background:#fff; }
+  .row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .row3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; }
+  .btn { display:inline-flex; align-items:center; gap:8px; padding:12px 20px; border-radius:10px; background:var(--ink); color:#fff; font-weight:600; text-decoration:none; border:0; cursor:pointer; font-size:15px; margin-top:18px; }
+  .btn.ghost { background:#fff; color:var(--ink); border:1px solid #D0D5DD; }
+  .fine { font-size:13px; color:#98A2B3; margin-top:12px; }
+  .result { display:none; }
+  .hero-num { font-size:44px; font-weight:800; letter-spacing:-0.02em; color:var(--green); line-height:1; margin:6px 0; }
+  .label { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; } .stats[hidden] { display:none; }
+  .stat { background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:12px; }
+  .stat b { display:block; font-size:20px; } .stat span { font-size:12px; color:var(--muted); }
+  ul.why { padding-left:18px; color:#344054; font-size:15px; } ul.why li { margin:6px 0; }
+  table { width:100%; border-collapse:collapse; font-size:14px; margin-top:8px; } th, td { text-align:left; padding:6px 4px; border-bottom:1px solid var(--line); } th.n, td.n { text-align:right; }
+  textarea { width:100%; min-height:260px; padding:12px; border:1px solid #D0D5DD; border-radius:10px; font:14px/1.5 inherit; margin-top:8px; }
+  .err { color:var(--red); font-size:14px; margin-top:10px; display:none; }
+  footer { border-top:1px solid var(--line); padding:26px 0 40px; font-size:13px; color:#98A2B3; margin-top:56px; }
+  footer a { color:#667085; }
+  @media (max-width:820px) { .two { grid-template-columns:1fr; } .row3 { grid-template-columns:1fr 1fr; } }
+  header { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:20px 0; }
+  nav { display:flex; align-items:center; gap:22px; }
+  nav a { color:var(--muted); text-decoration:none; font-weight:500; font-size:15px; white-space:nowrap; }
+  nav a:hover { color:var(--ink); }
+  /* Mobile menu: a right-side drawer. No JavaScript: a hidden checkbox drives it, so it works with scripts off
+     and cannot get stuck in a half-open state. One nav element serves as both the desktop row and the mobile drawer, so the
+     links exist once in the markup. */
+  .navt { position:absolute; opacity:0; pointer-events:none; width:0; height:0; }
+  .burger, .scrim, .navclose { display:none; }
+  @media (max-width:720px) {
+    header { flex-direction:row; align-items:center; justify-content:space-between; gap:12px; padding:14px 0; }
+    .burger { display:flex; flex-direction:column; justify-content:center; gap:5px;
+              width:44px; height:44px; margin-right:-10px; padding:10px; cursor:pointer; z-index:70; }
+    .burger span { display:block; height:2px; border-radius:2px; background:var(--ink,#101828);
+                   transition:transform .25s ease, opacity .2s ease; }
+    .navt:focus-visible ~ .burger { outline:2px solid var(--green,#157347); outline-offset:2px; border-radius:8px; }
+    .navt:checked ~ .burger span:nth-child(1) { transform:translateY(7px) rotate(45deg); }
+    .navt:checked ~ .burger span:nth-child(2) { opacity:0; }
+    .navt:checked ~ .burger span:nth-child(3) { transform:translateY(-7px) rotate(-45deg); }
+    .scrim { display:block; position:fixed; inset:0; background:rgba(16,24,40,.45);
+             opacity:0; pointer-events:none; transition:opacity .25s ease; z-index:55; }
+    .navt:checked ~ .scrim { opacity:1; pointer-events:auto; }
+    nav { position:fixed; top:0; right:0; height:100dvh; width:min(80vw,320px);
+          flex-direction:column; align-items:stretch; gap:0;
+          background:#fff; box-shadow:-24px 0 48px -24px rgba(16,24,40,.35);
+          padding:72px 24px 32px; z-index:60; overflow-y:auto;
+          transform:translateX(100%); transition:transform .28s cubic-bezier(.4,0,.2,1);
+          visibility:hidden; }
+    .navt:checked ~ nav { transform:translateX(0); visibility:visible; }
+    nav a { font-size:17px; padding:15px 0; border-bottom:1px solid var(--line,#EAECF0); }
+    nav a:last-of-type { border-bottom:0; }
+    .navclose { display:block; position:absolute; top:12px; right:14px; width:44px; height:44px;
+                line-height:44px; text-align:center; font-size:26px; color:var(--muted,#475467); cursor:pointer; }
+    /* 64px between sections reads as dead space at phone width */
+    section { padding:44px 0; }
+    h1 { margin-bottom:14px; }
+    h2 { font-size:27px; }
+    .hero { padding:28px 0 24px; gap:32px; }
+    .privacy { padding:26px; border-radius:14px; }
+    .sub { font-size:16px; margin-bottom:24px; }
+  }
+  /* Keep the page still while the drawer is open. Ignored by browsers without :has(), which only means the
+     page can scroll behind the drawer. */
+  body:has(.navt:checked) { overflow:hidden; }
+  .share { background:var(--soft); border:1px solid var(--line); border-radius:14px; padding:18px 20px; margin-top:28px; }
+  .share h2 { font-size:18px; margin:0 0 4px; } .share p { margin:0 0 10px; color:var(--muted); font-size:15px; }
+  .share form { background:none; border:0; padding:0; } .ok { color:var(--green); font-size:14px; margin-top:8px; }
+  .desk-only { display:none; } html:not(.phone) .desk-only { display:block; } html:not(.phone) .phone-only { display:none; }
+</style>
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/renew"><meta property="og:title" content="Renewal letter"><meta property="og:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta property="og:image" content="https://lowball.rent/img/share/renew.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Renewal letter"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Renewal letter"><meta name="twitter:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta name="twitter:image" content="https://lowball.rent/img/share/renew.png">
+<!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
+    <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="/deals/">Deals</a><a href="/buy/">Buy</a><a href="/">Extension</a><a href="/roulette">Rent roulette</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a></nav>
+  </header>
+  
+  <h1>Is this rent too high? Check it.</h1>
+  <p class="lede">Type in what the listing says. You get what similar places nearby ask, an offer, and a message you can paste into the landlord's contact form.</p>
+  <div class="two">
+    <form id="f" autocomplete="off">
+      <div class="row">
+        <div><label>Asking rent, per month</label><input id="price" inputmode="numeric" placeholder="2,600" required></div>
+        <div><label>ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" placeholder="92104" required></div>
+      </div>
+      <div class="row3">
+        <div><label>Bedrooms</label><select id="beds"><option value="0">Studio</option><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select></div>
+        <div><label>Bathrooms</label><input id="baths" inputmode="decimal" placeholder="1"></div>
+        <div><label>Square feet</label><input id="sqft" inputmode="numeric" placeholder="850"></div>
+      </div>
+      <label>Type</label>
+      <select id="type"><option value="APARTMENT">Apartment or condo</option><option value="TOWNHOUSE">Townhouse</option><option value="SINGLE_FAMILY">House</option></select>
+      <div class="row">
+        <div><label>Days listed (optional)</label><input id="days" inputmode="numeric" placeholder="24"></div>
+        <div><label>Street address (optional)</label><input id="addr" placeholder="3050 Upas St"></div>
+      </div>
+      <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-weight:500"><input type="checkbox" id="complex" style="width:auto"> Managed building (leasing office, not an individual owner)</label>
+      <button class="btn" type="submit">Check it</button>
+      <div class="err" id="err"></div>
+      <p class="fine">Nothing you type is stored with your name. Estimates use public listing data; San Diego and a few other metros have a trained model, elsewhere it is rougher. Not advice or a guarantee.</p>
+    </form>
+    <div class="result" id="res">
+      <div class="label">Offer</div>
+      <div class="hero-num" id="offer">$0</div>
+      <div id="sub" style="color:var(--muted)"></div>
+      <div class="stats">
+        <div class="stat"><b id="sAsk">$0</b><span>Asking</span></div>
+        <div class="stat"><b id="sFair">$0</b><span>Our estimate for a place like this</span></div>
+        <div class="stat"><b id="sComps">–</b><span>What similar places nearby ask</span></div>
+      </div>
+      <ul class="why" id="why"></ul>
+      <details id="compsBox"><summary id="compsSum">Similar rentals nearby</summary><table id="comps"><tr><th>Listing</th><th class="n">Rent</th><th class="n">Size</th><th class="n">Days</th></tr></table></details>
+      <div class="label" style="margin-top:22px">Message to the landlord</div>
+      <textarea id="letter"></textarea>
+      <button class="btn ghost" type="button" id="copy">Copy message</button>
+      <p class="fine">Check that the listing is still up and the numbers match before you send; you are responsible for what you send.</p>
+    </div>
+  </div>
+  <div class="share phone-only" id="share">
+    <h2>Want this on every listing automatically?</h2>
+    <p>The free Lowball extension does all of this on Zillow by itself, on a computer (Chrome or Firefox). Send yourself the link for later.</p>
+    <button class="btn" type="button" id="shareBtn" style="margin-top:0">Send me the link</button>
+    <form id="mailf" hidden>
+      <label for="email">Or email it to me</label><input id="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+      <label style="display:flex;align-items:flex-start;gap:8px;margin-top:10px;font-weight:500"><input type="checkbox" id="mailok" style="width:auto;margin-top:3px" required> <span id="mailtext">Email me the Lowball link once. Lowball does not keep this address and will not email me again.</span></label>
+      <button class="btn ghost" type="submit" style="margin-top:10px">Email me the link</button>
+      <div class="ok" id="mailmsg" role="status"></div>
+    </form>
+  </div>
+  <div class="share desk-only"><h2>Doing this on Zillow?</h2><p>The free extension reads the listing for you and writes the message in one click.</p><a class="btn" href="/" style="margin-top:0">Get the extension</a></div>
+  <footer>
+    <div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc.</div>
+    <div><a href="/support">Support</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
+  </footer>
+</div>
+<script>
+(function () {
+  var API = (new URLSearchParams(location.search).get('api')) || 'https://api.lowball.rent';
+  var $ = function (id) { return document.getElementById(id); };
+  var money = function (v) { return '$' + Math.round(v).toLocaleString('en-US'); };
+  var num = function (id) { var v = Number(String($(id).value).replace(/[^0-9.]/g, '')); return v > 0 ? v : null; };
+  var bedsWord = function (b) { return b === 0 ? 'studio' : b + '-bed'; };
+  function letterFor(q, r) {
+    var place = q.address ? 'the ' + bedsWord(q.beds) + ' at ' + q.address : 'your ' + bedsWord(q.beds) + ' listing';
+    var L = ['Hi,', '', "I'm interested in " + place + ' and would like to make an offer.', ''];
+    var why = [];
+    if (q.days >= 14) why.push('It has been listed for ' + q.days + ' days.');
+    var cs = (r.comps || []).filter(function (c) { return !c.loose && c.price; }).map(function (c) { return c.price; }).sort(function (a, b) { return a - b; });
+    if (cs.length >= 2 && r.offer <= cs[cs.length - 1] * 1.1 && cs[0] < q.price) why.push('Similar ' + bedsWord(q.beds) + ' rentals nearby are listed at ' + money(cs[0]) + ' to ' + money(cs[cs.length - 1]) + '.');
+    var cb = r.cut_band; if (cb && cb.cut_share >= 0.2 && q.days >= 14) why.push('About ' + Math.round(cb.cut_share * 100) + '% of similar listings up this long have already lowered their price.');
+    if (why.length) L.push(why.join(' '), '');
+    L.push('I can offer ' + money(r.offer) + ' a month on a 12-month lease, and I am ready to apply and sign quickly.', '', 'Would that work for you?', '', 'Thank you,', '[Your name]');
+    return L.join('\n');
+  }
+  $('f').addEventListener('submit', function (e) {
+    e.preventDefault(); $('err').style.display = 'none';
+    var q = { price: num('price'), zip: String($('zip').value).replace(/\D/g, '').slice(0, 5), beds: Number($('beds').value), baths: num('baths'), sqft: num('sqft'),
+              type: $('type').value, days: num('days') != null ? Math.round(num('days')) : null, address: $('addr').value.trim() || null, is_complex: $('complex').checked };
+    if (!q.price || q.zip.length !== 5) { $('err').textContent = 'Asking rent and a 5-digit ZIP are needed.'; $('err').style.display = 'block'; return; }
+    fetch(API + '/v1/score', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-check' }, body: JSON.stringify(q) })
+      .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
+      .then(function (r) {
+        $('offer').textContent = money(r.offer);
+        $('sub').textContent = r.settle && r.settle > r.offer ? 'Likely to land near ' + money(r.settle) + '. Open at the offer and leave room to meet in the middle.' : 'Open at this number.';
+        $('sAsk').textContent = money(q.price); $('sFair').textContent = money(r.fair);
+        $('sComps').textContent = r.comps_median ? money(r.comps_median) : '–';
+        var why = $('why'); why.innerHTML = ''; (r.signals || []).slice(0, 4).forEach(function (s) { var li = document.createElement('li'); li.textContent = s; why.appendChild(li); });
+        var tb = $('comps'); while (tb.rows.length > 1) tb.deleteRow(1);
+        (r.comps || []).forEach(function (c) { var tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="n"></td><td class="n"></td><td class="n"></td>'; tr.children[0].textContent = (c.beds != null ? bedsWord(c.beds) : '') + (c.dist_mi != null ? ', ' + c.dist_mi.toFixed(1) + ' mi' : ''); tr.children[1].textContent = money(c.price); tr.children[2].textContent = c.sqft ? c.sqft.toLocaleString() + ' sf' : ''; tr.children[3].textContent = c.days != null ? c.days + 'd' : ''; tb.appendChild(tr); });
+        $('compsSum').textContent = 'Similar rentals nearby (' + (r.comps || []).length + ')';
+        $('letter').value = letterFor(q, r);
+        $('res').style.display = 'block'; if (window.innerWidth < 820) $('res').scrollIntoView({ behavior: 'smooth' });
+        if (window.gtag) gtag('event', 'check_listing');
+      })
+      .catch(function (err) { $('err').textContent = 'Could not reach the estimate service (' + err.message + '). Try again in a minute.'; $('err').style.display = 'block'; });
+  });
+  $('copy').addEventListener('click', function () { var ta = $('letter'); ta.select(); try { navigator.clipboard.writeText(ta.value); } catch (e) { document.execCommand('copy'); } $('copy').textContent = 'Copied'; setTimeout(function () { $('copy').textContent = 'Copy message'; }, 1500); });
+  // Send me the link: the phone's share sheet (text it, email it, save it to notes); the email form shows only when the API can send.
+  $('shareBtn').addEventListener('click', function () {
+    var data = { title: 'Lowball', text: 'Lowball: free extension that shows what to offer on a Zillow rental. Open on a computer:', url: 'https://lowball.rent/' };
+    if (navigator.share) navigator.share(data).catch(function () {});
+    else { try { navigator.clipboard.writeText(data.url); $('shareBtn').textContent = 'Link copied'; } catch (e) {} }
+  });
+  fetch(API + '/v1/send_link').then(function (r) { return r.json(); }).then(function (d) { if (d && d.enabled) $('mailf').hidden = false; }).catch(function () {});
+  $('mailf').addEventListener('submit', function (e) {
+    e.preventDefault(); var m = $('mailmsg'); m.textContent = '';
+    fetch(API + '/v1/send_link', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-check' },
+      body: JSON.stringify({ email: $('email').value.trim(), consent_text: $('mailtext').textContent, gpc: !!navigator.globalPrivacyControl }) })
+      .then(function (r) { return r.json().then(function (d) { return [r.ok, d]; }); })
+      .then(function (x) { m.textContent = x[0] ? 'Sent. Check your inbox.' : (x[1].error || 'Could not send.'); })
+      .catch(function () { m.textContent = 'Could not send right now.'; });
+  });
+})();
+</script>
+</body>
+</html>

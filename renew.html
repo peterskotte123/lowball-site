@@ -28,7 +28,7 @@
   .result { display:none; }
   .hero-num { font-size:44px; font-weight:800; letter-spacing:-0.02em; color:var(--green); line-height:1; margin:6px 0; }
   .label { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
-  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; } .stats[hidden] { display:none; }
   .stat { background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:12px; }
   .stat b { display:block; font-size:20px; } .stat span { font-size:12px; color:var(--muted); }
   ul.why { padding-left:18px; color:#344054; font-size:15px; } ul.why li { margin:6px 0; }
@@ -111,6 +111,11 @@
       </div>
       <label>Type</label>
       <select id="type"><option value="APARTMENT">Apartment or condo</option><option value="TOWNHOUSE">Townhouse</option><option value="SINGLE_FAMILY">House</option></select>
+      <div class="row3">
+        <div><label>Free months on your lease</label><input id="mf" inputmode="decimal" placeholder="0"></div>
+        <div><label>Free months new renters get</label><input id="nmf" inputmode="decimal" placeholder="0"></div>
+        <div><label>New renters' rent (optional)</label><input id="newrent" inputmode="numeric" placeholder="same as yours"></div>
+      </div>
       <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-weight:500"><input type="checkbox" id="complex" style="width:auto"> Managed building (leasing office, not an individual owner)</label>
       <label style="display:flex;align-items:center;gap:8px;margin-top:8px;font-weight:500"><input type="checkbox" id="ontime" style="width:auto"> I have paid rent on time throughout my tenancy (adds one sentence to the letter)</label>
       <button class="btn" type="submit">Show my counter</button>
@@ -125,6 +130,11 @@
         <div class="stat"><b id="sFair">$0</b><span>Comparable units today</span></div>
         <div class="stat"><b id="sInc">0%</b><span>Proposed increase</span></div>
         <div class="stat"><b id="sTurn">$0</b><span>Landlord's cost if you leave</span></div>
+      </div>
+      <div class="stats" id="freeStats" hidden>
+        <div class="stat"><b id="sPaid">$0</b><span>What you actually paid a month</span></div>
+        <div class="stat"><b id="sReal">0%</b><span>Real increase on that</span></div>
+        <div class="stat"><b id="sNew">–</b><span>What new renters pay a month</span></div>
       </div>
       <ul class="why" id="why"></ul>
       <details id="compsBox"><summary id="compsSum">Comparable rentals</summary><table id="comps"><tr><th>Address</th><th class="n">Rent</th><th class="n">Size</th><th class="n">Days</th></tr></table></details>
@@ -150,7 +160,9 @@
     lines.push('Thank you for the renewal offer for ' + (q.address || 'my unit') + '. I would like to stay' + (q.years && q.years >= 2 ? ' after ' + q.years + ' years here' : '') + '.' + (q.ontime ? ' I have paid rent on time throughout my tenancy.' : ''));
     var cs = (r.comps || []).filter(function (c) { return c.price <= q.proposed_rent; }).sort(function (a, b) { return Math.abs(a.price - r.counter) - Math.abs(b.price - r.counter); }).slice(0, 3).sort(function (a, b) { return a.price - b.price; });
     if (cs.length >= 2 && !r.zip_only) lines.push('', 'Comparable ' + (q.beds === 0 ? 'studios' : q.beds + '-bed units') + ' nearby are listed on Zillow at ' + money(cs[0].price) + ' to ' + money(cs[cs.length - 1].price) + ' as of ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' (a few below).');
-    if (r.counter < q.proposed_rent) lines.push('', 'Rather than ' + money(q.proposed_rent) + ', would you renew at ' + money(r.counter) + ' for 12 months? That keeps a reliable tenant in place with no vacancy, no turnover cost, and no listing.');
+    if (r.paid_effective) lines.push('', 'My lease came with ' + r.months_free + ' month' + (r.months_free === 1 ? '' : 's') + ' free, so I have been paying about ' + money(r.paid_effective) + ' a month. ' + money(q.proposed_rent) + ' is a ' + Math.round(r.real_increase_pct) + '% increase on what I actually paid.');
+    if (r.new_effective) lines.push('', 'New residents are offered ' + r.new_months_free + ' month' + (r.new_months_free === 1 ? '' : 's') + ' free on this unit type today, about ' + money(r.new_effective) + ' a month. Could you renew me at that same effective rate, or with the same ' + r.new_months_free + ' month' + (r.new_months_free === 1 ? '' : 's') + ' free on a 12-month renewal? If the rent itself cannot move, I would ask for the free months and for any renewal fees to be waived.');
+    else if (r.counter < q.proposed_rent) lines.push('', 'Rather than ' + money(q.proposed_rent) + ', would you renew at ' + money(r.counter) + ' for 12 months? That keeps a reliable tenant in place with no vacancy, no turnover cost, and no listing.');
     else lines.push('', 'I can sign at ' + money(q.proposed_rent) + ' for 12 months. Would you consider a 24-month term at that rate, or taking care of [a repair] before the new term starts?');
     lines.push('', 'I can sign this week. If that number does not work, tell me what would.', '', 'Thank you,', '[Your name]', '[Phone]');
     if (cs.length >= 2 && !r.zip_only) { lines.push('', 'Similar listings I looked at on Zillow:'); cs.forEach(function (c) { lines.push('- ' + (c.addr || 'Nearby') + (c.sqft ? ' · ' + c.sqft.toLocaleString() + ' sf' : '') + ' · ' + money(c.price) + (c.days != null ? ' · listed ' + (c.days === 0 ? 'today' : c.days + ' days') : '')); }); }
@@ -158,14 +170,17 @@
   }
   $('f').addEventListener('submit', function (e) {
     e.preventDefault(); $('err').style.display = 'none';
-    var q = { current_rent: num('cur'), proposed_rent: num('prop'), years: num('years'), zip: $('zip').value.trim(), beds: Number($('beds').value), baths: num('baths'), sqft: num('sqft'), type: $('type').value, address: $('addr').value.trim() || null, is_complex: $('complex').checked, ontime: $('ontime').checked };
+    var q = { current_rent: num('cur'), proposed_rent: num('prop'), years: num('years'), zip: $('zip').value.trim(), beds: Number($('beds').value), baths: num('baths'), sqft: num('sqft'), type: $('type').value, address: $('addr').value.trim() || null, is_complex: $('complex').checked, ontime: $('ontime').checked, months_free: num('mf'), new_months_free: num('nmf'), new_rent: num('newrent') };
     if (!q.current_rent || !q.proposed_rent || !/^\d{5}$/.test(q.zip)) { $('err').textContent = 'Current rent, proposed rent, and a 5-digit ZIP are needed.'; $('err').style.display = 'block'; return; }
     fetch(API + '/v1/renewal', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-renew' }, body: JSON.stringify(q) })
       .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
       .then(function (r) {
-        $('ctrLabel').textContent = r.counter < q.proposed_rent ? 'Counter at' : 'Sign at';
-        $('counter').textContent = money(r.counter);
+        $('ctrLabel').textContent = r.new_effective ? 'Ask for what new renters pay' : r.counter < q.proposed_rent ? 'Counter at' : 'Sign at';
+        $('counter').textContent = money(r.new_effective || r.counter);
         $('sub').textContent = r.counter < q.proposed_rent ? money(q.proposed_rent - r.counter) + ' a month under the proposal · ' + money((q.proposed_rent - r.counter) * 12) + ' over the year' : 'The proposal is at or under the market. Ask for a longer term or a repair instead of a lower number.';
+        if (r.new_effective) $('sub').textContent = 'a month effective, the deal new renters get today · or the same ' + r.new_months_free + ' month' + (r.new_months_free === 1 ? '' : 's') + ' free on your renewal';
+        $('freeStats').hidden = !(r.paid_effective || r.new_effective);
+        $('sPaid').textContent = r.paid_effective ? money(r.paid_effective) : money(q.current_rent); $('sReal').textContent = r.real_increase_pct != null ? '+' + Math.round(r.real_increase_pct) + '%' : (r.increase_pct >= 0 ? '+' : '') + r.increase_pct + '%'; $('sNew').textContent = r.new_effective ? money(r.new_effective) : '–';
         $('sFair').textContent = money(r.fair); $('sInc').textContent = (r.increase_pct >= 0 ? '+' : '') + r.increase_pct + '%'; $('sTurn').textContent = money(r.turnover_cost);
         var why = $('why'); why.innerHTML = ''; (r.signals || []).forEach(function (s) { var li = document.createElement('li'); li.textContent = s; why.appendChild(li); });
         var tb = $('comps'); tb.innerHTML = '<tr><th>Address</th><th class="n">Rent</th><th class="n">Size</th><th class="n">Days</th></tr>';
