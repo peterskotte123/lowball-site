@@ -93,6 +93,11 @@
   .share h2 { font-size:18px; margin:0 0 4px; } .share p { margin:0 0 10px; color:var(--muted); font-size:15px; }
   .share form { background:none; border:0; padding:0; } .ok { color:var(--green); font-size:14px; margin-top:8px; }
   .desk-only { display:none; } html:not(.phone) .desk-only { display:block; } html:not(.phone) .phone-only { display:none; }
+  .nudge { position:fixed; inset:0; background:rgba(16,24,40,.55); display:flex; align-items:center; justify-content:center; padding:16px; z-index:50; }
+  .nudge[hidden] { display:none; }
+  .nudge .box { background:#fff; border-radius:14px; max-width:420px; width:100%; padding:24px; box-shadow:0 20px 40px rgba(16,24,40,.25); }
+  .nudge h2 { margin:0 0 8px; font-size:21px; line-height:1.25; } .nudge p { margin:0 0 6px; color:var(--muted); } .nudge ul { margin:8px 0 4px; padding-left:20px; color:var(--ink); }
+  .nudge .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; } .nudge .btn.go { background:var(--green); }
 </style>
 <meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/renew"><meta property="og:title" content="Renewal letter"><meta property="og:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta property="og:image" content="https://lowball.rent/img/share/renew.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Renewal letter"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Renewal letter"><meta name="twitter:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta name="twitter:image" content="https://lowball.rent/img/share/renew.png">
 <!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head>
@@ -169,6 +174,15 @@
     <div><a href="/support">Support</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
   </footer>
 </div>
+<div class="nudge" id="nudge" hidden role="dialog" aria-modal="true" aria-labelledby="nudgeT"><div class="box">
+  <h2 id="nudgeT">This page is the quick version</h2>
+  <p class="desk-only">Lowball is a free browser extension. Add it and it runs right on Zillow, on every rental you open:</p>
+  <p class="phone-only">Lowball is a free browser extension. On a computer it runs right on Zillow, on every rental you open:</p>
+  <ul><li>the offer and the message, without copying links</li><li>how long it has really been listed, and its past price cuts</li><li>every listing on a search ranked by who is most likely to take less</li></ul>
+  <div class="row"><a class="btn go desk-only" id="nudgeGo" href="https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno" target="_blank" rel="noopener">Add Lowball to Chrome, free</a>
+  <button class="btn go phone-only" type="button" id="nudgeShare">Send me the link</button>
+  <button class="btn ghost" type="button" id="nudgeNo">Not now</button></div>
+</div></div>
 <script>
 (function () {
   var API = (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && new URLSearchParams(location.search).get('api')) || 'https://api.lowball.rent';
@@ -218,19 +232,35 @@
     msg.textContent = 'Looking it up...'; $('pbtn').disabled = true;
     findZpid(Number(m[1])).then(function (row) {
       $('pbtn').disabled = false;
-      if (!row) {
-        msg.className = 'pmsg miss'; msg.textContent = "We don't have this listing in our data yet. Type the rent, ZIP and bedrooms below and you get the same check.";
-        hit = { zpid: Number(m[1]) }; $('price').focus(); track('check_paste_miss'); return;
-      }
+      if (!row) return live(Number(m[1]), t);
       var days = row.days != null ? row.days + Math.max(0, Math.round((Date.now() - Date.parse(row.asof + 'T12:00:00')) / 864e5)) : null;
-      hit = { zpid: row.zpid, zip: String(row.zip), lat: row.lat, lon: row.lon };
-      $('price').value = row.price; $('zip').value = row.zip; $('beds').value = String(Math.min(5, Math.round(row.beds || 0)));
-      $('baths').value = row.baths || ''; $('sqft').value = row.sqft || ''; $('days').value = days != null ? days : '';
-      $('type').value = TYPES[row.type] || 'APARTMENT'; $('addr').value = addrFromLink(t, row) || '';
-      msg.textContent = 'Found it: ' + (row.beds ? bedsWord(Math.round(row.beds)) : 'listing') + (row.city ? ' in ' + row.city : '') + ', ' + money(row.price) + ' a month. Checking...';
-      track('check_paste_found');
-      $('f').requestSubmit ? $('f').requestSubmit() : $('f').dispatchEvent(new Event('submit', { cancelable: true }));
+      fill(t, row, days, null); track('check_paste_found');
     });
+  }
+  function fill(t, row, days, extra) {
+    hit = { zpid: row.zpid, zip: String(row.zip), lat: row.lat, lon: row.lon, extra: extra };
+    $('price').value = row.price; $('zip').value = row.zip; $('beds').value = String(Math.min(5, Math.round(row.beds || 0)));
+    $('baths').value = row.baths || ''; $('sqft').value = row.sqft || ''; $('days').value = days != null ? Math.round(days) : '';
+    $('type').value = TYPES[row.type] || 'APARTMENT'; $('addr').value = addrFromLink(t, row) || row.address || '';
+    $('pmsg').textContent = 'Found it: ' + (row.beds ? bedsWord(Math.round(row.beds)) : 'listing') + (row.city ? ' in ' + row.city : '') + ', ' + money(row.price) + ' a month. Checking...';
+    $('f').requestSubmit ? $('f').requestSubmit() : $('f').dispatchEvent(new Event('submit', { cancelable: true }));
+  }
+  // Not in the nightly files: ask the API, which checks listings other people's browsing shared, then reads this one listing.
+  function live(zpid, t) {
+    var msg = $('pmsg'); msg.textContent = 'Not in our nightly data. Reading this listing now, about 15 seconds...'; $('pbtn').disabled = true;
+    fetch(API + '/v1/listing', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-check' }, body: JSON.stringify({ zpid: zpid }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        $('pbtn').disabled = false;
+        if (!d || !d.found) {
+          msg.className = 'pmsg miss'; msg.textContent = d && d.reason === 'not_rental' ? 'That listing is not for rent right now. Paste a rental listing.' : "We couldn't read this listing right now. Type the rent, ZIP and bedrooms below and you get the same check.";
+          hit = { zpid: zpid }; $('price').focus(); track('check_paste_miss'); return;
+        }
+        var L = d.listing; L.zpid = zpid;
+        fill(t, L, L.days, { price_history: L.price_history || [], lease_term: L.lease_term || null, furnished: L.furnished, description: L.description || null });
+        track(d.src === 'live' ? 'check_paste_live' : 'check_paste_store');
+      })
+      .catch(function () { $('pbtn').disabled = false; msg.className = 'pmsg miss'; msg.textContent = "We couldn't read this listing right now. Type the rent, ZIP and bedrooms below and you get the same check."; hit = { zpid: zpid }; track('check_paste_miss'); });
   }
   $('pf').addEventListener('submit', function (e) { e.preventDefault(); runLink($('link').value); });
   $('link').addEventListener('paste', function () { setTimeout(function () { runLink($('link').value); }, 0); });
@@ -242,7 +272,7 @@
     e.preventDefault(); $('err').style.display = 'none';
     var q = { price: num('price'), zip: String($('zip').value).replace(/\D/g, '').slice(0, 5), beds: Number($('beds').value), baths: num('baths'), sqft: num('sqft'),
               type: $('type').value, days: num('days') != null ? Math.round(num('days')) : null, address: $('addr').value.trim() || null, is_complex: $('complex').checked };
-    if (hit && hit.zpid) { q.zpid = hit.zpid; if (hit.lat != null && String(hit.zip || q.zip) === q.zip) { q.lat = hit.lat; q.lon = hit.lon; } }
+    if (hit && hit.zpid) { q.zpid = hit.zpid; if (hit.lat != null && String(hit.zip || q.zip) === q.zip) { q.lat = hit.lat; q.lon = hit.lon; if (hit.extra) for (var k in hit.extra) if (hit.extra[k] != null) q[k] = hit.extra[k]; } }
     if (!q.price || q.zip.length !== 5) { $('err').textContent = 'Asking rent and a 5-digit ZIP are needed.'; $('err').style.display = 'block'; return; }
     fetch(API + '/v1/score', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-check' }, body: JSON.stringify(q) })
       .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
@@ -260,10 +290,24 @@
         $('letter').value = letterFor(q, r);
         $('res').style.display = 'block'; if (window.innerWidth < 820) $('res').scrollIntoView({ behavior: 'smooth' });
         if (window.gtag) gtag('event', 'check_listing');
+        nudgeSoon();
       })
       .catch(function (err) { $('err').textContent = 'Could not reach the estimate service (' + err.message + '). Try again in a minute.'; $('err').style.display = 'block'; });
   });
   $('copy').addEventListener('click', function () { var ta = $('letter'); ta.select(); try { navigator.clipboard.writeText(ta.value); } catch (e) { document.execCommand('copy'); } $('copy').textContent = 'Copied'; track('check_copy'); setTimeout(function () { $('copy').textContent = 'Copy message'; }, 1500); });
+  // After the first result: say plainly that this page is the quick version and the tool is the extension, once per visit.
+  var nudged = false;
+  function nudgeSoon() {
+    if (nudged) return; nudged = true;
+    try { if (sessionStorage.getItem('lb_nudged')) return; sessionStorage.setItem('lb_nudged', '1'); } catch (e) {}
+    setTimeout(function () { $('nudge').hidden = false; track('check_nudge_shown'); }, 2500);
+  }
+  if (/Firefox\//.test(navigator.userAgent)) { $('nudgeGo').href = 'https://addons.mozilla.org/firefox/addon/lowball/'; $('nudgeGo').textContent = 'Add Lowball to Firefox, free'; }
+  $('nudgeGo').addEventListener('click', function () { track('check_nudge_install'); $('nudge').hidden = true; });
+  $('nudgeShare').addEventListener('click', function () { track('check_nudge_share'); $('nudge').hidden = true; $('shareBtn').click(); });
+  $('nudgeNo').addEventListener('click', function () { $('nudge').hidden = true; });
+  $('nudge').addEventListener('click', function (e) { if (e.target === $('nudge')) $('nudge').hidden = true; });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $('nudge').hidden = true; });
   // Send me the link: the phone's share sheet (text it, email it, save it to notes); the email form shows only when the API can send.
   $('shareBtn').addEventListener('click', function () {
     var data = { title: 'Lowball', text: 'Lowball: free extension that shows what to offer on a Zillow rental. Open on a computer:', url: 'https://lowball.rent/' };
