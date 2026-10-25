@@ -174,14 +174,16 @@
     <div><a href="/support">Support</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>
   </footer>
 </div>
-<div class="nudge" id="nudge" hidden role="dialog" aria-modal="true" aria-labelledby="nudgeT"><div class="box">
-  <h2 id="nudgeT">This page is the quick version</h2>
+<div class="nudge" id="nudge" hidden role="dialog" aria-modal="true" aria-label="Lowball"><div class="box">
+  <h2 id="nudgeT" class="desk-only">This page is the quick version</h2>
+  <h2 class="phone-only">Keep this one tap away</h2>
   <p class="desk-only">Lowball is a free browser extension. Add it and it runs right on Zillow, on every rental you open:</p>
-  <p class="phone-only">Lowball is a free browser extension. On a computer it runs right on Zillow, on every rental you open:</p>
-  <ul><li>the offer and the message, without copying links</li><li>how long it has really been listed, and its past price cuts</li><li>every listing on a search ranked by who is most likely to take less</li></ul>
+  <ul class="desk-only"><li>the offer and the message, without copying links</li><li>how long it has really been listed, and its past price cuts</li><li>every listing on a search ranked by who is most likely to take less</li></ul>
+  <p class="phone-only">Next time a listing catches your eye: in the Zillow app tap Share, then Copy link, and paste it here before you apply.</p>
+  <p class="phone-only">Add this page to your home screen: <b id="nudgeHow">tap Share, then Add to Home Screen</b>.</p>
   <div class="row"><a class="btn go desk-only" id="nudgeGo" href="https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno" target="_blank" rel="noopener">Add Lowball to Chrome, free</a>
-  <button class="btn go phone-only" type="button" id="nudgeShare">Send me the link</button>
-  <button class="btn ghost" type="button" id="nudgeNo">Not now</button></div>
+  <button class="btn go phone-only" type="button" id="nudgeOk">Got it</button>
+  <button class="btn ghost desk-only" type="button" id="nudgeNo">Not now</button></div>
 </div></div>
 <script>
 (function () {
@@ -299,12 +301,14 @@
   var nudged = false;
   function nudgeSoon() {
     if (nudged) return; nudged = true;
+    if (document.documentElement.classList.contains('phone') && window.matchMedia && matchMedia('(display-mode: standalone)').matches) return;
     try { if (sessionStorage.getItem('lb_nudged')) return; sessionStorage.setItem('lb_nudged', '1'); } catch (e) {}
     setTimeout(function () { $('nudge').hidden = false; track('check_nudge_shown'); }, 2500);
   }
   if (/Firefox\//.test(navigator.userAgent)) { $('nudgeGo').href = 'https://addons.mozilla.org/firefox/addon/lowball/'; $('nudgeGo').textContent = 'Add Lowball to Firefox, free'; }
   $('nudgeGo').addEventListener('click', function () { track('check_nudge_install'); $('nudge').hidden = true; });
-  $('nudgeShare').addEventListener('click', function () { track('check_nudge_share'); $('nudge').hidden = true; $('shareBtn').click(); });
+  $('nudgeOk').addEventListener('click', function () { track('check_nudge_a2hs'); $('nudge').hidden = true; });
+  if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) $('nudgeHow').textContent = 'tap the menu, then Add to Home screen';
   $('nudgeNo').addEventListener('click', function () { $('nudge').hidden = true; });
   $('nudge').addEventListener('click', function (e) { if (e.target === $('nudge')) $('nudge').hidden = true; });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') $('nudge').hidden = true; });

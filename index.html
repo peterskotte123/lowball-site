@@ -129,6 +129,7 @@
   .pm-lev i { display:block; width:34px; height:7px; border-radius:4px; background:#16A34A; } .pm-lev span { margin-left:8px; }
   .phonebox { background:#ECFDF3; border:1px solid #ABEFC6; border-radius:14px; padding:18px; }
   .phonebox p { margin:0 0 12px; }
+  .linkbtn { background:none; border:0; padding:0; font:inherit; color:var(--green); text-decoration:underline; cursor:pointer; }
   button.btn { font:inherit; font-weight:600; border:0; cursor:pointer; } button.btn.ghost { border:1px solid #D0D5DD; }
   .listen { padding:20px 0 48px; max-width:46em; } .listen p { font-size:18px; color:#344054; margin:0; }
   .strip h2 { margin-bottom:18px; }
@@ -148,7 +149,7 @@
 <div class="wrap">
   <header>
     <a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball" class="logo"></a>
-    <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="#how">How it&nbsp;works</a><a href="#why">Why</a><a href="/renew">Renewing?</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a><a class="btn navbtn only-desk" href="https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno" rel="noopener">Add to Chrome, free</a><a class="btn navbtn only-phone" href="#get">Get it on your computer</a></nav>
+    <input type="checkbox" id="navt" class="navt" aria-label="Menu"><label class="burger" for="navt" aria-hidden="true"><span></span><span></span><span></span></label><label class="scrim" for="navt" aria-hidden="true"></label><nav><label class="navclose" for="navt" aria-hidden="true">×</label><a href="#how">How it&nbsp;works</a><a href="#why">Why</a><a href="/renew">Renewing?</a><a href="/accuracy">Accuracy</a><a href="/privacy">Privacy</a><a class="btn navbtn only-desk" href="https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno" rel="noopener">Add to Chrome, free</a><a class="btn navbtn only-phone" href="/check">Check a listing</a></nav>
   </header>
   <div class="hero">
     <h1 class="h-title">Stop paying the <em>sticker price</em> on rent.</h1>
@@ -180,9 +181,11 @@
         <a class="more" href="#how">See how it works ↓</a>
       </div>
       <div class="phonebox only-phone" id="get">
-        <p><b>On a computer?</b> The browser extension does all of this right on zillow.com, on every listing you open. Send yourself the link:</p>
-        <div class="cta"><button type="button" class="btn sendlink">Send lowball.rent to my laptop</button><button type="button" class="btn ghost copylink">Copy link</button></div>
-        <p class="fine sharemsg">We never see who you send it to.</p>
+        <p><b>Nothing to install.</b> Before you apply, paste the listing's link and see what it is worth, what to offer, and the message to send.</p>
+        <div class="cta"><a class="btn" href="/check">Open the checker</a></div>
+        <p class="fine">Keep it one tap away: open <a href="/check">lowball.rent/check</a>, then <span class="a2hs-how">tap Share, then Add to Home Screen</span>.</p>
+        <p class="fine">On a computer too? The free browser extension shows the same thing right on zillow.com. <button type="button" class="linkbtn sendlink">Send me the link</button></p>
+        <p class="fine sharemsg"></p>
         <p class="fine">Lease ending instead? The renewal letter works on your phone: <a href="/renew">lowball.rent/renew</a></p>
         <!-- 20-second vertical demo goes here (plan step 17, not built yet) -->
       </div>
@@ -254,9 +257,9 @@
       <a class="btn ghost" href="https://addons.mozilla.org/firefox/addon/lowball/" rel="noopener">Get it for Firefox</a>
     </div>
     <div class="only-phone">
-      <p>On a phone right now? Send yourself the link and open it at a computer.</p>
-      <div class="cta"><button type="button" class="btn sendlink">Send lowball.rent to my laptop</button><button type="button" class="btn ghost copylink">Copy link</button></div>
-      <p class="fine sharemsg">We never see who you send it to.</p>
+      <p>On a phone you don't need the extension: paste a Zillow link at lowball.rent/check and you get the same offer and message.</p>
+      <div class="cta"><a class="btn" href="/check">Open the checker</a></div>
+      <p class="fine">Keep it one tap away: <span class="a2hs-how">tap Share, then Add to Home Screen</span>.</p>
     </div>
   </section>
   <!--lb-cities--><section id="cities"><h2>Rent by city</h2><p class="sub">Lowball works anywhere Zillow lists a rental. Where we have the most data we publish median asking rent by bedroom count and neighborhood, and how many listings ask well above similar ones nearby: <a href="/rent/san-diego-ca/">San Diego, CA</a> · <a href="/rent/birmingham-al/">Birmingham, AL</a> · <a href="/rent/huntsville-al/">Huntsville, AL</a> · <a href="/rent/santa-cruz-ca/">Santa Cruz, CA</a> · <a href="/rent/mobile-al/">Mobile, AL</a> · <a href="/rent/tuscaloosa-al/">Tuscaloosa, AL</a> · <a href="/rent/auburn-opelika-al/">Auburn-Opelika, AL</a> · <a href="/rent/montgomery-al/">Montgomery, AL</a>. <a href="/rent/">All markets and ZIP codes</a>.</p></section><!--/lb-cities-->
@@ -277,6 +280,7 @@
 <script>
 (function(){
   var LINK='https://lowball.rent/go';
+  if (!/iPhone|iPad|iPod/.test(navigator.userAgent)) document.querySelectorAll('.a2hs-how').forEach(function(e){ e.textContent = 'tap the menu, then Add to Home screen'; });
   function say(t){ document.querySelectorAll('.sharemsg').forEach(function(m){ m.textContent=t; }); }
   function copy(){
     if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(LINK).then(function(){ say('Link copied: lowball.rent/go. Open it on your computer.'); },function(){ window.prompt('Copy this link',LINK); }); }
