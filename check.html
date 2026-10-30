@@ -35,7 +35,7 @@
   .result { display:none; }
   .hero-num { font-size:44px; font-weight:800; letter-spacing:-0.02em; color:var(--green); line-height:1; margin:6px 0; }
   .label { font-size:12px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--muted); }
-  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; } .stats[hidden] { display:none; }
+  .stats { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin:16px 0; } .stats .stat:nth-child(4){ grid-column:1 / -1; } .stats[hidden] { display:none; }
   .stat { background:var(--soft); border:1px solid var(--line); border-radius:12px; padding:12px; }
   .stat b { display:block; font-size:20px; } .stat span { font-size:12px; color:var(--muted); }
   ul.why { padding-left:18px; color:#344054; font-size:15px; } ul.why li { margin:6px 0; }
@@ -150,6 +150,7 @@
         <div class="stat"><b id="sAsk">$0</b><span>Asking</span></div>
         <div class="stat"><b id="sFair">$0</b><span>Our estimate for a place like this</span></div>
         <div class="stat"><b id="sComps">–</b><span>What similar places nearby ask</span></div>
+        <div class="stat" id="sExtra" hidden><b></b><span></span></div>
       </div>
       <ul class="why" id="why"></ul>
       <details id="compsBox"><summary id="compsSum">Similar rentals nearby</summary><table id="comps"><tr><th>Listing</th><th class="n">Rent</th><th class="n">Size</th><th class="n">Days</th></tr></table></details>
@@ -301,6 +302,8 @@
         $('sub').textContent = r.settle && r.settle > r.offer ? 'Likely to land near ' + money(r.settle) + '. Open at the offer and leave room to meet in the middle.' : 'Open at this number.';
         $('sAsk').textContent = money(q.price); $('sFair').textContent = money(r.fair);
         $('sComps').textContent = r.comps_median ? money(r.comps_median) : '–';
+        var st = Array.isArray(r.stats) && r.stats[0], sx = $('sExtra');
+        if (st && typeof st.label === 'string' && typeof st.value === 'string') { sx.children[0].textContent = st.value; sx.children[1].textContent = st.label + (st.note ? ', ' + st.note : ''); sx.hidden = false; } else sx.hidden = true;
         var why = $('why'); why.innerHTML = ''; (r.signals || []).slice(0, 4).forEach(function (s) { var li = document.createElement('li'); li.textContent = s; why.appendChild(li); });
         var tb = $('comps'); while (tb.rows.length > 1) tb.deleteRow(1);
         (r.comps || []).forEach(function (c) { var tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="n"></td><td class="n"></td><td class="n"></td>'; tr.children[0].textContent = (c.beds != null ? bedsWord(c.beds) : '') + (c.dist_mi != null ? ', ' + c.dist_mi.toFixed(1) + ' mi' : ''); tr.children[1].textContent = money(c.price); tr.children[2].textContent = c.sqft ? c.sqft.toLocaleString() + ' sf' : ''; tr.children[3].textContent = c.days != null ? c.days + 'd' : ''; tb.appendChild(tr); });
