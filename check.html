@@ -264,7 +264,7 @@
           hit = { zpid: zpid }; $('price').focus(); track('check_paste_miss'); return;
         }
         var L = d.listing; L.zpid = zpid;
-        fill(t, L, L.days, { price_history: L.price_history || [], lease_term: L.lease_term || null, furnished: L.furnished, description: L.description || null });
+        fill(t, L, L.days, { price_history: L.price_history || [], lease_term: L.lease_term || null, furnished: L.furnished, description: L.description || null, facts: L.facts || null });
         track(d.src === 'live' ? 'check_paste_live' : 'check_paste_store');
       })
       .catch(function () { $('pbtn').disabled = false; msg.className = 'pmsg miss'; msg.textContent = "We couldn't read this listing right now. Type the rent, ZIP and bedrooms below and you get the same check."; hit = { zpid: zpid }; track('check_paste_miss'); });
@@ -277,7 +277,7 @@
       .then(function (d) {
         var ph = d && d.found && d.listing && d.listing.price_history;
         if (!ph || !ph.some(function (e) { return /sold/i.test(e.event || ''); }) || !hit || hit.zpid !== zpid) return;
-        hit.extra = { price_history: ph }; $('f').requestSubmit ? $('f').requestSubmit() : $('f').dispatchEvent(new Event('submit', { cancelable: true }));
+        hit.extra = { price_history: ph, facts: d.listing.facts || null }; $('f').requestSubmit ? $('f').requestSubmit() : $('f').dispatchEvent(new Event('submit', { cancelable: true }));
       }).catch(function () {});
   }
   $('pf').addEventListener('submit', function (e) { e.preventDefault(); runLink($('link').value); });
