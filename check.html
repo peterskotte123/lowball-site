@@ -98,6 +98,7 @@
   .nudge .box { background:#fff; border-radius:14px; max-width:420px; width:100%; padding:24px; box-shadow:0 20px 40px rgba(16,24,40,.25); }
   .nudge h2 { margin:0 0 8px; font-size:21px; line-height:1.25; } .nudge p { margin:0 0 6px; color:var(--muted); } .nudge ul { margin:8px 0 4px; padding-left:20px; color:var(--ink); }
   .nudge .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; } .nudge .btn.go { background:var(--green); }
+  .lead{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:var(--lead-bg,#F2F4F7);color:var(--ink,#1D2939);font-weight:600}
 </style>
 <meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/renew"><meta property="og:title" content="Renewal letter"><meta property="og:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta property="og:image" content="https://lowball.rent/img/share/renew.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Renewal letter"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Renewal letter"><meta name="twitter:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta name="twitter:image" content="https://lowball.rent/img/share/renew.png">
 <!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head>
@@ -140,6 +141,7 @@
       <p class="fine">Nothing you type is stored with your name. Estimates use public listing data; San Diego and a few other metros have a trained model, elsewhere it is rougher. Not advice or a guarantee.</p>
     </form>
     <div class="result" id="res">
+      <div id="leads"></div>
       <div class="label">Offer</div>
       <div class="hero-num" id="offer">$0</div>
       <a class="btn photos" id="photos" href="#" target="_blank" rel="noopener" hidden>See the photos on Zillow</a>
@@ -237,6 +239,7 @@
       if (!row) return live(Number(m[1]), t);
       var days = row.days != null ? row.days + Math.max(0, Math.round((Date.now() - Date.parse(row.asof + 'T12:00:00')) / 864e5)) : null;
       fill(t, row, days, null); track('check_paste_found');
+      saleHistory(row.zpid);
     });
   }
   function fill(t, row, days, extra) {
@@ -264,6 +267,17 @@
       })
       .catch(function () { $('pbtn').disabled = false; msg.className = 'pmsg miss'; msg.textContent = "We couldn't read this listing right now. Type the rent, ZIP and bedrooms below and you get the same check."; hit = { zpid: zpid }; track('check_paste_miss'); });
   }
+  // A link we already have: score it at once from the nightly row, then read the listing's price history (its last sale)
+  // and score again, so the owner's estimated monthly cost can show. Capped and cached on the server.
+  function saleHistory(zpid) {
+    fetch(API + '/v1/listing', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-check' }, body: JSON.stringify({ zpid: zpid, history: true }) })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        var ph = d && d.found && d.listing && d.listing.price_history;
+        if (!ph || !ph.some(function (e) { return /sold/i.test(e.event || ''); }) || !hit || hit.zpid !== zpid) return;
+        hit.extra = { price_history: ph }; $('f').requestSubmit ? $('f').requestSubmit() : $('f').dispatchEvent(new Event('submit', { cancelable: true }));
+      }).catch(function () {});
+  }
   $('pf').addEventListener('submit', function (e) { e.preventDefault(); runLink($('link').value); });
   $('link').addEventListener('paste', function () { setTimeout(function () { runLink($('link').value); }, 0); });
   var qs = new URLSearchParams(location.search), shared = [qs.get('link'), qs.get('url'), qs.get('text')].filter(Boolean).join(' ');
@@ -279,6 +293,8 @@
     fetch(API + '/v1/score', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-check' }, body: JSON.stringify(q) })
       .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
       .then(function (r) {
+        var ld = $('leads'); ld.innerHTML = '';
+        (Array.isArray(r.leads) ? r.leads : []).slice(0, 3).forEach(function (x) { if (typeof x !== 'string') return; var d = document.createElement('div'); d.className = 'lead'; d.textContent = x; ld.appendChild(d); });
         $('offer').textContent = money(r.offer);
         $('photos').hidden = !q.zpid; if (q.zpid) $('photos').href = 'https://www.zillow.com/homedetails/' + q.zpid + '_zpid/';
         if (hit && hit.lat != null) $('pmsg').textContent = $('pmsg').textContent.replace(' Checking...', '');
