@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rent increase calculator: percent, cap and notice</title><meta name="description" content="Work out a rent increase in dollars and percent, check it against California&#x27;s cap for your county, and see the notice required in California and Alabama."><link rel="canonical" href="https://lowball.rent/rent-increase-calculator/">
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball">
+<meta property="og:url" content="https://lowball.rent/rent-increase-calculator/"><meta property="og:title" content="Rent increase calculator: percent, cap and notice">
+<meta property="og:description" content="Work out a rent increase in dollars and percent, check it against California&#x27;s cap for your county, and see the notice required in California and Alabama."><meta property="og:image" content="https://lowball.rent/img/share/rent.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rent increase calculator: percent, cap and notice">
+<meta name="twitter:description" content="Work out a rent increase in dollars and percent, check it against California&#x27;s cap for your county, and see the notice required in California and Alabama."><meta name="twitter:image" content="https://lowball.rent/img/share/rent.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lowball","item":"https://lowball.rent/"},{"@type":"ListItem","position":2,"name":"Rent increase calculator","item":"https://lowball.rent/rent-increase-calculator/"}]}</script><style>:root{--ink:#101828;--muted:#475467;--line:#EAECF0;--soft:#F8FAFC;--green:#157347}*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:#fff}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px}header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:20px 0}.brand img{height:38px;display:block}nav a{color:var(--muted);text-decoration:none;margin-left:22px;font-weight:500;font-size:15px}
+.crumbs{font-size:13px;color:var(--muted);margin-top:4px}.crumbs a{margin:0;font-size:13px;color:var(--muted)}
+h1{font-size:clamp(28px,4.5vw,42px);line-height:1.1;letter-spacing:-.02em;margin:20px 0 8px}.lede{font-size:18px;color:var(--muted);max-width:40em;margin:0 0 24px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px}.stat b{display:block;font-size:24px;letter-spacing:-.01em}.stat span{font-size:13px;color:var(--muted)}
+.btn{display:inline-flex;gap:8px;padding:12px 20px;border-radius:10px;background:var(--ink);color:#fff;font-weight:600;text-decoration:none;white-space:nowrap}.btn.ghost{background:#fff;color:var(--ink);border:1px solid #D0D5DD}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:#ECFDF3;border:1px solid #ABEFC6;border-radius:12px;padding:16px 18px;margin:24px 0}.cta .sub{font-size:14px;color:#344054;max-width:36em}
+h2{font-size:22px;letter-spacing:-.01em;margin:30px 0 8px}h3{font-size:18px;margin:22px 0 6px}p,li{color:#344054}.fine{font-size:13px;color:#98A2B3}.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}td.n,th.n{text-align:right;white-space:nowrap}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;font-size:13px;color:#98A2B3;margin-top:48px}footer a{color:#667085}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}.grid a{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--soft);font-size:14px}
+@media(max-width:640px){.wrap{padding:0 16px}.stats{grid-template-columns:1fr 1fr}nav a{margin:0 14px 0 0}th,td{padding:7px 4px;font-size:14px}}</style><!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head><body><div class="wrap">
+<header><a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball"></a><nav><a href="/rent/">Rent by city</a><a href="/deals/">Deals</a><a href="/buy/">Buy</a><a href="/renew">Renewing?</a><a href="/">Extension</a><a href="/accuracy">Accuracy</a></nav></header><style>
+.calc{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px;margin:20px 0}
+.calc .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:12px}
+.calc label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.calc input,.calc select{width:100%;max-width:100%;padding:9px 10px;border:1px solid #D0D5DD;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+.calc .out{margin-top:6px;border-top:1px solid var(--line);padding-top:12px}.calc .out p{margin:8px 0}
+.calc .big{font-size:22px;font-weight:700}.calc .ok{color:var(--green);font-weight:600}.calc .bad{color:#B42318;font-weight:600}
+.calc .note{font-size:13px;color:var(--muted);margin:10px 0 0}
+</style>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Lowball</a> › <span>Rent increase calculator</span></nav>
+<h1>Rent increase calculator</h1>
+<p class="lede">A rent increase percentage is the increase in dollars divided by your current rent, times 100. Going from $2,400.00 to $2,700.00 is $300.00, or 12.5%. In California, a covered unit cannot rise more than the cap for its area in 12 months: 8.2% in San Diego County for increases starting August 1, 2026 through July 31, 2027. Enter your numbers to see the increase, the cap, the most the cap allows and the notice required.</p>
+<form class="calc" id="ric" onsubmit="return false" aria-label="Rent increase calculator">
+<div class="row">
+<div><label for="r-cur">Current rent ($)</label><input id="r-cur" type="number" min="0" step="0.01" value="2400" inputmode="decimal"></div>
+<div><label for="r-new">Proposed rent ($)</label><input id="r-new" type="number" min="0" step="0.01" value="2700" inputmode="decimal"></div>
+</div>
+<div class="row">
+<div><label for="r-st">State</label><select id="r-st"><option value="ca" selected>California</option><option value="al">Alabama</option><option value="xx">Other state</option></select></div>
+<div id="r-cty-w"><label for="r-cty">California county</label><select id="r-cty"><option value="sd" selected>San Diego County (8.2%)</option><option value="la">Los Angeles or Orange County (8.7%)</option><option value="rv">Riverside or San Bernardino County (8.1%)</option><option value="sf">San Francisco Bay Area (Alameda, Contra Costa, Marin, San Francisco, San Mateo) (8.8%)</option><option value="ot">Other California county (8.6%)</option></select></div>
+</div>
+<div class="row">
+<div><label for="r-ten">Tenancy</label><select id="r-ten"><option value="m" selected>Month-to-month</option><option value="f">Fixed-term lease</option></select></div>
+<div><label for="r-date">Notice received (optional)</label><input id="r-date" type="date" value=""></div>
+</div>
+<div class="out" aria-live="polite">
+<p class="big" id="o-inc">+$300.00 (12.5%)</p>
+<p id="o-cap"><span class="bad">Over the 8.2% cap.</span> The most a covered unit can go to is $2,596.80.</p>
+<p id="o-notice">Notice: 90 days in writing, because the increase is over 10% (Civ. Code 827). Add 5 calendar days if the notice was mailed within California (CCP 1013(a)).</p>
+<p class="note" id="o-math">$2,700.00 - $2,400.00 = $300.00. $300.00 ÷ $2,400.00 = 12.5%. San Diego County cap: 8.2%. $2,400.00 × 1.082 = $2,596.80, rounded down to the cent. $2,700.00 is $103.20 above that, so a covered unit cannot take this increase. 12.5% is more than 10%, so 90 days' written notice on a month-to-month tenancy.</p>
+</div>
+<p class="note">Many California units are exempt (certificate of occupancy within 15 years, many single-family homes with the required notice, and others); the <a href="/rent-increase/">cap page</a> lists them. The cap counts every increase in the past 12 months, measured from the lowest rent charged in that time; this calculator treats your current rent as that base. It runs in your browser and sends nothing anywhere.</p>
+</form>
+<h2>How do you calculate a rent increase percentage?</h2><p>Subtract the current rent from the new rent to get the increase in dollars. Divide that by the current rent and multiply by 100. For the example above: $2,700.00 minus $2,400.00 is $300.00, and $300.00 ÷ $2,400.00 is 0.125, or 12.5%. To go the other way, from a cap to a rent, multiply the current rent by one plus the cap: $2,400.00 × 1.082 is $2,596.80, the most a covered San Diego County unit at $2,400.00 can reach. Always divide by the old rent, not the new one: $300.00 ÷ $2,700.00 is 11.1%, which understates the increase. In California the cap is measured from the lowest rent charged in the prior 12 months, and increases within 12 months count together (<a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&amp;sectionNum=1947.12">Civ. Code 1947.12</a>).</p>
+<h2>Is my rent increase legal in California?</h2><p>It comes down to three checks. First, is the unit covered by <a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&amp;sectionNum=1947.12">Civil Code 1947.12</a>? Many are not: housing with a certificate of occupancy issued within the previous 15 years, many single-family homes and condos whose owner gave the written exemption notice the statute requires, owner-occupied duplexes, deed-restricted affordable housing, and others. The <a href="/rent-increase/">cap page</a> lists them. Second, if it is covered, is the increase within the cap for your area? For increases starting August 1, 2026 through July 31, 2027, the <a href="https://oag.ca.gov/rentcaps">Attorney General&#x27;s published caps</a> are 8.2% in San Diego County, 8.7% in Los Angeles and Orange, 8.1% in Riverside and San Bernardino, 8.8% in the San Francisco area, and 8.6% elsewhere. An increase over 10% is above every one of them. Third, was the notice in writing and on time (<a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&amp;sectionNum=827">Civil Code 827</a>)? Some cities have stricter rules of their own.</p>
+<h2>How much notice does a rent increase need?</h2><p>In California, <a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&amp;sectionNum=827">Civil Code 827</a> covers week-to-week and month-to-month tenancies. The landlord must give written notice at least 30 days before the increase if it, together with any other increases in the past 12 months, is 10% or less; above 10%, the notice period is 90 days. A notice mailed to an address in California adds five calendar days (<a href="https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CCP&amp;sectionNum=1013">CCP 1013(a)</a>). The <a href="https://oag.ca.gov/consumers/general/landlord-tenant-issues">Attorney General</a> says a call, text or email is not enough. In Alabama no statute sets a notice period for an increase, so the lease governs; a month-to-month tenancy can be ended on 30 days' written notice before a rental date (<a href="https://alison.legislature.state.al.us/code-of-alabama?section=35-9A-441">Ala. Code 35-9A-441(b)</a>). On a fixed-term lease the rent usually stays put until the term ends, since rent is a term of the agreement (<a href="https://alison.legislature.state.al.us/code-of-alabama?section=35-9A-161">Ala. Code 35-9A-161</a>).</p>
+<h2>What can you do about an increase?</h2><p>Renters who get an increase usually reply in one of a few ways: accept it, counter with a smaller number, ask for something else in exchange, such as a longer lease, or plan a move. A landlord weighs a counter against the cost of an empty unit: rent lost while it sits, cleaning and repairs before the next tenant, and the time or fees to re-let it. A counter that points to comparable listings nearby asking less is one the landlord can check. Our <a href="/renew">renewal tool</a> puts numbers on those turnover costs, shows its assumptions, and drafts a reply. For how others word a counter, see <a href="/negotiate-rent/">how to negotiate rent</a>. In Alabama there is no cap, so the lease and the conversation are what you have (<a href="https://alison.legislature.state.al.us/code-of-alabama?section=11-80-8.1">Ala. Code 11-80-8.1</a>). The landlord can say no.</p>
+<div class="cta"><div><b>See the fair rent on the listing you are looking at.</b><div class="sub">Lowball is a free browser extension for Chrome and Firefox. On any Zillow rental it shows our estimate, the comparable listings behind it, an opening offer and a message to send.</div></div><a class="btn" href="/go">Get the free extension</a></div>
+<p class="fine">Refreshed 2026-10-31. Caps are the California Attorney General's figures for increases starting August 1, 2026 through July 31, 2027, recomputed here from the CPI levels and matched to them; the law cited was read from the primary sources on 2026-10-30. Every figure is computed from the formulas shown. This is general information, not legal advice.</p><script>
+(function(){
+  var f=document.getElementById('ric'); if(!f) return;
+  var CAPS={'sd': 8.2, 'la': 8.7, 'rv': 8.1, 'sf': 8.8, 'ot': 8.6}, NAMES={'sd': 'San Diego County', 'la': 'Los Angeles or Orange County', 'rv': 'Riverside or San Bernardino County', 'sf': 'San Francisco Bay Area', 'ot': 'Other California county'};
+  function $(id){return document.getElementById(id)}
+  function money(x){return '$'+x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function pct(x){return x.toFixed(2).replace(/0+$/,'').replace(/\.$/,'')+'%'}
+  function addDays(v,n){var p=v.split('-'),d=new Date(Date.UTC(+p[0],+p[1]-1,+p[2]+n));return d.toLocaleDateString('en-US',{timeZone:'UTC',month:'long',day:'numeric',year:'numeric'})}
+  function L(u,t){return '<a href="'+u+'">'+t+'</a>'}
+  var U827='https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CIV&sectionNum=827',U1013='https://leginfo.legislature.ca.gov/faces/codes_displaySection.xhtml?lawCode=CCP&sectionNum=1013',U161='https://alison.legislature.state.al.us/code-of-alabama?section=35-9A-161',U441='https://alison.legislature.state.al.us/code-of-alabama?section=35-9A-441',U808='https://alison.legislature.state.al.us/code-of-alabama?section=11-80-8.1';
+  function run(){
+    var st=$('r-st').value,ar=$('r-cty').value,ten=$('r-ten').value,dt=$('r-date').value;
+    $('r-cty-w').hidden=st!=='ca';
+    var cc=Math.round((parseFloat($('r-cur').value)||0)*100),nc=Math.round((parseFloat($('r-new').value)||0)*100);
+    if(cc<=0){$('o-inc').textContent='Enter your current rent.';$('o-cap').textContent='';$('o-notice').textContent='';$('o-math').textContent='';return}
+    var d=nc-cc,p=d/cc*100,over10=nc*10>cc*11,sign=d<0?'-':'+';
+    $('o-inc').textContent=sign+money(Math.abs(d)/100)+' ('+(d<0?'-':'')+pct(Math.abs(p))+')';
+    var m=money(nc/100)+' - '+money(cc/100)+' = '+(d<0?'-':'')+money(Math.abs(d)/100)+'. '+(d<0?'-':'')+money(Math.abs(d)/100)+' ÷ '+money(cc/100)+' = '+(d<0?'-':'')+pct(Math.abs(p))+'.';
+    var cap='',notice='';
+    if(st==='ca'){
+      var t=Math.round(CAPS[ar]*10),mx=Math.floor(cc*(1000+t)/1000),ok=nc<=mx;
+      cap=(ok?'<span class="ok">Within the '+CAPS[ar]+'% cap.</span>':'<span class="bad">Over the '+CAPS[ar]+'% cap.</span>')+' The most a covered unit can go to is '+money(mx/100)+'.';
+      m+=' '+NAMES[ar]+' cap: '+CAPS[ar]+'%. '+money(cc/100)+' × '+(1+t/1000).toFixed(3)+' = '+money(mx/100)+', rounded down to the cent. '+
+        (ok?money(nc/100)+' is within it.':money(nc/100)+' is '+money((nc-mx)/100)+' above that, so a covered unit cannot take this increase.');
+      if(ten==='f'){
+        notice='Fixed-term lease: the rent usually cannot change until the term ends, unless the lease allows it; check the lease. The cap still applies to a covered unit at renewal.';
+      }else if(d<=0){
+        notice='No increase, so no increase notice applies.';
+      }else{
+        var n=over10?90:30;
+        notice='Notice: '+n+' days in writing, because the increase is '+(over10?'over':'10% or less')+(over10?' 10%':'')+' ('+L(U827,'Civ. Code 827')+'). Add 5 calendar days if the notice was mailed within California ('+L(U1013,'CCP 1013(a)')+').';
+        if(dt) notice+=' '+n+' days from '+addDays(dt,0)+' is '+addDays(dt,n)+'; with 5 mailing days, '+addDays(dt,n+5)+'.';
+        m+=' '+pct(p)+' is '+(over10?'more than 10%, so 90':'10% or less, so 30')+" days' written notice on a month-to-month tenancy.";
+      }
+    }else if(st==='al'){
+      cap='Alabama has no rent cap, and cities and counties may not create one ('+L(U808,'Ala. Code 11-80-8.1')+').';
+      notice=ten==='f'?'Fixed-term lease: rent is a term of the rental agreement ('+L(U161,'Ala. Code 35-9A-161')+'), so it usually cannot change until the term ends; check the lease.'
+        :'No statute sets a notice period for an increase; the lease governs. A month-to-month tenancy can be ended on 30 days\' written notice before a rental date ('+L(U441,'Ala. Code 35-9A-441(b)')+').';
+    }else{
+      cap='Rent caps and notice rules depend on your state, and some cities add their own. Check your state\'s landlord-tenant law.';
+      notice=ten==='f'?'Fixed-term lease: the rent usually cannot change until the term ends; check the lease.':'Check your state\'s notice rule for a month-to-month increase.';
+    }
+    $('o-cap').innerHTML=cap;$('o-notice').innerHTML=notice;$('o-math').textContent=m;
+  }
+  f.addEventListener('input',run);f.addEventListener('change',run);run();
+})();
+</script><footer><div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Figures are estimates from public listing data, not advice or a guarantee.</div>
+<div>Guides: <a href="/negotiate-rent/">Negotiate rent</a> · <a href="/rent-increase/">Rent increase limits</a> · <a href="/net-effective-rent/">Net effective rent</a> · <a href="/is-rent-going-down/">Is rent going down?</a> · <a href="/rent-estimate/">Rent estimates</a> · <a href="/prorated-rent/">Prorated rent</a> · <a href="/rent-to-income/">Rent and income</a> · <a href="/rent-increase-calculator/">Rent increase calculator</a> · <a href="/rent-report/">San Diego rent report</a> · <a href="/renew">Renewal counter</a></div>
+<div><a href="/rent/">Rent by city</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div></footer></div></body></html>
