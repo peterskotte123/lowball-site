@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Rent renewal counteroffer calculator · Lowball</title>
-<link rel="canonical" href="https://lowball.rent/renew"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lowball","item":"https://lowball.rent/"},{"@type":"ListItem","position":2,"name":"Renewal letter","item":"https://lowball.rent/renew"}]}</script>
-<meta name="description" content="Your landlord wants more at renewal. See what comparable units are asking today, what leaving would cost them, and a number to counter with. Free, no account.">
+<title>Negotiate a rent increase: renewal calculator · Lowball</title>
+<link rel="canonical" href="https://lowball.rent/renew"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lowball","item":"https://lowball.rent/"},{"@type":"ListItem","position":2,"name":"Renewal counter","item":"https://lowball.rent/renew"}]}</script>
+<meta name="description" content="Your landlord wants more at renewal. See what comparable units ask, what your leaving would cost them, and a number to counter with. Free, no account.">
 <link rel="icon" type="image/svg+xml" href="/img/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
 <style>
   :root { --ink:#101828; --muted:#475467; --line:#EAECF0; --paper:#fff; --soft:#F8FAFC; --green:#157347; --amber:#B45309; --red:#B42318; }
@@ -83,7 +83,7 @@
      page can scroll behind the drawer. */
   body:has(.navt:checked) { overflow:hidden; }
 </style>
-<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/renew"><meta property="og:title" content="Renewal letter"><meta property="og:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta property="og:image" content="https://lowball.rent/img/share/renew.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Renewal letter"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Renewal letter"><meta name="twitter:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta name="twitter:image" content="https://lowball.rent/img/share/renew.png">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/renew"><meta property="og:title" content="Negotiate a rent increase: renewal calculator"><meta property="og:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta property="og:image" content="https://lowball.rent/img/share/renew.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Renewal letter"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Renewal letter"><meta name="twitter:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta name="twitter:image" content="https://lowball.rent/img/share/renew.png">
 <!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head>
 <body>
 <div class="wrap">
@@ -99,7 +99,7 @@
         <div><label>Current rent, per month</label><input id="cur" inputmode="numeric" placeholder="2,900" required></div>
         <div><label>Proposed rent</label><input id="prop" inputmode="numeric" placeholder="3,150" required></div>
       </div>
-      <label>Street address (optional, sharpens the comps)</label><input id="addr" placeholder="3050 Upas St">
+      <label>Street address (optional, sharpens the comps)</label><input id="addr" placeholder="Street and number">
       <div class="row">
         <div><label>ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" placeholder="92104" required></div>
         <div><label>Years in the unit</label><input id="years" inputmode="numeric" placeholder="3"></div>
@@ -120,7 +120,7 @@
       <label style="display:flex;align-items:center;gap:8px;margin-top:8px;font-weight:500"><input type="checkbox" id="ontime" style="width:auto"> I have paid rent on time throughout my tenancy (adds one sentence to the letter)</label>
       <button class="btn" type="submit">Show my counter</button>
       <div class="err" id="err"></div>
-      <p class="fine">Nothing you type is stored with your name. The estimate uses public listing data and our San Diego model; outside San Diego it uses a public rent index and is rougher. Not advice or a guarantee.</p>
+      <p class="fine">Nothing you type is stored with your name. The estimate uses public listing data and our model where we have trained one; elsewhere it uses similar listings nearby that other users have seen, or a public rent index, and is rougher. Not advice or a guarantee.</p>
     </form>
     <div class="result" id="res">
       <div class="label" id="ctrLabel">Counter at</div>
@@ -144,6 +144,24 @@
       <p class="fine">Not legal advice. Rent-increase limits depend on your city, building age, and owner; the state cap may not apply. Verify at oag.ca.gov/housing or with a local tenant-rights group. Check that the comps are still listed before you send; you are responsible for what you send.</p>
     </div>
   </div>
+    <section class="guide" style="max-width:44em;padding:36px 0 8px;color:#344054">
+    <h2 style="font-size:22px;letter-spacing:-.01em;margin:0 0 10px;color:#101828">How to negotiate a rent increase</h2>
+    <p>To negotiate a rent increase, reply in writing before the date on the notice with three things: what comparable units nearby are asking today, a specific number you will sign at, and what your leaving would cost the landlord. The argument is not that you cannot afford the increase. It is that your landlord is choosing between your counter and an empty unit, and the tool above puts a number on that choice.</p>
+    <p>The turnover figure in the letter is built from stated assumptions, shown so the landlord can check them:</p>
+    <ul>
+      <li>Apartment: about 1.1 months empty at the current market rent, roughly $1,500 to make the unit ready, about a quarter of a month's rent to re-let.</li>
+      <li>House: 1.5 months empty, about $3,000 to make ready, half a month's rent to re-let.</li>
+      <li>The total is weighted by the odds you actually leave, 35% to 50% depending on how long you have been there, so the letter never claims the full cost.</li>
+    </ul>
+    <h3 style="font-size:18px;margin:22px 0 6px;color:#101828">What goes in the counter</h3>
+    <p>Comparable units by address and size, so the landlord can open the listings. A number, not "something lower". A date you will sign by. The tool fills in the first two; the date is yours. Keep the tone plain. A one-line "no" gives a landlord nothing to work with; three comps and a number give them a decision to make before the unit sits.</p>
+    <h3 style="font-size:18px;margin:22px 0 6px;color:#101828">If your first lease had free months</h3>
+    <p>A renewal is usually priced from the lease rent, not from what you actually paid. If you signed at $2,847 with one month free, you paid about $2,610 a month, and a 4% increase on $2,847 is a 13% increase on what left your account. Work that out before you counter, and ask for the same concession again or for the base rent to come down instead. The arithmetic is on the <a href="/net-effective-rent/">net effective rent</a> page, with a calculator.</p>
+    <h3 style="font-size:18px;margin:22px 0 6px;color:#101828">When a state cap applies</h3>
+    <p>In California, most units whose certificate of occupancy is more than 15 years old cannot go up by more than 5% plus regional inflation, or 10%, whichever is lower, in any 12 months; on a month-to-month tenancy the notice is 30 days for increases up to 10% and 90 days above that. Alabama has no cap and bars cities from creating one. Many units are exempt, so check before you cite a cap in a letter. The current California figures and the statutes behind each statement are on <a href="/rent-increase/">how much a landlord can raise rent</a>. This page is general information, not legal advice.</p>
+    <h3 style="font-size:18px;margin:22px 0 6px;color:#101828">Timing</h3>
+    <p>Answer in writing before the date on the notice, even if you are still deciding. On a fixed-term lease the rent usually cannot change until the term ends, so check your lease for a clause that allows it; on month-to-month the notice period is what protects you. If the landlord says no, the comps still work as an offer on the next place, and <a href="/negotiate-rent/">negotiating a new lease</a> uses the same evidence. For what listings are doing right now, see <a href="/is-rent-going-down/">is rent going down</a>.</p>
+  </section>
   <footer>
     <div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc.</div>
     <div><a href="/support">Support</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div>

@@ -1,0 +1,76 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rent estimate: how it is built and how accurate it is</title><meta name="description" content="What a rent estimate is, what Zillow says about its Rent Zestimate, how accurate our estimate measures, what a rent comp is, and how to get an estimate for one listing."><link rel="canonical" href="https://lowball.rent/rent-estimate/">
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball">
+<meta property="og:url" content="https://lowball.rent/rent-estimate/"><meta property="og:title" content="Rent estimate: how it is built and how accurate it is">
+<meta property="og:description" content="What a rent estimate is, what Zillow says about its Rent Zestimate, how accurate our estimate measures, what a rent comp is, and how to get an estimate for one listing."><meta property="og:image" content="https://lowball.rent/img/share/rent.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rent estimate: how it is built and how accurate it is">
+<meta name="twitter:description" content="What a rent estimate is, what Zillow says about its Rent Zestimate, how accurate our estimate measures, what a rent comp is, and how to get an estimate for one listing."><meta name="twitter:image" content="https://lowball.rent/img/share/rent.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lowball","item":"https://lowball.rent/"},{"@type":"ListItem","position":2,"name":"Rent estimate","item":"https://lowball.rent/rent-estimate/"}]}</script><style>:root{--ink:#101828;--muted:#475467;--line:#EAECF0;--soft:#F8FAFC;--green:#157347}*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:#fff}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px}header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:20px 0}.brand img{height:38px;display:block}nav a{color:var(--muted);text-decoration:none;margin-left:22px;font-weight:500;font-size:15px}
+.crumbs{font-size:13px;color:var(--muted);margin-top:4px}.crumbs a{margin:0;font-size:13px;color:var(--muted)}
+h1{font-size:clamp(28px,4.5vw,42px);line-height:1.1;letter-spacing:-.02em;margin:20px 0 8px}.lede{font-size:18px;color:var(--muted);max-width:40em;margin:0 0 24px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px}.stat b{display:block;font-size:24px;letter-spacing:-.01em}.stat span{font-size:13px;color:var(--muted)}
+.btn{display:inline-flex;gap:8px;padding:12px 20px;border-radius:10px;background:var(--ink);color:#fff;font-weight:600;text-decoration:none;white-space:nowrap}.btn.ghost{background:#fff;color:var(--ink);border:1px solid #D0D5DD}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:#ECFDF3;border:1px solid #ABEFC6;border-radius:12px;padding:16px 18px;margin:24px 0}.cta .sub{font-size:14px;color:#344054;max-width:36em}
+h2{font-size:22px;letter-spacing:-.01em;margin:30px 0 8px}h3{font-size:18px;margin:22px 0 6px}p,li{color:#344054}.fine{font-size:13px;color:#98A2B3}.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}td.n,th.n{text-align:right;white-space:nowrap}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;font-size:13px;color:#98A2B3;margin-top:48px}footer a{color:#667085}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}.grid a{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--soft);font-size:14px}
+@media(max-width:640px){.wrap{padding:0 16px}.stats{grid-template-columns:1fr 1fr}nav a{margin:0 14px 0 0}th,td{padding:7px 4px;font-size:14px}}</style><!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head><body><div class="wrap">
+<header><a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball"></a><nav><a href="/rent/">Rent by city</a><a href="/deals/">Deals</a><a href="/buy/">Buy</a><a href="/renew">Renewing?</a><a href="/">Extension</a><a href="/accuracy">Accuracy</a></nav></header><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Lowball</a> › <span>Rent estimate</span></nav>
+<h1>Rent estimate: how it is built and how accurate it is</h1>
+<p class="lede">A rent estimate is a guess at what a unit would rent for, built from similar listings nearby. Ours lands within about 10% of the asking rent on the typical listing: 8.2% median error in the typical ZIP, measured 2026-10-25.</p>
+<div class="stats"><div class="stat"><b>8.2%</b><span>Median error vs asking rent, typical ZIP</span></div><div class="stat"><b>80%</b><span>Asking rents inside the 80% range</span></div><div class="stat"><b>16,638</b><span>Listings measured, 2026-10-25</span></div></div>
+<h2>What is a rent estimate?</h2>
+<p>A rent estimate is a model's best guess at what a unit would rent for, built from what similar homes nearby are
+listed at. It is not the price: the landlord sets the asking rent, and the estimate only tells you whether that ask
+sits high, low or about in line with the neighborhood. It is also not what the unit will actually rent for. Many
+listings cut their price before they rent, and the final number is agreed between landlord and tenant, so neither the
+ask nor the estimate is the clearing price. Treat an estimate as a reference point you can check against real
+listings, not as an appraisal. A good one tells you how it was built, which listings stand behind it, and how often it
+has been wrong.</p>
+<h2>How does Zillow&#x27;s Rent Zestimate work?</h2>
+<p>According to <a href="https://www.zillow.com/rentals-network/what-is-the-rent-zestimate/" rel="nofollow">Zillow's own pages</a>, a Rent Zestimate is Zillow's estimate of a
+property's monthly rent, computed with a proprietary formula and meant as a starting point rather than a fixed price.
+Zillow lists its inputs as the home's physical features, such as square footage, bedrooms and bathrooms, comparable
+rentals and market rents in the area, facts updated by the owner, and other public data such as the last sale price.
+An <a href="https://www.zillow.com/research/a-peek-inside-our-newest-zestimate-the-rent-zestimate-1076/" rel="nofollow">older Zillow Research post</a> says models within each county or state learn
+from recent rental listings how home attributes relate to rents, then estimate rents for all homes, including ones not
+listed; the current model may differ. Zillow also shows a Rent Range, and a wide range signals less data or more
+volatility. Lowball works differently: it reads the listings on the market near the unit, using the rules below, plus
+the listing's own days listed and price cuts. Zillow's figure is never an input.</p>
+<h2>How accurate is a rent estimate?</h2>
+<p>Ours is usually within about 10% of the asking rent. For the model accepted as of 2026-10-25, the median error against
+asking rent is 8.2% in the typical ZIP: we take the median error within each of 148 ZIPs that have at least
+30 listings, then the median across ZIPs. Every prediction is made by a model that did not train on that listing.
+The 80% range shown in the panel contains the asking rent 80.0% of the time. Measured on 16,638 listings.
+Asking rent is the only truth available at this scale, so a listing priced well above the market counts as error,
+which is the point. Error is larger in expensive and thinly listed areas. See <a href="/accuracy">how we measure
+accuracy</a>.</p>
+<h2>What is a rent comp?</h2>
+<p>A rent comp, short for comparable, is a listing similar enough to the one you are looking at that its rent says
+something about this one. Where Lowball builds comparables from listings on the fly, the rules are: the same number of
+bedrooms, the same class (a house is compared with houses, an apartment or condo with attached homes), within
+5 miles, and within 35% of the unit's size when both sizes are known. Of those, the 8 nearest are kept.
+If fewer than 3 qualify, the search widens to one bedroom fewer and sizes within 60%, and the panel marks them as
+a looser match. Asks under half or over 2.2 times the group's median are dropped, which removes room shares and short
+stays.</p>
+<h2>Why would an estimate differ from the asking price?</h2>
+<p>Because the estimate cannot see everything the landlord priced in. Condition and finishes matter, and a renovated
+kitchen or a worn carpet barely shows in beds, baths and square feet. Photos, views and noise matter too. Timing
+matters: a listing posted at the start of a busy month may ask more than one that has sat. And some landlords simply
+start high and wait. A gap between the ask and the estimate is a starting point for a conversation, not proof the
+listing is overpriced. Check how long it has been listed and whether it has cut, then see
+<a href="/negotiate-rent/">how to negotiate rent</a> and <a href="/is-rent-going-down/">whether rents are falling</a>
+where you are looking.</p>
+<h2>How do you get a rent estimate for one listing?</h2>
+<p>Paste the listing's Zillow link at <a href="/check">lowball.rent/check</a>, which works on a phone. On a computer,
+the free Lowball extension shows the same panel on any Zillow rental page as you browse. The panel gives the estimate
+with its range, the nearby listings behind it and what they ask, how long this listing has been up, whether it and
+listings near it have cut their price, an opening offer, and a short message you can send the landlord. The message
+cites only things the landlord can check on the listing or nearby ones, so the offer reads as a business case
+rather than a haggle.</p>
+<div class="cta"><div><b>See the fair rent on the listing you are looking at.</b><div class="sub">Lowball is a free browser extension for Chrome and Firefox. On any Zillow rental it shows our estimate, the comparable listings behind it, an opening offer and a message to send.</div></div><a class="btn" href="/go">Get the free extension</a></div>
+<p class="fine">Page built 2026-10-31. Accuracy figures from the accepted rent model, data/model_metrics.json as of 2026-10-25: median absolute percentage error against asking rent, out of fold, median across ZIPs with 30 or more listings. Comparable rules from the Lowball scorer. Zillow's description of the Rent Zestimate from its pages at https://www.zillow.com/rentals-network/what-is-the-rent-zestimate/ and https://www.zillow.com/research/a-peek-inside-our-newest-zestimate-the-rent-zestimate-1076/, read 2026-10-31. Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Zillow and Zestimate are trademarks of Zillow Group, Inc. Estimates are for information only, not advice.</p><footer><div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Figures are estimates from public listing data, not advice or a guarantee.</div>
+<div>Guides: <a href="/negotiate-rent/">Negotiate rent</a> · <a href="/rent-increase/">Rent increase limits</a> · <a href="/net-effective-rent/">Net effective rent</a> · <a href="/is-rent-going-down/">Is rent going down?</a> · <a href="/rent-estimate/">Rent estimates</a> · <a href="/prorated-rent/">Prorated rent</a> · <a href="/rent-to-income/">Rent and income</a> · <a href="/renew">Renewal counter</a></div>
+<div><a href="/rent/">Rent by city</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div></footer></div></body></html>

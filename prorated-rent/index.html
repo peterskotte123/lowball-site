@@ -1,0 +1,92 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prorated rent calculator: what you owe for a partial month</title><meta name="description" content="Work out prorated rent for a move-in or move-out mid-month, by the three methods landlords use: days in the month, a 30-day month, and a daily rate from the year."><link rel="canonical" href="https://lowball.rent/prorated-rent/">
+<link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball">
+<meta property="og:url" content="https://lowball.rent/prorated-rent/"><meta property="og:title" content="Prorated rent calculator: what you owe for a partial month">
+<meta property="og:description" content="Work out prorated rent for a move-in or move-out mid-month, by the three methods landlords use: days in the month, a 30-day month, and a daily rate from the year."><meta property="og:image" content="https://lowball.rent/img/share/rent.png">
+<meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Prorated rent calculator: what you owe for a partial month">
+<meta name="twitter:description" content="Work out prorated rent for a move-in or move-out mid-month, by the three methods landlords use: days in the month, a 30-day month, and a daily rate from the year."><meta name="twitter:image" content="https://lowball.rent/img/share/rent.png">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lowball","item":"https://lowball.rent/"},{"@type":"ListItem","position":2,"name":"Prorated rent","item":"https://lowball.rent/prorated-rent/"}]}</script><style>:root{--ink:#101828;--muted:#475467;--line:#EAECF0;--soft:#F8FAFC;--green:#157347}*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:#fff}
+.wrap{max-width:900px;margin:0 auto;padding:0 24px}header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:20px 0}.brand img{height:38px;display:block}nav a{color:var(--muted);text-decoration:none;margin-left:22px;font-weight:500;font-size:15px}
+.crumbs{font-size:13px;color:var(--muted);margin-top:4px}.crumbs a{margin:0;font-size:13px;color:var(--muted)}
+h1{font-size:clamp(28px,4.5vw,42px);line-height:1.1;letter-spacing:-.02em;margin:20px 0 8px}.lede{font-size:18px;color:var(--muted);max-width:40em;margin:0 0 24px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0}.stat{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:14px}.stat b{display:block;font-size:24px;letter-spacing:-.01em}.stat span{font-size:13px;color:var(--muted)}
+.btn{display:inline-flex;gap:8px;padding:12px 20px;border-radius:10px;background:var(--ink);color:#fff;font-weight:600;text-decoration:none;white-space:nowrap}.btn.ghost{background:#fff;color:var(--ink);border:1px solid #D0D5DD}
+.cta{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;background:#ECFDF3;border:1px solid #ABEFC6;border-radius:12px;padding:16px 18px;margin:24px 0}.cta .sub{font-size:14px;color:#344054;max-width:36em}
+h2{font-size:22px;letter-spacing:-.01em;margin:30px 0 8px}h3{font-size:18px;margin:22px 0 6px}p,li{color:#344054}.fine{font-size:13px;color:#98A2B3}.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;font-size:15px}th,td{text-align:left;padding:8px 6px;border-bottom:1px solid var(--line)}td.n,th.n{text-align:right;white-space:nowrap}
+footer{border-top:1px solid var(--line);padding:26px 0 40px;font-size:13px;color:#98A2B3;margin-top:48px}footer a{color:#667085}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}.grid a{display:block;padding:10px 12px;border:1px solid var(--line);border-radius:10px;text-decoration:none;color:var(--ink);background:var(--soft);font-size:14px}
+@media(max-width:640px){.wrap{padding:0 16px}.stats{grid-template-columns:1fr 1fr}nav a{margin:0 14px 0 0}th,td{padding:7px 4px;font-size:14px}}</style><!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head><body><div class="wrap">
+<header><a class="brand" href="/"><img src="/img/logo.svg" alt="Lowball"></a><nav><a href="/rent/">Rent by city</a><a href="/deals/">Deals</a><a href="/buy/">Buy</a><a href="/renew">Renewing?</a><a href="/">Extension</a><a href="/accuracy">Accuracy</a></nav></header><style>
+.calc{background:var(--soft);border:1px solid var(--line);border-radius:12px;padding:18px;margin:20px 0}
+.calc .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.calc label{display:block;font-size:13px;color:var(--muted);font-weight:600;margin-bottom:4px}
+.calc input{width:100%;padding:9px 10px;border:1px solid #D0D5DD;border-radius:8px;font:inherit;background:#fff;color:var(--ink)}
+.calc .out{margin-top:16px}.calc .out td.n{font-weight:600}.calc .out td.low{color:var(--green)}
+.calc .note{font-size:13px;color:var(--muted);margin:10px 0 0}.calc h3{margin:16px 0 4px;font-size:16px}
+.ctas{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.ctas .btn{white-space:normal}
+</style>
+<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Lowball</a> › <span>Prorated rent</span></nav>
+<h1>Prorated rent calculator</h1>
+<p class="lede">Prorated rent is the share of a month's rent you owe for the days you actually live there. Divide the monthly rent by the days in the month, by 30, or by 365 ÷ 12, then multiply by the days you occupy. Moving in on the 20th of a 31-day month at $2,400.00 works out to $929.03, $960.00 or $946.85, depending on the method your lease names.</p>
+<form class="calc" id="pro" onsubmit="return false" aria-label="Prorated rent calculator">
+<div class="row">
+<div><label for="p-rent">Monthly rent ($)</label><input id="p-rent" type="number" min="0" step="0.01" value="2400" inputmode="decimal"></div>
+<div><label for="p-in">Move-in date</label><input id="p-in" type="date" value="2026-12-20"></div>
+<div><label for="p-out">Move-out date (optional)</label><input id="p-out" type="date" value=""></div>
+</div>
+<div class="out">
+<h3 id="in-h">Move-in month: 12 of 31 days</h3>
+<div class="tw"><table><tbody><tr><td>Days in that month</td><td class="n low" id="in-month">$929.03</td></tr><tr><td>30-day month</td><td class="n" id="in-thirty">$960.00</td></tr><tr><td>Daily rate from the year (365 days)</td><td class="n" id="in-year">$946.85</td></tr></tbody></table></div>
+<p class="note" id="in-math">December has 31 days; moving in on the 20th counts 12 days including move-in day. $2,400.00 ÷ 31 × 12 = $929.03. $2,400.00 ÷ 30 × 12 = $960.00. $2,400.00 × 12 ÷ 365 × 12 = $946.85. Lowest: days in that month.</p>
+<div id="out-block" hidden>
+<h3 id="out-h"></h3>
+<div class="tw"><table><tbody><tr><td>Days in that month</td><td class="n low" id="out-month">$929.03</td></tr><tr><td>30-day month</td><td class="n" id="out-thirty">$960.00</td></tr><tr><td>Daily rate from the year (365 days)</td><td class="n" id="out-year">$946.85</td></tr></tbody></table></div>
+<p class="note" id="out-math"></p>
+</div>
+</div>
+<p class="note">The move-in day counts as a day you occupy; a move-out day counts too. Each method is capped at one month's rent. Your lease, or the method your landlord states in writing, governs which figure you owe. The calculator runs in your browser and sends nothing anywhere.</p>
+</form>
+<h2>How do you calculate prorated rent?</h2><p>Count the days you will occupy the unit in the partial month, counting the move-in day. Then find a daily rate and multiply. The daily rate is the only thing that changes between methods: rent divided by the days in that month, rent divided by 30, or rent times 12 divided by 365. Worked example: rent is $2,400.00 and you move in on December 20, a 31-day month, so you occupy 12 days.</p>
+<div class="tw"><table><thead><tr><th>Method</th><th>Formula</th><th class="n">Daily rate</th><th class="n">12 days</th></tr></thead><tbody>
+<tr><td>Days in that month</td><td>$2,400.00 ÷ 31 × 12</td><td class="n">$77.42</td><td class="n">$929.03</td></tr>
+<tr><td>30-day month</td><td>$2,400.00 ÷ 30 × 12</td><td class="n">$80.00</td><td class="n">$960.00</td></tr>
+<tr><td>Daily rate from the year</td><td>$2,400.00 × 12 ÷ 365 × 12</td><td class="n">$78.90</td><td class="n">$946.85</td></tr>
+</tbody></table></div>
+<p>The gap between the highest and lowest figure here is $30.97. In a 31-day month, dividing by the days in the month gives the lowest figure. In February it gives the highest, and the daily rate from the year gives the lowest: 14 days of a 28-day February at $2,400.00 is $1,200.00, $1,120.00 or $1,104.66. Rounding to the cent can move any figure by a penny.</p>
+<h2>Which method do landlords use?</h2><p>Landlords use one of three: the actual days in that month, a flat 30-day month, or a daily rate taken from the annual rent (rent times 12, divided by 365). Leases often name the method in the rent or move-in section, in a line that says how rent for a partial month is calculated. Ask which method the landlord uses before you sign, and check that the first invoice matches it. We know of no California statute that sets a proration method; the lease governs. If the lease is silent, ask the landlord which method they use and get the answer in writing before you pay. If the figure you are quoted matches none of the three methods, ask to see the arithmetic. This is general information, not legal advice.</p>
+<h2>Is prorated rent due at move-in or the first of the month?</h2><p>Usually it is due with your first payment, at lease signing or on move-in day, together with the security deposit. Some landlords do it the other way: you pay a full month at move-in, and the prorated amount is added to the second month's rent. That matters when you move in late in a month, because a move-in on the 28th followed by a full rent payment on the 1st means two payments a few days apart. Both arrangements are common and the lease says which one applies. Read the move-in charges on the lease or the move-in statement, and check that the days counted match your actual move-in date. If you move out mid-month, the same arithmetic applies to the last month, but many leases require a full month's rent or a set notice period, so check that section before you plan on a prorated last month.</p>
+<h2>Can you negotiate the prorated month?</h2><p>Sometimes. A landlord with an empty unit loses rent every day it sits, so asking for a move-in date a few days later at no charge, or for the partial month to be waived, is a reasonable request on a listing that has been up a while. Free days at the start of a lease are the same arithmetic as free weeks: spread them over the lease and you get the average rent you actually pay, which is what our <a href="/net-effective-rent/">net effective rent calculator</a> does. Ask in writing, name the days you want covered, and give the landlord something in return, such as a firm move-in date or a longer lease. The landlord can say no. For how to make the ask on the rent itself, see <a href="/negotiate-rent/">how to negotiate rent</a>. Looking at a specific listing? <a href="/check">Paste the link here</a> to see how it compares with nearby asks.</p>
+<div class="cta"><div><b>See the fair rent on the listing you are looking at.</b><div class="sub">Lowball is a free browser extension for Chrome and Firefox. On any Zillow rental it shows our estimate, the comparable listings behind it, an opening offer and a message to send.</div></div><a class="btn" href="/go">Get the free extension</a></div>
+<p class="fine">Refreshed 2026-10-31. Every figure on this page is computed from the formulas shown. This is general information, not legal advice; your lease governs how a partial month is charged.</p><script>
+(function(){
+  var f=document.getElementById('pro'); if(!f) return;
+  var L={month:'days in that month',thirty:'the 30-day month',year:'the daily rate from the year'};
+  var MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  function money(x){return '$'+x.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}
+  function d(id){var v=document.getElementById(id).value;if(!v)return null;var p=v.split('-');return {y:+p[0],m:+p[1]-1,d:+p[2]}}
+  function dim(y,m){return new Date(Date.UTC(y,m+1,0)).getUTCDate()}
+  function calc(rent,days,md){return {month:Math.min(rent,rent/md*days),thirty:Math.min(rent,rent/30*days),year:Math.min(rent,rent*12/365*days)}}
+  function paint(p,v,rent,days,md,mname,first){
+    var low='month';['thirty','year'].forEach(function(k){if(v[k]<v[low]-0.004)low=k});
+    ['month','thirty','year'].forEach(function(k){var e=document.getElementById(p+'-'+k);e.textContent=money(v[k]);e.className='n'+(k===low?' low':'')});
+    var r=money(rent);
+    document.getElementById(p+'-math').textContent=mname+' has '+md+' days; '+(first?(first+days-1<md?'day '+first+' to day '+(first+days-1)+' counts ':'moving in on day '+first+' counts '):'moving out on day '+days+' counts ')+days+' day'+(days===1?'':'s')+(first?(first+days-1<md?' including both days. ':' including move-in day. '):' including move-out day. ')+
+      r+' ÷ '+md+' × '+days+' = '+money(v.month)+'. '+r+' ÷ 30 × '+days+' = '+money(v.thirty)+'. '+r+' × 12 ÷ 365 × '+days+' = '+money(v.year)+'. Lowest: '+L[low]+'.';
+  }
+  function run(){
+    var rent=Math.max(0,parseFloat(document.getElementById('p-rent').value)||0),a=d('p-in'),b=d('p-out'),ob=document.getElementById('out-block');
+    if(!a)return;
+    var md=dim(a.y,a.m),same=b&&b.y===a.y&&b.m===a.m&&b.d>=a.d;
+    var days=same?b.d-a.d+1:md-a.d+1;
+    document.getElementById('in-h').textContent=(same?'Move-in to move-out: ':'Move-in month: ')+days+' of '+md+' days';
+    paint('in',calc(rent,days,md),rent,days,md,MN[a.m],a.d);
+    var later=b&&(b.y>a.y||(b.y===a.y&&b.m>a.m));
+    ob.hidden=!later;
+    if(later){var md2=dim(b.y,b.m);document.getElementById('out-h').textContent='Move-out month: '+b.d+' of '+md2+' days';paint('out',calc(rent,b.d,md2),rent,b.d,md2,MN[b.m],0);}
+  }
+  f.addEventListener('input',run); f.addEventListener('change',run); run();
+})();
+</script><footer><div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Figures are estimates from public listing data, not advice or a guarantee.</div>
+<div>Guides: <a href="/negotiate-rent/">Negotiate rent</a> · <a href="/rent-increase/">Rent increase limits</a> · <a href="/net-effective-rent/">Net effective rent</a> · <a href="/is-rent-going-down/">Is rent going down?</a> · <a href="/rent-estimate/">Rent estimates</a> · <a href="/prorated-rent/">Prorated rent</a> · <a href="/rent-to-income/">Rent and income</a> · <a href="/renew">Renewal counter</a></div>
+<div><a href="/rent/">Rent by city</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div></footer></div></body></html>
