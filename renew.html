@@ -99,7 +99,7 @@
         <div><label>Current rent, per month</label><input id="cur" inputmode="numeric" placeholder="2,900" required></div>
         <div><label>Proposed rent</label><input id="prop" inputmode="numeric" placeholder="3,150" required></div>
       </div>
-      <label>Street address (optional, sharpens the comps)</label><input id="addr" placeholder="Street and number">
+      <label>Street address (optional, goes in the letter)</label><input id="addr" placeholder="Street and number">
       <div class="row">
         <div><label>ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" placeholder="92104" required></div>
         <div><label>Years in the unit</label><input id="years" inputmode="numeric" placeholder="3"></div>
@@ -127,9 +127,9 @@
       <div class="hero-num" id="counter">$0</div>
       <div id="sub" style="color:var(--muted)"></div>
       <div class="stats">
-        <div class="stat"><b id="sFair">$0</b><span>Comparable units today</span></div>
+        <div class="stat"><b id="sFair">$0</b><span id="sFairL">Comparable units today</span></div>
         <div class="stat"><b id="sInc">0%</b><span>Proposed increase</span></div>
-        <div class="stat"><b id="sTurn">$0</b><span>Landlord's cost if you leave</span></div>
+        <div class="stat"><b id="sTurn">$0</b><span>Expected cost to the landlord if you leave</span></div>
       </div>
       <div class="stats" id="freeStats" hidden>
         <div class="stat"><b id="sPaid">$0</b><span>What you actually paid a month</span></div>
@@ -140,8 +140,11 @@
       <details id="compsBox"><summary id="compsSum">Comparable rentals</summary><table id="comps"><tr><th>Address</th><th class="n">Rent</th><th class="n">Size</th><th class="n">Days</th></tr></table></details>
       <div class="label" style="margin-top:22px">Renewal letter</div>
       <textarea id="letter"></textarea>
+      <p class="fine" style="margin:6px 0 10px">Put your name and phone where the brackets are before you send.</p>
       <button class="btn ghost" type="button" id="copy">Copy letter</button>
       <p class="fine">Not legal advice. Rent-increase limits depend on your city, building age, and owner; the state cap may not apply. Verify at oag.ca.gov/housing or with a local tenant-rights group. Check that the comps are still listed before you send; you are responsible for what you send.</p>
+      <div class="label" style="margin-top:22px">Next</div>
+      <p class="fine" id="next" style="margin-top:6px"><a href="/rent-increase-calculator/">Check the increase against the cap and the notice period</a> · <a href="/rent-increase-laws/">Rent increase rules by state</a> · <a href="/check">Looking at a listing instead? Check it</a> · <a href="/">Get the free extension for Zillow</a></p>
     </div>
   </div>
     <section class="guide" style="max-width:44em;padding:36px 0 8px;color:#344054">
@@ -154,7 +157,7 @@
       <li>The total is weighted by the odds you actually leave, 35% to 50% depending on how long you have been there, so the letter never claims the full cost.</li>
     </ul>
     <h3 style="font-size:18px;margin:22px 0 6px;color:#101828">What goes in the counter</h3>
-    <p>Comparable units by address and size, so the landlord can open the listings. A number, not "something lower". A date you will sign by. The tool fills in the first two; the date is yours. Keep the tone plain. A one-line "no" gives a landlord nothing to work with; three comps and a number give them a decision to make before the unit sits.</p>
+    <p>Comparable units by address and size, so the landlord can open the listings. A number, not "something lower". A date you will sign by. The tool fills in the comparable listings and the number; the date is yours. Keep the tone plain. A one-line "no" gives a landlord nothing to work with; three comps and a number give them a decision to make before the unit sits.</p>
     <h3 style="font-size:18px;margin:22px 0 6px;color:#101828">If your first lease had free months</h3>
     <p>A renewal is usually priced from the lease rent, not from what you actually paid. If you signed at $2,847 with one month free, you paid about $2,610 a month, and a 4% increase on $2,847 is a 13% increase on what left your account. Work that out before you counter, and ask for the same concession again or for the base rent to come down instead. The arithmetic is on the <a href="/net-effective-rent/">net effective rent</a> page, with a calculator.</p>
     <h3 style="font-size:18px;margin:22px 0 6px;color:#101828">When a state cap applies</h3>
@@ -177,13 +180,15 @@
     var lines = ['Hi,', ''];
     lines.push('Thank you for the renewal offer for ' + (q.address || 'my unit') + '. I would like to stay' + (q.years && q.years >= 2 ? ' after ' + q.years + ' years here' : '') + '.' + (q.ontime ? ' I have paid rent on time throughout my tenancy.' : ''));
     var cs = (r.comps || []).filter(function (c) { return c.price <= q.proposed_rent; }).sort(function (a, b) { return Math.abs(a.price - r.counter) - Math.abs(b.price - r.counter); }).slice(0, 3).sort(function (a, b) { return a.price - b.price; });
-    if (cs.length >= 2 && !r.zip_only) lines.push('', 'Comparable ' + (q.beds === 0 ? 'studios' : q.beds + '-bed units') + ' nearby are listed on Zillow at ' + money(cs[0].price) + ' to ' + money(cs[cs.length - 1].price) + ' as of ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' (a few below).');
+    var where = r.zip_only ? ' in ZIP ' + q.zip : ' nearby';
+    if (cs.length >= 2) lines.push('', 'Comparable ' + (q.beds === 0 ? 'studios' : q.beds + '-bed units') + where + ' are listed on Zillow at ' + money(cs[0].price) + ' to ' + money(cs[cs.length - 1].price) + ' as of ' + new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' (a few below).');
     if (r.paid_effective) lines.push('', 'My lease came with ' + r.months_free + ' month' + (r.months_free === 1 ? '' : 's') + ' free, so I have been paying about ' + money(r.paid_effective) + ' a month. ' + money(q.proposed_rent) + ' is a ' + Math.round(r.real_increase_pct) + '% increase on what I actually paid.');
     if (r.new_effective) lines.push('', 'New residents are offered ' + r.new_months_free + ' month' + (r.new_months_free === 1 ? '' : 's') + ' free on this unit type today, about ' + money(r.new_effective) + ' a month. Could you renew me at that same effective rate, or with the same ' + r.new_months_free + ' month' + (r.new_months_free === 1 ? '' : 's') + ' free on a 12-month renewal? If the rent itself cannot move, I would ask for the free months and for any renewal fees to be waived.');
+    else if (r.cap_rent) lines.push('', 'Rather than ' + money(q.proposed_rent) + ', would you renew at ' + money(r.cap_rent) + ' for 12 months? As I understand it, California\'s rent cap limits increases on covered units to ' + r.cap_pct + '% over 12 months in ' + r.cap_area + ', which is ' + money(r.cap_rent) + ' on my current rent. If this unit is exempt, I would still like to stay at that number: it keeps a reliable tenant in place with no vacancy, no turnover cost, and no listing.');
     else if (r.counter < q.proposed_rent) lines.push('', 'Rather than ' + money(q.proposed_rent) + ', would you renew at ' + money(r.counter) + ' for 12 months? That keeps a reliable tenant in place with no vacancy, no turnover cost, and no listing.');
-    else lines.push('', 'I can sign at ' + money(q.proposed_rent) + ' for 12 months. Would you consider a 24-month term at that rate, or taking care of [a repair] before the new term starts?');
+    else lines.push('', 'I can sign at ' + money(q.proposed_rent) + ' for 12 months. Would you consider a 24-month term at that rate, or taking care of a repair before the new term starts?');
     lines.push('', 'I can sign this week. If that number does not work, tell me what would.', '', 'Thank you,', '[Your name]', '[Phone]');
-    if (cs.length >= 2 && !r.zip_only) { lines.push('', 'Similar listings I looked at on Zillow:'); cs.forEach(function (c) { lines.push('- ' + (c.addr || 'Nearby') + (c.sqft ? ' · ' + c.sqft.toLocaleString() + ' sf' : '') + ' · ' + money(c.price) + (c.days != null ? ' · listed ' + (c.days === 0 ? 'today' : c.days + ' days') : '')); }); }
+    if (cs.length >= 2) { lines.push('', 'Similar listings I looked at on Zillow:'); cs.forEach(function (c) { lines.push('- ' + (c.addr || 'Nearby') + (c.sqft ? ' · ' + c.sqft.toLocaleString() + ' sf' : '') + ' · ' + money(c.price) + (c.days != null ? ' · listed ' + (c.days === 0 ? 'today' : c.days + ' days') : '')); }); }
     return lines.join('\n');
   }
   $('f').addEventListener('submit', function (e) {
@@ -199,11 +204,11 @@
         if (r.new_effective) $('sub').textContent = 'a month effective, the deal new renters get today · or the same ' + r.new_months_free + ' month' + (r.new_months_free === 1 ? '' : 's') + ' free on your renewal';
         $('freeStats').hidden = !(r.paid_effective || r.new_effective);
         $('sPaid').textContent = r.paid_effective ? money(r.paid_effective) : money(q.current_rent); $('sReal').textContent = r.real_increase_pct != null ? '+' + Math.round(r.real_increase_pct) + '%' : (r.increase_pct >= 0 ? '+' : '') + r.increase_pct + '%'; $('sNew').textContent = r.new_effective ? money(r.new_effective) : '–';
-        $('sFair').textContent = money(r.fair); $('sInc').textContent = (r.increase_pct >= 0 ? '+' : '') + r.increase_pct + '%'; $('sTurn').textContent = money(r.turnover_cost);
+        $('sFair').textContent = money(r.fair); $('sFairL').textContent = (r.comps || []).length ? 'Comparable units today' : 'Rent index for this ZIP (rough)'; $('sInc').textContent = (r.increase_pct >= 0 ? '+' : '') + r.increase_pct + '%'; $('sTurn').textContent = money(r.turnover_cost);
         var why = $('why'); why.innerHTML = ''; (r.signals || []).forEach(function (s) { var li = document.createElement('li'); li.textContent = s; why.appendChild(li); });
         var tb = $('comps'); tb.innerHTML = '<tr><th>Address</th><th class="n">Rent</th><th class="n">Size</th><th class="n">Days</th></tr>';
         (r.comps || []).forEach(function (c) { var tr = document.createElement('tr'); tr.innerHTML = '<td></td><td class="n"></td><td class="n"></td><td class="n"></td>'; tr.children[0].textContent = c.addr || 'Hidden address'; tr.children[1].textContent = money(c.price); tr.children[2].textContent = c.sqft ? c.sqft.toLocaleString() + ' sf' : ''; tr.children[3].textContent = c.days != null ? c.days + 'd' : ''; tb.appendChild(tr); });
-        $('compsSum').textContent = (r.comps || []).length + (r.zip_only ? ' rentals in the same ZIP (location not exact)' : ' comparable rentals nearby'); $('compsBox').open = !r.zip_only && (r.comps || []).length > 0;
+        $('compsSum').textContent = (r.comps || []).length + (r.zip_only ? ' rentals in the same ZIP (location not exact)' : ' comparable rentals nearby'); $('compsBox').open = (r.comps || []).length > 0;
         $('letter').value = letterFor(q, r);
         $('res').style.display = 'block'; $('res').scrollIntoView({ behavior: 'smooth', block: 'start' });
       })

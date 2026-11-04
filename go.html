@@ -12,7 +12,7 @@
 (function(){
   var u=navigator.userAgent||"";
   var phone=/Android|iPhone|iPad|iPod|Mobile|Silk|Kindle/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1);
-  var to=phone?"/#get":/Firefox\//.test(u)?"https://addons.mozilla.org/firefox/addon/lowball/":"https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno";
+  var to=phone?"/check":/Firefox\//.test(u)?"https://addons.mozilla.org/firefox/addon/lowball/":"https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno";
   location.replace(to);
 })();
 </script>

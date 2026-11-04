@@ -28,11 +28,12 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
 <script>
 (function(){
   // Reached only after the /start form is sent. ?e=1 means an email was given; the email itself never goes in the URL.
+  var phone=/Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent)||(/Macintosh/.test(navigator.userAgent)&&navigator.maxTouchPoints>1);
   var ff=/Firefox/.test(navigator.userAgent), STORE=ff?'https://addons.mozilla.org/firefox/addon/lowball/':'https://chromewebstore.google.com/detail/lowball/llampbkdlfhcfgpegkifhcghfcjgkkno';
   var e=new URLSearchParams(location.search).get('e')==='1', b=document.getElementById('install');
-  b.href=STORE; b.textContent=ff?'Add Lowball to Firefox':'Add Lowball to Chrome';
+  if(phone){STORE='/check'} b.href=STORE; b.textContent=phone?'Check a listing on your phone':ff?'Add Lowball to Firefox':'Add Lowball to Chrome';
   document.getElementById('doneh').textContent=e?'You\u2019re set.':'Thanks.';
-  document.getElementById('donep').textContent=(e?'Deal alerts will come from hello@lowball.rent. ':'')+'Now install the extension to score listings and draft your offer.';
+  document.getElementById('donep').textContent=(e?'Deal alerts will come from hello@lowball.rent. ':'')+(phone?'The extension runs on a computer. On your phone, paste a listing link and you get the same check.':'Now install the extension to score listings and draft your offer.');
   setTimeout(function(){location.href=STORE},2500);
 })();
 </script>

@@ -4,7 +4,7 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><script>(function(){var u=navigator.userAgent||"";if(/Android|iPhone|iPad|iPod|Mobile|Silk|Kindle/i.test(u)||(/Macintosh/.test(u)&&navigator.maxTouchPoints>1))document.documentElement.classList.add("phone")})();</script>
 <title>Check a rental listing · Lowball</title>
 <link rel="canonical" href="https://lowball.rent/check"><script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lowball","item":"https://lowball.rent/"},{"@type":"ListItem","position":2,"name":"Check a listing","item":"https://lowball.rent/check"}]}</script>
-<meta name="description" content="Type in a rental listing from any site and see what similar places nearby ask, what to offer, and the message to send. Free, works on your phone.">
+<meta name="description" content="Paste a Zillow rental link, or type in the listing, and see what similar places nearby ask, what to offer, and the message to send. Free, works on your phone.">
 <link rel="icon" type="image/svg+xml" href="/img/favicon.svg"><link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png"><link rel="apple-touch-icon" href="/img/apple-touch-icon.png"><link rel="manifest" href="/check.webmanifest"><meta name="theme-color" content="#157347"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Lowball">
 <style>
   :root { --ink:#101828; --muted:#475467; --line:#EAECF0; --paper:#fff; --soft:#F8FAFC; --green:#157347; --amber:#B45309; --red:#B42318; }
@@ -101,7 +101,7 @@
   .lead{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#F2F4F7;color:#1D2939;font-weight:600}
   .lead.green{background:#ECFDF3;color:#067647} .lead.lime{background:#F4FBE8;color:#3B6D11} .lead.amber{background:#FFFAEB;color:#B54708} .lead.red{background:#FEF3F2;color:#B42318}
 </style>
-<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/renew"><meta property="og:title" content="Renewal letter"><meta property="og:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta property="og:image" content="https://lowball.rent/img/share/renew.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Renewal letter"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Renewal letter"><meta name="twitter:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta name="twitter:image" content="https://lowball.rent/img/share/renew.png">
+<meta property="og:type" content="website"><meta property="og:site_name" content="Lowball"><meta property="og:url" content="https://lowball.rent/check"><meta property="og:title" content="Is this rent too high? Check a listing"><meta property="og:description" content="Paste a Zillow rental link. See what similar places nearby ask, what to offer, and the message to send. Free."><meta property="og:image" content="https://lowball.rent/img/share/home.png"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta property="og:image:alt" content="Lowball. Renewal letter"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Is this rent too high? Check a listing"><meta name="twitter:description" content="What the market says your unit is worth today, and what leaving would cost your landlord."><meta name="twitter:image" content="https://lowball.rent/img/share/renew.png">
 <!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head>
 <body>
 <div class="wrap">
@@ -116,7 +116,7 @@
     <label for="link">Zillow listing link</label>
     <div class="prow"><input id="link" type="url" inputmode="url" placeholder="Paste the listing link"><button class="btn" type="submit" id="pbtn">Check it</button></div>
     <div class="pmsg" id="pmsg" role="status"></div>
-    <div class="hint">In the Zillow app: Share, then Copy link. Works for rentals in San Diego and the other markets on our <a href="/deals/">deals map</a>. Anything else: fill in the details below.</div>
+    <div class="hint">In the Zillow app: Share, then Copy link. Any rental on Zillow in the US. Not on Zillow? Fill in the details below.</div>
   </form>
   <div class="a2hs phone-only" id="a2hs">Keep it one tap away: <b id="a2hsHow">Share, then Add to Home Screen</b>.</div>
   <div class="two">
@@ -261,14 +261,18 @@
       .then(function (d) {
         $('pbtn').disabled = false;
         if (!d || !d.found) {
-          msg.className = 'pmsg miss'; msg.textContent = d && d.reason === 'not_rental' ? 'That listing is not for rent right now. Paste a rental listing.' : "We couldn't read this listing right now. Type the rent, ZIP and bedrooms below and you get the same check.";
+          msg.className = 'pmsg miss'; msg.textContent = d && d.reason === 'not_rental' ? 'That listing is not for rent right now. Paste a rental listing.'
+            : d && d.reason === 'limit' ? "That is today's limit of link reads from this connection. Type the rent, ZIP and bedrooms below instead."
+            : d && d.reason === 'missing' ? "We couldn't find that listing on Zillow. Check the link, or type the rent, ZIP and bedrooms below."
+            : d && (d.reason === 'fetch' || d.reason === 'off') ? "Our listing reader is paused right now. Try the link again later today, or type the rent, ZIP and bedrooms below for a rougher check without the price history."
+            : "We couldn't read this listing. Type the rent, ZIP and bedrooms below for a rougher check without the price history.";
           hit = { zpid: zpid }; $('price').focus(); track('check_paste_miss'); return;
         }
         var L = d.listing; L.zpid = zpid;
         fill(t, L, L.days, { price_history: L.price_history || [], lease_term: L.lease_term || null, furnished: L.furnished, description: L.description || null, facts: L.facts || null });
         track(d.src === 'live' ? 'check_paste_live' : 'check_paste_store');
       })
-      .catch(function () { $('pbtn').disabled = false; msg.className = 'pmsg miss'; msg.textContent = "We couldn't read this listing right now. Type the rent, ZIP and bedrooms below and you get the same check."; hit = { zpid: zpid }; track('check_paste_miss'); });
+      .catch(function () { $('pbtn').disabled = false; msg.className = 'pmsg miss'; msg.textContent = "We couldn't reach our listing reader. Try again in a minute, or type the rent, ZIP and bedrooms below for a rougher check without the price history."; hit = { zpid: zpid }; track('check_paste_miss'); });
   }
   // A link we already have: score it at once from the nightly row, then read the listing's price history (its last sale)
   // and score again, so the owner's estimated monthly cost can show. Capped and cached on the server.
@@ -297,6 +301,12 @@
       .then(function (res) { if (!res.ok) throw new Error('HTTP ' + res.status); return res.json(); })
       .then(function (r) {
         var ld = $('leads'); ld.innerHTML = '';
+        var vd = document.createElement('div'), gap = r.fair ? q.price / r.fair - 1 : null;
+        if (r.data_tier === 'none' && r.interval) { vd.className = 'lead grey'; vd.textContent = 'Rough: no listings near this one in our data yet, so this is a band for the ZIP, about ' + money(r.interval[0]) + ' to ' + money(r.interval[1]) + '. Asking ' + money(q.price) + ' is ' + (q.price > r.interval[1] ? 'above' : q.price < r.interval[0] ? 'below' : 'inside') + ' it.'; }
+        else if (gap != null && gap <= -0.05) { vd.className = 'lead green'; vd.textContent = 'Asking is about ' + Math.round(-gap * 100) + '% under what we would expect for a place like this.'; }
+        else if (gap != null && gap < 0.05) { vd.className = 'lead lime'; vd.textContent = 'Asking is about what we would expect for a place like this. Any room comes from time listed and cuts, not price.'; }
+        else if (gap != null) { vd.className = 'lead ' + (gap >= 0.15 ? 'red' : 'amber'); vd.textContent = 'Asking is about ' + Math.round(gap * 100) + '% above what we would expect for a place like this.'; }
+        if (vd.textContent) ld.appendChild(vd);
         (Array.isArray(r.leads) ? r.leads : []).slice(0, 3).forEach(function (x) { var text = typeof x === 'string' ? x : (x && typeof x.text === 'string' ? x.text : ''); if (!text) return; var d = document.createElement('div'); d.className = 'lead ' + (x && /^(green|lime|amber|red|grey)$/.test(x.tone) ? x.tone : 'grey'); d.textContent = text; ld.appendChild(d); });
         $('offer').textContent = money(r.offer);
         $('photos').hidden = !q.zpid; if (q.zpid) $('photos').href = 'https://www.zillow.com/homedetails/' + q.zpid + '_zpid/';
