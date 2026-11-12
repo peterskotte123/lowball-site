@@ -350,6 +350,12 @@
     else { try { navigator.clipboard.writeText(data.url); $('shareBtn').textContent = 'Link copied'; } catch (e) {} }
   });
   fetch(API + '/v1/send_link').then(function (r) { return r.json(); }).then(function (d) { if (d && d.enabled) $('mailf').hidden = false; }).catch(function () {});
+  // the homepage's three-field form lands here with the rent, ZIP and bedrooms in the address
+  if (!shared && qs.get('price') && qs.get('zip')) {
+    $('price').value = qs.get('price'); $('zip').value = String(qs.get('zip')).replace(/\D/g, '').slice(0, 5);
+    if (qs.get('beds') != null && /^[0-5]$/.test(qs.get('beds'))) $('beds').value = qs.get('beds');
+    setTimeout(function () { var f = $('f'); if (f.requestSubmit) f.requestSubmit(); else f.dispatchEvent(new Event('submit', { cancelable: true })); }, 0);
+  }
   $('mailf').addEventListener('submit', function (e) {
     e.preventDefault(); var m = $('mailmsg'); m.textContent = '';
     fetch(API + '/v1/send_link', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Lowball-Client': 'web-check' },
