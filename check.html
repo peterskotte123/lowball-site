@@ -244,7 +244,7 @@ document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&
   function runLink(t) {
     var m = /(\d{5,12})_zpid/.exec(t || '') || /zpid[=\/](\d{5,12})/.exec(t || '');
     var msg = $('pmsg'); msg.className = 'pmsg'; hit = null;
-    if (!m) { msg.className = 'pmsg miss'; msg.textContent = 'That does not look like a Zillow listing link. On the listing, tap Share, then Copy link.'; track('check_paste_bad'); return; }
+    if (!m) { var bld = /zillow\.com\/(?:b|apartments)\//i.test(t || ''); msg.className = 'pmsg miss'; msg.textContent = bld ? 'That link is for a whole building, which has many units and prices. Type the rent, ZIP and bedrooms of the unit you want below.' : 'That does not look like a Zillow listing link. On the listing, tap Share, then Copy link.'; if (bld) { $('complex').checked = true; $('price').focus(); } track(bld ? 'check_paste_building' : 'check_paste_bad'); return; }
     msg.textContent = 'Looking it up...'; $('pbtn').disabled = true;
     findZpid(Number(m[1])).then(function (row) {
       $('pbtn').disabled = false;
