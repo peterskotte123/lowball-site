@@ -17,7 +17,16 @@ input.t{font:15px inherit;width:100%;padding:11px 13px;border:1px solid var(--li
 .notice{font-size:12.5px;color:var(--muted);line-height:1.5;border-top:1px solid var(--line);margin-top:14px;padding-top:12px}.notice a{color:var(--green)}
 label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--ink2);margin:8px 0 4px}label.ck input{margin-top:3px;flex:none}
 .done h2{font-size:20px;margin:0 0 8px}.foot{max-width:560px;margin:0 auto;padding:10px 20px 40px;color:var(--muted3);font-size:12px}
-</style><!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><!--/lb-head--></head><body>
+</style><!--lb-head--><script async src="https://www.googletagmanager.com/gtag/js?id=AW-18530110139"></script><script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','AW-18530110139',{'allow_ad_personalization_signals':false});</script><script type="text/javascript">(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window,document,"clarity","script","z1ijr38e3y");</script><script>(function(){var S='';try{S=sessionStorage.lb_src||'';if(!S){var q=location.search,h=(document.referrer.match(/^https?:\/\/([^\/]+)/)||[])[1]||'',
+m=q.match(/[?&]utm_source=([a-z0-9_-]{1,12})/i),s=/[?&](gclid|gbraid|wbraid|gad_source)=/.test(q)?'ads':m?m[1].toLowerCase():!h?'direct':/(^|\.)lowball\.rent$/.test(h)?'':
+(h.match(/google|bing|duckduckgo|yahoo|youtube|tiktok|instagram|facebook|reddit|chatgpt|openai|claude|perplexity|linkedin|twitter|t\.co|x\.com/)||['other'])[0];
+if(s){S=s.replace(/[^a-z0-9]/g,'').slice(0,10)+'|'+location.pathname.slice(0,60);sessionStorage.lb_src=S}}}catch(e){}
+var R=/^https:\/\/(chromewebstore\.google\.com\/detail\/lowball|addons\.mozilla\.org\/firefox\/addon\/lowball)/;
+window.lbStore=function(u){try{if(!R.test(u)||/utm_source=/.test(u))return u;var f=(S||'direct|'+location.pathname).split('|'),src=f[0]||'direct',
+land=(f[1]||'/').replace(/^\/|\/$/g,'').replace(/[^a-z0-9]+/gi,'-').slice(0,40)||'home';
+fetch('https://api.lowball.rent/v1/ping',{method:'POST',keepalive:true,headers:{'Content-Type':'application/json','X-Lowball-Client':'web-go'},body:JSON.stringify({on:'go:'+src+':'+(/mozilla/.test(u)?'f':'c')})}).catch(function(){});
+return u+(u.indexOf('?')<0?'?':'&')+'utm_source='+src+'&utm_medium=lowball.rent&utm_campaign='+land}catch(e){return u}};
+document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&e.target.closest('a[href]');if(a&&R.test(a.href))a.href=window.lbStore(a.href)},true)})();</script><!--/lb-head--></head><body>
 <header><div class="nav"><a href="/"><img src="/img/logo.svg" alt="Lowball"></a><a href="/deals/">Deals</a><a href="/buy/">Buy</a></div></header>
 <main><div class="card">
   <div class="prog"><i class="on" id="p1"></i><i id="p2"></i><i id="p3"></i><i id="p4"></i></div>
@@ -88,7 +97,7 @@ label.ck{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(-
     if(k==='intent'){ setup2(); show(2); } else if(k==='timeline'){ show(3); } else if(k==='market'){ a.area=''; $('area').value=METROS[b.dataset.v]?METROS[b.dataset.v].short:''; picked=$('area').value; $('sugg').style.display='none'; loadAreas(); } });
   $('next').addEventListener('click',function(){ if(step===3){ settle(); show(4); } else if(step===4){ submit(true); } });
   $('back').addEventListener('click',function(){ show(step-1) });
-  $('skip').addEventListener('click',function(e){ e.preventDefault(); if(a.intent) submit(false); location.href=STORE; });
+  $('skip').addEventListener('click',function(e){ e.preventDefault(); if(a.intent) submit(false); location.href=window.lbStore?lbStore(STORE):STORE; });
   $('email').addEventListener('input',function(){ $('next').textContent=$('email').value?'Save & install':'Install without email' });
   function submit(goInstall){
     var email=$('email').value.trim(); var body={intent:a.intent,timeline:a.timeline,area:a.area||null,market:a.market||null,helper:a.helper,buy_soon:a.buy_soon,beds:a.beds,budget:a.budget,home_type:a.home_type,email:email||null,page:page,notice_v:3,gpc:navigator.globalPrivacyControl===true,share_ok:$('share').checked,consent_notice:$('notice').innerText.slice(0,1500),consent_box:$('sharetxt').innerText.slice(0,400),client_ts:Math.floor(Date.now()/1000)};
