@@ -1,12 +1,12 @@
 <!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>How much income should go to rent? Calculator · Lowball</title><meta name="description" content="The 30% rule says rent should be no more than 30% of gross income. Work out your number from a monthly or annual salary, with a table for $40k to $150k."><link rel="canonical" href="https://lowball.rent/rent-to-income/">
+<title>Rent affordability calculator: how much rent can I afford?</title><meta name="description" content="Free rent affordability calculator: enter your income and see the rent the 30% rule allows and the rent a landlord asking for 3 times the rent would approve. Table for $40k to $150k."><link rel="canonical" href="https://lowball.rent/rent-to-income/">
 <link rel="icon" type="image/svg+xml" href="/img/favicon.svg">
 <meta property="og:type" content="website"><meta property="og:site_name" content="Lowball">
-<meta property="og:url" content="https://lowball.rent/rent-to-income/"><meta property="og:title" content="How much income should go to rent? Calculator · Lowball">
-<meta property="og:description" content="The 30% rule says rent should be no more than 30% of gross income. Work out your number from a monthly or annual salary, with a table for $40k to $150k."><meta property="og:image" content="https://lowball.rent/img/share/rent.png">
+<meta property="og:url" content="https://lowball.rent/rent-to-income/"><meta property="og:title" content="Rent affordability calculator: how much rent can I afford?">
+<meta property="og:description" content="Free rent affordability calculator: enter your income and see the rent the 30% rule allows and the rent a landlord asking for 3 times the rent would approve. Table for $40k to $150k."><meta property="og:image" content="https://lowball.rent/img/share/rent.png">
 <meta property="og:image:width" content="1200"><meta property="og:image:height" content="630">
-<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="How much income should go to rent? Calculator · Lowball">
-<meta name="twitter:description" content="The 30% rule says rent should be no more than 30% of gross income. Work out your number from a monthly or annual salary, with a table for $40k to $150k."><meta name="twitter:image" content="https://lowball.rent/img/share/rent.png">
+<meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="Rent affordability calculator: how much rent can I afford?">
+<meta name="twitter:description" content="Free rent affordability calculator: enter your income and see the rent the 30% rule allows and the rent a landlord asking for 3 times the rent would approve. Table for $40k to $150k."><meta name="twitter:image" content="https://lowball.rent/img/share/rent.png">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Lowball","item":"https://lowball.rent/"},{"@type":"ListItem","position":2,"name":"Rent and income","item":"https://lowball.rent/rent-to-income/"}]}</script><style>:root{--ink:#101828;--muted:#475467;--line:#EAECF0;--soft:#F8FAFC;--green:#157347}*{box-sizing:border-box}body{margin:0;font:16px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,Helvetica,Arial,sans-serif;color:var(--ink);background:#fff}
 .wrap{max-width:900px;margin:0 auto;padding:0 24px}header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:20px 0}.brand img{height:38px;display:block}nav a{color:var(--muted);text-decoration:none;margin-left:22px;font-weight:500;font-size:15px}
 .crumbs{font-size:13px;color:var(--muted);margin-top:4px}.crumbs a{margin:0;font-size:13px;color:var(--muted)}
@@ -36,9 +36,9 @@ document.addEventListener('click',function(e){var a=e.target&&e.target.closest&&
 .ctas{display:flex;gap:10px;flex-wrap:wrap;margin:18px 0}.ctas .btn{white-space:normal}
 blockquote{margin:12px 0;padding:8px 14px;border-left:3px solid var(--green);color:#344054;background:var(--soft)}
 </style><nav class="crumbs" aria-label="Breadcrumb"><a href="/">Lowball</a> › <span>Rent and income</span></nav>
-<h1>How much of your income should go to rent?</h1>
-<p class="lede">The common rule is no more than about 30% of gross monthly income on rent: on $5,000 a month that is $1,500. HUD counts households above 30% as cost burdened and above 50% as severely cost burdened.</p>
-<form class="calc" id="rti" onsubmit="return false" aria-label="Rent to income calculator">
+<h1>Rent affordability calculator</h1>
+<p class="lede">How much rent can you afford? The common rule is no more than about 30% of gross monthly income on rent: on $5,000 a month that is $1,500. HUD counts households above 30% as cost burdened and above 50% as severely cost burdened.</p>
+<form class="calc" id="rti" onsubmit="return false" aria-label="Rent affordability calculator">
 <div class="row">
 <div><label for="c-inc">Gross income before tax ($)</label><input id="c-inc" type="number" min="0" step="1" value="5000" inputmode="decimal"></div>
 <div><label for="c-per">Per</label><select id="c-per"><option value="month" selected>Month</option><option value="year">Year</option></select></div>
@@ -46,9 +46,10 @@ blockquote{margin:12px 0;padding:8px 14px;border-left:3px solid var(--green);col
 <div class="out tw"><table><tbody>
 <tr><td>Monthly gross income</td><td class="n" id="o-mo">$5,000</td></tr>
 <tr><td>Rent at 30% of income</td><td class="n" id="o-30">$1,500</td></tr>
+<tr><td>Highest rent if the landlord asks for income of 3 times the rent</td><td class="n" id="o-3x">$1,667</td></tr>
 <tr><td>Rent at 50% of income (severe cost burden)</td><td class="n" id="o-50">$2,500</td></tr>
 </tbody></table></div>
-<p class="note" id="o-math">$5,000 × 0.30 = $1,500 a month. $5,000 × 0.50 = $2,500 a month.</p>
+<p class="note" id="o-math">$5,000 × 0.30 = $1,500 a month. $5,000 ÷ 3 = $1,667 a month. $5,000 × 0.50 = $2,500 a month.</p>
 <p class="note">The page uses gross income, before tax, because the 30% rule is usually stated against income before tax, and many landlords ask about gross income too. Annual income is divided by 12. The calculator runs in your browser and sends nothing anywhere.</p>
 </form>
 
@@ -86,12 +87,12 @@ blockquote{margin:12px 0;padding:8px 14px;border-left:3px solid var(--green);col
   function run(){
     var x=parseFloat(document.getElementById('c-inc').value); if(!isFinite(x)||x<0) x=0;
     var mo=document.getElementById('c-per').value==='year'?x/12:x;
-    set('o-mo',money(mo)); set('o-30',money(mo*0.3)); set('o-50',money(mo*0.5));
+    set('o-mo',money(mo)); set('o-30',money(mo*0.3)); set('o-3x',money(mo/3)); set('o-50',money(mo*0.5));
     set('o-math',(document.getElementById('c-per').value==='year'?money(x)+' ÷ 12 = '+money(mo)+' a month. ':'')+
-      money(mo)+' × 0.30 = '+money(mo*0.3)+' a month. '+money(mo)+' × 0.50 = '+money(mo*0.5)+' a month.');
+      money(mo)+' × 0.30 = '+money(mo*0.3)+' a month. '+money(mo)+' ÷ 3 = '+money(mo/3)+' a month. '+money(mo)+' × 0.50 = '+money(mo*0.5)+' a month.');
   }
   f.addEventListener('input',run); f.addEventListener('change',run);
 })();
 </script><footer><div>Lowball is an independent product and is not affiliated with, endorsed by, or sponsored by Zillow Group, Inc. Figures are estimates from public listing data, not advice or a guarantee.</div>
-<div>Guides: <a href="/negotiate-rent/">Negotiate rent</a> · <a href="/rent-increase/">Rent increase limits</a> · <a href="/net-effective-rent/">Net effective rent</a> · <a href="/is-rent-going-down/">Is rent going down?</a> · <a href="/rent-estimate/">Rent estimates</a> · <a href="/prorated-rent/">Prorated rent</a> · <a href="/rent-to-income/">Rent and income</a> · <a href="/rent-increase-calculator/">Rent increase calculator</a> · <a href="/rent-increase-laws/">Rent laws by state</a> · <a href="/connect/">Use in ChatGPT or Claude</a> · <a href="/rent-report/">San Diego rent report</a> · <a href="/renew">Renewal counter</a></div>
+<div>Guides: <a href="/negotiate-rent/">Negotiate rent</a> · <a href="/rent-increase/">Rent increase limits</a> · <a href="/net-effective-rent/">Net effective rent</a> · <a href="/is-rent-going-down/">Is rent going down?</a> · <a href="/rent-estimate/">Rent estimates</a> · <a href="/prorated-rent/">Prorated rent</a> · <a href="/rent-concession/">Rent concessions</a> · <a href="/rent-split-calculator/">Rent split</a> · <a href="/rent-to-income/">Rent and income</a> · <a href="/rent-increase-calculator/">Rent increase calculator</a> · <a href="/rent-increase-laws/">Rent laws by state</a> · <a href="/connect/">Use in ChatGPT or Claude</a> · <a href="/rent-report/">San Diego rent report</a> · <a href="/renew">Renewal counter</a></div>
 <div><a href="/rent/">Rent by city</a> · <a href="/privacy">Privacy</a> · <a href="/terms">Terms</a> · <a href="mailto:peterskotte@lowball.rent">peterskotte@lowball.rent</a></div></footer></div></body></html>
